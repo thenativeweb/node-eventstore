@@ -29,7 +29,7 @@ v0.0.2
 1. pipelinehook for _select commit_, _precommit_, _postcommit_
 
 
-v.0.0.3
+v0.0.3
 
 1. encrypt json
 
