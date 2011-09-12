@@ -2,6 +2,12 @@ Inspiration:
 
 https://github.com/joliver/EventStore/blob/master/doc/EventStore.Example/MainProgram.cs
 
+### general stuff
+
+- write plain javascript
+- jslint it
+- use vows as bdd framework
+
 ### todo:
 
 v0.0.1
@@ -29,7 +35,7 @@ v0.0.2
 1. pipelinehook for _select commit_, _precommit_, _postcommit_
 
 
-v.0.0.3
+v0.0.3
 
 1. encrypt json
 
