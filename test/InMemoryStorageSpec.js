@@ -1,10 +1,9 @@
-var vows = require('vows'),
-    assert = require('assert');
-    
-var storage = require('../lib/storage/inMemory/InMemoryStorage');
-fillStore(storage);
+var vows = require('vows')
+  , assert = require('assert')
+  , storage = require('../lib/storage/inMemory/InMemoryStorage');
 
-vows.describe('The InMemoryStorage').addBatch({
+vows.describe('The InMemoryStorage')
+.addBatch({
     'An empty InMemoryStorage': {
         topic: storage,
         
@@ -21,14 +20,18 @@ vows.describe('The InMemoryStorage').addBatch({
         },
         
         'can be filled with events': function(storage) {
-            storage.addEvent('1', {payload: null});
+            storage.addEvent({streamId: '1', payload: null});
             
             var evtCount = storage.getEvents('1', 0, -1).length;
             assert.equal(evtCount, 1);
         }
-    },
+    }
+})
+.addBatch({
     'An filled InMemoryStorage': {
-        topic: storage,
+       topic: function() {
+            return fillStore(storage);
+        },
         
         'can provide requested events': function(storage) {
             var evtCount1 = storage.getEvents('2', 0, -1).length;
@@ -46,10 +49,12 @@ vows.describe('The InMemoryStorage').addBatch({
 
 
 function fillStore(storage) {
-    storage.addEvent('2', {payload: null});
-    storage.addEvent('2', {payload: null});
-    storage.addEvent('2', {payload: null});
-    storage.addEvent('2', {payload: null});
-    storage.addEvent('3', {payload: null});
-    storage.addEvent('3', {payload: null});
-};
+    storage.addEvent({streamId: '2', payload: null});
+    storage.addEvent({streamId: '2', payload: null});
+    storage.addEvent({streamId: '2', payload: null});
+    storage.addEvent({streamId: '2', payload: null});
+    storage.addEvent({streamId: '3', payload: null});
+    storage.addEvent({streamId: '3', payload: null});
+    
+    return storage;
+}
