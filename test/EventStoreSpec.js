@@ -10,8 +10,7 @@ vows.describe('The EventStore')
         topic: eventstore,
         
         'throws error when requesting an eventstream': function(es) {
-            assert.throws(function() {es.getEventStream('1', 0, -1)}, 
-            /Configure/);
+            assert.throws(function() {es.getEventStream('1', 0, -1)}, /Configure/);
         },
         
         'throws error when committing': function(es) {
@@ -50,6 +49,25 @@ vows.describe('The EventStore')
         'and request it`s full eventstream': function(es) {
             var stream = es.getEventStream('e1', 0, -1);
             assert.equal(stream.events.length, 3);
+        }
+    }
+})
+.addBatch({
+    'or i can work with eventstream': {
+        topic: function() {
+            var stream = eventstore.getEventStream('e1', 0, -1);
+            return stream;
+        },
+        
+        'you can add events to the stream': function(stream) {
+             stream.addEvent({streamId: 'e1', payload: null});
+        },
+        
+        'and commit it': function(stream) {
+            stream.commit();
+            
+            var s = eventstore.getEventStream('e1', 0, -1);
+            assert.equal(s.events.length, 4);
         }
     }
 }).export(module);
