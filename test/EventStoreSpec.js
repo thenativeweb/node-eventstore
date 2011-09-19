@@ -1,7 +1,7 @@
 var vows = require('vows')
   , assert = require('assert')
-  , eventstore = require('../lib/EventStore')
-  , storage = require('../lib/storage/inMemory/InMemoryStorage')
+  , eventstore = require('../lib/EventStore').createStore()
+  , storage = require('../lib/storage/inMemory/InMemoryStorage').createStorage()
   , event = eventstore.Event;
 
 vows.describe('The EventStore')

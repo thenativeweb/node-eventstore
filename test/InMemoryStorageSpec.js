@@ -1,6 +1,6 @@
 var vows = require('vows')
   , assert = require('assert')
-  , storage = require('../lib/storage/inMemory/InMemoryStorage');
+  , storage = require('../lib/storage/inMemory/InMemoryStorage').createStorage();
 
 vows.describe('The InMemoryStorage')
 .addBatch({
