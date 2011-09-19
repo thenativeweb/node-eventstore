@@ -27,47 +27,48 @@ vows.describe('The EventStore')
         },
         
         'requesting and eventstream won`t throw': function(es) {
-             assert.doesNotThrow(function() {es.getEventStream('1', 0, -1)}, /Configure/);
+             assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function(err, stream){})}, /Configure/);
         },
         
         'committing won`t throw': function(es) {
-            assert.doesNotThrow(function() {es.commit([])}, /Configure/);
+            assert.doesNotThrow(function() {es.commit({events: [], uncommittedEvents: []})}, /Configure/);
         }
     }
 })
 .addBatch({
     'when committed an single event': {
         topic: function() {
-            eventstore.commit({streamId: 'e1', payload: null});
+            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: null}]});
             return eventstore;
         },
         
         'you can commit an additional array of events': function(es) {
-            eventstore.commit([{streamId: 'e1', payload: null}, {streamId: 'e1', payload: null}]);
+            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: null}, {streamId: 'e1', payload: null}]});
         },
         
-        'and request it`s full eventstream': function(es) {
-            var stream = es.getEventStream('e1', 0, -1);
-            assert.equal(stream.events.length, 3);
+        'and request it`s full eventstream': {
+            topic: function(es) {
+                es.getEventStream('e1', 0, -1, this.callback);
+            },
+            
+            'you get the eventstream async': function(err, stream) {
+                assert.equal(stream.events.length, 3);
+            }
         }
     }
 })
 .addBatch({
     'or i can work with eventstream': {
         topic: function() {
-            var stream = eventstore.getEventStream('e1', 0, -1);
-            return stream;
+            var stream = eventstore.getEventStream('e1', 0, -1, this.callback);
         },
         
-        'you can add events to the stream': function(stream) {
+        'you can add events to the stream': function(err, stream) {
              stream.addEvent({streamId: 'e1', payload: null});
         },
         
-        'and commit it': function(stream) {
+        'and commit it': function(err, stream) {
             stream.commit();
-            
-            var s = eventstore.getEventStream('e1', 0, -1);
-            assert.equal(s.events.length, 4);
         }
     }
 }).export(module);
