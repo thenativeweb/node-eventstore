@@ -1,15 +1,18 @@
 {
-    "name": "SimpleCQRS.Host"
+  "author": "Kaba CC EAC"
+  , "name": "nodeEventStore"
   , "version": "0.0.1"
   , "private": true
+  , "main": "lib/eventstore.js"
+  , "engines": {
+        "node": "~v0.4.12"
+    }
   , "dependencies": {
-      "express": "2.4.6"
-    , "stylus": ">= 0.0.1"
-    , "jade": ">= 0.0.1"
-    , "socket.io": ">= 0.0.1"
-    , "redis": ">= 0.0.1"
+      "redis": ">= 0.0.1"
     , "hiredis": ">= 0.0.1"
-    , "coffee-script": ">= 1.0.0"
-    , "async" : ">= 0.0.1"
+    , "mongodb": ">= 0.0.1"
+  }
+  , "devDependencies": {
+      "vows": ">= 0.0.1"
   }
 }
