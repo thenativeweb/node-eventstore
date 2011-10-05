@@ -8,6 +8,7 @@
         "node": "~v0.4.12"
     }
   , "dependencies": {
+      "async": ">= 0.0.1"
       "redis": ">= 0.0.1"
     , "hiredis": ">= 0.0.1"
     , "mongodb": ">= 0.0.1"
