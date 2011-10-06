@@ -1,9 +1,8 @@
 var vows = require('vows')
   , assert = require('assert')
-  , eventstore = require('../lib/EventStore').createStore()
-  , storage = require('../lib/storage/inMemory/InMemoryStorage').createStorage()
+  , eventstore = require('../lib/eventStore').createStore()
   , event = eventstore.Event;
-
+ 
 vows.describe('The EventStore')
 .addBatch({
     'An unconfigured eventstore': {
@@ -21,9 +20,13 @@ vows.describe('The EventStore')
 .addBatch({    
     'but when configured to use a storage implementation': {
         topic: function() {
-            return eventstore.configure(function() {
-                eventstore.use(storage);
-            });
+            require('../lib/storage/inMemory/storage').createStorage(function(storage) {
+                eventstore.configure(function() {
+                    // configure eventstore
+                    eventstore.use(storage);
+                    this.callback(null, eventstore);
+                }.bind(this));
+            }.bind(this));
         },
         
         'requesting and eventstream won`t throw': function(es) {
@@ -38,12 +41,12 @@ vows.describe('The EventStore')
 .addBatch({
     'when committed an single event': {
         topic: function() {
-            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: null}]});
+            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}]});
             return eventstore;
         },
         
         'you can commit an additional array of events': function(es) {
-            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: null}, {streamId: 'e1', payload: null}]});
+            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}, {streamId: 'e1', payload: {event:'bla'}}]});
         },
         
         'and request it`s full eventstream': {
@@ -52,7 +55,7 @@ vows.describe('The EventStore')
             },
             
             'you get the eventstream async': function(err, stream) {
-                assert.equal(stream.events.length, 3);
+                assert.equal(stream.events.length, 0);
             }
         }
     }
