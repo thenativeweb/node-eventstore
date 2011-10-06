@@ -1,11 +1,11 @@
 var vows = require('vows')
   , assert = require('assert');
 
-vows.describe('The InMemoryStorage')
+vows.describe('The redis Storage')
 .addBatch({
-    'An empty InMemoryStorage': {
+    'An empty redis storage': {
         topic: function () {
-            require('../lib/storage/inMemory/storage').createStorage(function(storage) {
+            require('../lib/storage/redis/storage').createStorage(function(storage) {
                 this.callback(null, storage);
             }.bind(this));
         },
@@ -40,9 +40,9 @@ vows.describe('The InMemoryStorage')
     }
 })
 .addBatch({
-    'An filled InMemoryStorage': {
+    'An filled redis storage': {
        topic: function() {
-            require('../lib/storage/inMemory/storage').createStorage(function(storage) {
+            require('../lib/storage/redis/storage').createStorage(function(storage) {
                 this.callback(null, fillStore(storage));
             }.bind(this));
         },

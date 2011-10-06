@@ -1,11 +1,13 @@
 var vows = require('vows')
-  , assert = require('assert');
+  , assert = require('assert')
+  , mongo = require('mongodb')
+  , ObjectID = mongo.BSONPure.ObjectID;
 
-vows.describe('The InMemoryStorage')
+vows.describe('The MongoDB Storage')
 .addBatch({
-    'An empty InMemoryStorage': {
+    'An empty mongo db storage': {
         topic: function () {
-            require('../lib/storage/inMemory/storage').createStorage(function(storage) {
+            require('../lib/storage/mongoDb/storage').createStorage(function(storage) {
                 this.callback(null, storage);
             }.bind(this));
         },
@@ -29,7 +31,7 @@ vows.describe('The InMemoryStorage')
         },
         
         'can be filled with events': function(storage) {
-            var id = "1";
+            var id = new ObjectID().toString();
             storage.addEvent({'streamId': id, 'payload': {event:'bla'}}, function() {
                 storage.getEvents(id, 0, -1, function(events) {
                     var evtCount = events.length;
@@ -40,9 +42,9 @@ vows.describe('The InMemoryStorage')
     }
 })
 .addBatch({
-    'An filled InMemoryStorage': {
+    'An filled MongoDbStorage': {
        topic: function() {
-            require('../lib/storage/inMemory/storage').createStorage(function(storage) {
+            require('../lib/storage/mongoDb/storage').createStorage(function(storage) {
                 this.callback(null, fillStore(storage));
             }.bind(this));
         },
