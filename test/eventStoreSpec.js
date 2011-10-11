@@ -8,12 +8,18 @@ vows.describe('The EventStore')
     'An unconfigured eventstore': {
         topic: eventstore,
         
-        'throws error when requesting an eventstream': function(es) {
-            assert.throws(function() {es.getEventStream('1', 0, -1)}, /Configure/);
+        'does not throw error when requesting an eventstream': function(es) {
+            assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function (error, es) {})});
         },
         
-        'throws error when committing': function(es) {
-            assert.throws(function() {es.commit([])}, /Configure/);
+        'but returns an error in the callback': function(es) {
+            es.getEventStream('1', 0, -1, function (error, es) {
+                assert.include(error.toString(), 'Configure');
+            });
+        },
+        
+        'does not throw error when committing': function(es) {
+            assert.doesNotThrow(function() {es.commit([])});
         }
     }
 })
