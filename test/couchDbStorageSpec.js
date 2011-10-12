@@ -1,12 +1,20 @@
 var vows = require('vows')
   , assert = require('assert');
+  
+var options = {
+    collectionName: 'testevents'
+}
 
-vows.describe('The couchDB Storage')
+var storageName = "couchDb";
+
+vows.describe('The ' + storageName + ' Storage')
 .addBatch({
-    'An empty couchDB storage': {
+    'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/couchDb/storage').createStorage(function(storage) {
-                this.callback(null, storage);
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
+                storage._clear(function() {
+                    this.callback(null, storage);
+                }.bind(this));
             }.bind(this));
         },
         
@@ -32,49 +40,87 @@ vows.describe('The couchDB Storage')
             var id = "1";
             storage.addEvent({'streamId': id, 'payload': {event:'bla'}}, function() {
                 storage.getEvents(id, 0, -1, function(events) {
-                    var evtCount = events.length;
-                    assert.equal(evtCount, 1);
+                    assert.length(events, 1);
                 });
             });
         }
     }
 })
 .addBatch({
-    'An filled couchDB storage': {
+    'An filled  Storage': {
        topic: function() {
-            require('../lib/storage/couchDb/storage').createStorage(function(storage) {
-                this.callback(null, fillStore(storage));
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
+                storage._clear(function() {
+                    fillStore(storage, function(storage) {
+                        this.callback(null, storage);
+                    }.bind(this));
+                }.bind(this));
             }.bind(this));
         },
         
-        'can provide requested events': function(storage) {
-            storage.getEvents('2', 0, -1, function(events) {
-                var evtCount1 = events.length;
-                assert.equal(evtCount1, 4);
-            });
+        'after a successful `fill` we get events for id 2': {
+            topic: function (storage) {
+                storage.getEvents('2', 0, -1, function(events) {
+                    this.callback(null, events);
+                }.bind(this));
+            },
             
-            storage.getEvents('3', 0, -1, function(events) {
-                var evtCount2 = events.length;
-                assert.equal(evtCount2, 2);
-            });
+            'we can assert if length is right': function (events) {
+                assert.length(events, 4);
+            }
         },
-        'can provide events from minRevision to maxRevision': function(storage) {
-            storage.getEvents('2', 1, 3, function(events) {
-                var evtCount = events.length;
-                assert.equal(evtCount, 2);
-            });            
+        
+        'after a successful `fill` we get events for id 3': {
+            topic: function (storage) {
+                storage.getEvents('3', 0, -1, function(events) {
+                    this.callback(null, events);
+                }.bind(this));
+            },
+            
+            'we can assert if length is right': function (events) {
+                assert.length(events, 2);
+            }
+        },
+        
+        'after a successful `fill` we get events for id 2 from 1 to 3': {
+            topic: function (storage) {
+                storage.getEvents('2', 1, 3, function(events) {
+                    this.callback(null, events);
+                }.bind(this));
+            },
+            
+            'we can assert if length is right': function (events) {
+                assert.length(events, 2);
+            }
+        },
+        
+        'after a successful `fill` we get all undispatched events': {
+            topic: function (storage) {
+                storage.getUndispatchedEvents(function(events) {
+                    this.callback(null, events);
+                }.bind(this));
+            },
+            
+            'we can assert if length is right': function (events) {
+                assert.length(events, 6);
+            }
         }
     }
 }).export(module);
 
 
-function fillStore(storage) {
-    storage.addEvent({streamId: '2', payload: null}, function(){});
-    storage.addEvent({streamId: '2', payload: null}, function(){});
-    storage.addEvent({streamId: '2', payload: null}, function(){});
-    storage.addEvent({streamId: '2', payload: null}, function(){});
-    storage.addEvent({streamId: '3', payload: null}, function(){});
-    storage.addEvent({streamId: '3', payload: null}, function(){});
-    
-    return storage;
+function fillStore(storage, callback) {
+    storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+        storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+            storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                    storage.addEvent({streamId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                        storage.addEvent({streamId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                            callback(storage);
+                        });
+                    });
+                });
+            });
+        });
+    });
 }
