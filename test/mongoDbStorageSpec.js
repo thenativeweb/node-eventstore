@@ -39,7 +39,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'can be filled with events': function(storage) {
             var id = "1";
-            storage.addEvent({'streamId': id, 'payload': {event:'bla'}}, function() {
+            storage.addEvent({'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}, function() {
                 storage.getEvents(id, 0, -1, function(events) {
                     assert.length(events, 1);
                 });
@@ -81,7 +81,7 @@ vows.describe('The ' + storageName + ' Storage')
             'we can assert if length is right': function (events) {
                 assert.length(events, 2);
             }
-        }/*,
+        },
         
         'after a successful `fill` we get events for id 2 from 1 to 3': {
             topic: function (storage) {
@@ -93,7 +93,7 @@ vows.describe('The ' + storageName + ' Storage')
             'we can assert if length is right': function (events) {
                 assert.length(events, 2);
             }
-        }*/,
+        },
         
         'after a successful `fill` we get all undispatched events': {
             topic: function (storage) {
@@ -111,12 +111,12 @@ vows.describe('The ' + storageName + ' Storage')
 
 
 function fillStore(storage, callback) {
-    storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-        storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-            storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                storage.addEvent({streamId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                    storage.addEvent({streamId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                        storage.addEvent({streamId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+    storage.addEvent({streamId: '2', 'streamRevision': 0, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+        storage.addEvent({streamId: '2', 'streamRevision': 1, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+            storage.addEvent({streamId: '2', 'streamRevision': 2, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                storage.addEvent({streamId: '2', 'streamRevision': 3, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                    storage.addEvent({streamId: '3', 'streamRevision': 0, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
+                        storage.addEvent({streamId: '3', 'streamRevision': 1, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
                             callback(storage);
                         });
                     });
