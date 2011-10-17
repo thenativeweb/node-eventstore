@@ -1,7 +1,6 @@
 var vows = require('vows')
   , assert = require('assert')
-  , eventstore = require('../lib/eventStore').createStore()
-  , event = eventstore.Event;
+  , eventstore = require('../lib/eventStore').createStore();
  
 vows.describe('The EventStore')
 .addBatch({
@@ -69,7 +68,7 @@ vows.describe('The EventStore')
 .addBatch({
     'or i can work with eventstream': {
         topic: function() {
-            var stream = eventstore.getEventStream('e1', 0, -1, this.callback);
+            eventstore.getEventStream('e1', 0, -1, this.callback);
         },
         
         'you can add events to the stream': function(err, stream) {
@@ -78,6 +77,30 @@ vows.describe('The EventStore')
         
         'and commit it': function(err, stream) {
             stream.commit();
+        }
+    }
+})
+.addBatch({
+    'when creating a snapshot': {
+        topic: function() {
+            eventstore.getEventStream('e1', 0, -1, this.callback);
+        },
+        
+        'you can request it': {
+            topic: function(stream) {
+                stream.createSnapshot('data', this.callback);
+            },
+        
+            'you can request it': {
+                topic: function(err) {
+                    eventstore.getFromSnapshot('e1', -1, this.callback);
+                },
+                
+                'you get the snapshot async': function(err, snapshot, stream) {
+                    assert.equal(snapshot[0].data, 'data');
+                    assert.equal(snapshot[0].streamId, 'e1');
+                }
+            }
         }
     }
 }).export(module);
