@@ -97,8 +97,8 @@ vows.describe('The EventStore')
                 },
                 
                 'you get the snapshot async': function(err, snapshot, stream) {
-                    assert.equal(snapshot[0].data, 'data');
-                    assert.equal(snapshot[0].streamId, 'e1');
+                    assert.equal(snapshot.data, 'data');
+                    assert.equal(snapshot.streamId, 'e1');
                 }
             }
         }
