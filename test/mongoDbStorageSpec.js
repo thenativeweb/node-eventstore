@@ -24,14 +24,14 @@ vows.describe('The ' + storageName + ' Storage')
         },
         
         'getId returns a string': function(storage) {
-            storage.getId(function(id) {
+            storage.getId(function(err, id) {
                 assert.isString(id);
             });
         },
         
         'a second id returned by getId won\'t equal the first': function(storage) {
-            storage.getId(function(id1) {
-                storage.getId(function(id2) {
+            storage.getId(function(err, id1) {
+                storage.getId(function(err, id2) {
                     assert.notEqual(id1, id2);
                 });
             });
@@ -40,7 +40,7 @@ vows.describe('The ' + storageName + ' Storage')
         'can be filled with events': function(storage) {
             var id = "1";
             storage.addEvent({'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}, function() {
-                storage.getEvents(id, 0, -1, function(events) {
+                storage.getEvents(id, 0, -1, function(err, events) {
                     assert.length(events, 1);
                 });
             });
@@ -61,7 +61,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 2': {
             topic: function (storage) {
-                storage.getEvents('2', 0, -1, function(events) {
+                storage.getEvents('2', 0, -1, function(err, events) {
                     this.callback(null, events);
                 }.bind(this));
             },
@@ -73,7 +73,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 3': {
             topic: function (storage) {
-                storage.getEvents('3', 0, -1, function(events) {
+                storage.getEvents('3', 0, -1, function(err, events) {
                     this.callback(null, events);
                 }.bind(this));
             },
@@ -85,7 +85,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 2 from 1 to 3': {
             topic: function (storage) {
-                storage.getEvents('2', 1, 3, function(events) {
+                storage.getEvents('2', 1, 3, function(err, events) {
                     this.callback(null, events);
                 }.bind(this));
             },
@@ -97,7 +97,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get all undispatched events': {
             topic: function (storage) {
-                storage.getUndispatchedEvents(function(events) {
+                storage.getUndispatchedEvents(function(err, events) {
                     this.callback(null, events);
                 }.bind(this));
             },
@@ -109,7 +109,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill with a snapshot` we get the snapshot': {
             topic: function (storage) {
-                storage.getSnapshot('3', -1, function(snapshot) {
+                storage.getSnapshot('3', -1, function(err, snapshot) {
                     this.callback(null, snapshot);
                 }.bind(this));
             },

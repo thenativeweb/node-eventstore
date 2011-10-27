@@ -39,19 +39,19 @@ vows.describe('The EventStore')
         },
         
         'committing won`t throw': function(es) {
-            assert.doesNotThrow(function() {es.commit({events: [], uncommittedEvents: []})}, /Configure/);
+            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []})}, /Configure/);
         }
     }
 })
 .addBatch({
     'when committed an single event': {
         topic: function() {
-            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}]});
+            eventstore.commit({currentRevision: function() {return 0;}, events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}]});
             return eventstore;
         },
         
         'you can commit an additional array of events': function(es) {
-            eventstore.commit({events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}, {streamId: 'e1', payload: {event:'bla'}}]});
+            es.commit({currentRevision: function() {return 0;},events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}, {streamId: 'e1', payload: {event:'bla'}}]});
         },
         
         'and request it`s full eventstream': {
