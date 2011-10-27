@@ -1,24 +1,14 @@
 var vows = require('vows')
   , assert = require('assert');
   
-var options = {
-    collectionName: 'testevents'
-}
-
-var storageName = "inMemory";
-
-vows.describe('The ' + storageName + ' Storage')
+vows.describe('The inMemory Storage')
 .addBatch({
     'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
-                storage._clear(function() {
-                    this.callback(null, storage);
-                }.bind(this));
-            }.bind(this));
+            require('../lib/storage/inMemory/storage').createStorage(this.callback);
         },
         
-        'has a function getId': function(storage) {
+        'has a function getId': function(err, storage) {
             assert.isFunction(storage.getId);
         },
         
@@ -49,11 +39,9 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An filled  Storage': {
        topic: function() {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
-                storage._clear(function() {
+            require('../lib/storage/inMemory/storage').createStorage(function(err, storage) {
                     fillStore(storage, function(storage) {
                         this.callback(null, storage);
-                    }.bind(this));
                 }.bind(this));
             }.bind(this));
         },

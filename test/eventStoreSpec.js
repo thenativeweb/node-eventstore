@@ -25,7 +25,7 @@ vows.describe('The EventStore')
 .addBatch({    
     'but when configured to use a storage implementation': {
         topic: function() {
-            require('../lib/storage/inMemory/storage').createStorage(function(storage) {
+            require('../lib/storage/inMemory/storage').createStorage(function(err, storage) {
                 eventstore.configure(function() {
                     // configure eventstore
                     eventstore.use(storage);
