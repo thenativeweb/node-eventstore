@@ -12,7 +12,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
                 storage._clear(function() {
                     this.callback(null, storage);
                 }.bind(this));
@@ -50,7 +50,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An filled  Storage': {
        topic: function() {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
                 storage._clear(function() {
                     fillStore(storage, function(storage) {
                         this.callback(null, storage);
@@ -116,9 +116,9 @@ vows.describe('The ' + storageName + ' Storage')
             
             'we can assert if snapshot is right': function (snapshot) {
                 assert.equal(snapshot.data, 'data');
-                assert.equal(snapshot.snapshotId, '1');
+                assert.equal(snapshot.id, '1');
                 assert.equal(snapshot.streamId, '3');
-                assert.equal(snapshot.snapshotRevision, '1');
+                assert.equal(snapshot.revision, '1');
             }
         }
     }
@@ -132,7 +132,7 @@ function fillStore(storage, callback) {
                 storage.addEvent({streamId: '2', streamRevision: 3, commitId: 3, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
                     storage.addEvent({streamId: '3', streamRevision: 0, commitId: 4, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
                         storage.addEvent({streamId: '3', streamRevision: 1, commitId: 5, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                            storage.addSnapshot({snapshotId: '1', streamId: '3', snapshotRevision: 1, data: 'data'}, function(){
+                            storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function(){
                                 callback(storage);
                             });
                         });
