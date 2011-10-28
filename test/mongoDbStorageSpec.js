@@ -2,7 +2,6 @@ var vows = require('vows')
   , assert = require('assert');
   
 var options = {
-    collectionName: 'testevents',
     dbName: 'testeventstore'
 }
 
@@ -12,9 +11,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
-                this.callback(null, storage);
-            }.bind(this));
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, this.callback);
         },
         
         'has a function getId': function(storage) {
@@ -49,17 +46,13 @@ vows.describe('The ' + storageName + ' Storage')
     'An filled  Storage': {
        topic: function() {
             require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
-                fillStore(storage, function(storage) {
-                    this.callback(null, storage);
-                }.bind(this));
+                fillStore(storage, this.callback);
             }.bind(this));
         },
         
         'after a successful `fill` we get events for id 2': {
             topic: function (storage) {
-                storage.getEvents('2', 0, -1, function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('2', 0, -1, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -69,9 +62,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 3': {
             topic: function (storage) {
-                storage.getEvents('3', 0, -1, function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('3', 0, -1, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -81,9 +72,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 2 from 1 to 3': {
             topic: function (storage) {
-                storage.getEvents('2', 1, 3, function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('2', 1, 3, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -93,9 +82,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get all undispatched events': {
             topic: function (storage) {
-                storage.getUndispatchedEvents(function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getUndispatchedEvents(this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -105,9 +92,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill with a snapshot` we get the snapshot': {
             topic: function (storage) {
-                storage.getSnapshot('3', -1, function(err, snapshot) {
-                    this.callback(null, snapshot);
-                }.bind(this));
+                storage.getSnapshot('3', -1, this.callback);
             },
             
             'we can assert if snapshot is right': function (snapshot) {
@@ -139,7 +124,7 @@ function fillStore(storage, callback) {
             ], 
             function (err) {
                 storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                    callback(storage);
+                    callback(null, storage);
                 });
             }
         );

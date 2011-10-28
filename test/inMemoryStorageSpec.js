@@ -1,14 +1,20 @@
 var vows = require('vows')
   , assert = require('assert');
   
-vows.describe('The inMemory Storage')
+var storageName = "inMemory";
+
+var options = {};
+
+vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/inMemory/storage').createStorage(this.callback);
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
+                this.callback(null, storage);
+            }.bind(this));
         },
         
-        'has a function getId': function(err, storage) {
+        'has a function getId': function(storage) {
             assert.isFunction(storage.getId);
         },
         
@@ -20,16 +26,17 @@ vows.describe('The inMemory Storage')
         
         'a second id returned by getId won\'t equal the first': function(storage) {
             storage.getId(function(err, id1) {
-                storage.getId(function(id2) {
+                storage.getId(function(err, id2) {
                     assert.notEqual(id1, id2);
                 });
             });
         },
         
         'can be filled with events': function(storage) {
-            var id = "1";
-            storage.addEvents([{'streamId': id, 'payload': {event:'bla'}}], function() {
+            var id = '1';
+            storage.addEvents([{'streamId': id, commitId: '10', 'payload': {event:'bla'}}], function() {
                 storage.getEvents(id, 0, -1, function(err, events) {
+                    assert.isArray(events);
                     assert.length(events, 1);
                 });
             });
@@ -39,18 +46,14 @@ vows.describe('The inMemory Storage')
 .addBatch({
     'An filled  Storage': {
        topic: function() {
-            require('../lib/storage/inMemory/storage').createStorage(function(err, storage) {
-                    fillStore(storage, function(storage) {
-                        this.callback(null, storage);
-                }.bind(this));
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
+                fillStore(storage, this.callback);
             }.bind(this));
         },
         
         'after a successful `fill` we get events for id 2': {
             topic: function (storage) {
-                storage.getEvents('2', 0, -1, function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('2', 0, -1, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -60,9 +63,7 @@ vows.describe('The inMemory Storage')
         
         'after a successful `fill` we get events for id 3': {
             topic: function (storage) {
-                storage.getEvents('3', 0, -1, function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('3', 0, -1, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -72,9 +73,7 @@ vows.describe('The inMemory Storage')
         
         'after a successful `fill` we get events for id 2 from 1 to 3': {
             topic: function (storage) {
-                storage.getEvents('2', 1, 3, function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('2', 1, 3, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -84,9 +83,7 @@ vows.describe('The inMemory Storage')
         
         'after a successful `fill` we get all undispatched events': {
             topic: function (storage) {
-                storage.getUndispatchedEvents(function(err, events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getUndispatchedEvents(this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -96,16 +93,14 @@ vows.describe('The inMemory Storage')
         
         'after a successful `fill with a snapshot` we get the snapshot': {
             topic: function (storage) {
-                storage.getSnapshot('3', -1, function(err, snapshot) {
-                    this.callback(null, snapshot);
-                }.bind(this));
+                storage.getSnapshot('3', -1, this.callback);
             },
             
             'we can assert if snapshot is right': function (snapshot) {
                 assert.equal(snapshot.data, 'data');
-                assert.equal(snapshot.snapshotId, '1');
+                assert.equal(snapshot.id, '1');
                 assert.equal(snapshot.streamId, '3');
-                assert.equal(snapshot.snapshotRevision, '1');
+                assert.equal(snapshot.revision, '1');
             }
         }
     }
@@ -126,7 +121,7 @@ function fillStore(storage, callback) {
             ], 
             function (err) {
                 storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                    callback(storage);
+                    callback(null, storage);
                 });
             }
         );
