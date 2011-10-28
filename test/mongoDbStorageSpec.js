@@ -13,9 +13,7 @@ vows.describe('The ' + storageName + ' Storage')
     'An empty  Storage': {
         topic: function () {
             require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
-                storage._clear(function() {
-                    this.callback(null, storage);
-                }.bind(this));
+                this.callback(null, storage);
             }.bind(this));
         },
         
@@ -38,8 +36,8 @@ vows.describe('The ' + storageName + ' Storage')
         },
         
         'can be filled with events': function(storage) {
-            var id = "1";
-            storage.addEvent({'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}, function() {
+            var id = "1234-abcd";
+            storage.addEvents([{'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}], function() {
                 storage.getEvents(id, 0, -1, function(err, events) {
                     assert.length(events, 1);
                 });
@@ -51,10 +49,8 @@ vows.describe('The ' + storageName + ' Storage')
     'An filled  Storage': {
        topic: function() {
             require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
-                storage._clear(function() {
-                    fillStore(storage, function(storage) {
-                        this.callback(null, storage);
-                    }.bind(this));
+                fillStore(storage, function(storage) {
+                    this.callback(null, storage);
                 }.bind(this));
             }.bind(this));
         },
@@ -120,25 +116,32 @@ vows.describe('The ' + storageName + ' Storage')
                 assert.equal(snapshot.streamId, '3');
                 assert.equal(snapshot.revision, '1');
             }
+        },
+        
+        teardown:  function(storage) { 
+            storage.client.dropDatabase();
         }
     }
 }).export(module);
 
 
 function fillStore(storage, callback) {
-    storage.addEvent({streamId: '2', streamRevision: 0, commitId: 0, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-        storage.addEvent({streamId: '2', streamRevision: 1, commitId: 1, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-            storage.addEvent({streamId: '2', streamRevision: 2, commitId: 2, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                storage.addEvent({streamId: '2', streamRevision: 3, commitId: 3, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                    storage.addEvent({streamId: '3', streamRevision: 0, commitId: 4, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                        storage.addEvent({streamId: '3', streamRevision: 1, commitId: 5, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                            storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function(){
-                                callback(storage);
-                            });
-                        });
-                    });
+    storage.addEvents([
+        {streamId: '2', streamRevision: 0, commitId: 0, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 1, commitId: 1, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 2, commitId: 2, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 3, commitId: 3, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+    ],
+    function (err) {
+        storage.addEvents([
+            {streamId: '3', streamRevision: 0, commitId: 4, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '3', streamRevision: 1, commitId: 5, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+            ], 
+            function (err) {
+                storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                    callback(storage);
                 });
-            });
-        });
+            }
+        );
     });
-}
+ };

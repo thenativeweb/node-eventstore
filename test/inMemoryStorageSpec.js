@@ -28,7 +28,7 @@ vows.describe('The inMemory Storage')
         
         'can be filled with events': function(storage) {
             var id = "1";
-            storage.addEvent({'streamId': id, 'payload': {event:'bla'}}, function() {
+            storage.addEvents([{'streamId': id, 'payload': {event:'bla'}}], function() {
                 storage.getEvents(id, 0, -1, function(err, events) {
                     assert.length(events, 1);
                 });
@@ -113,19 +113,22 @@ vows.describe('The inMemory Storage')
 
 
 function fillStore(storage, callback) {
-    storage.addEvent({streamId: '2', streamRevision: 0, commitId: 0, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-        storage.addEvent({streamId: '2', streamRevision: 1, commitId: 1, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-            storage.addEvent({streamId: '2', streamRevision: 2, commitId: 2, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                storage.addEvent({streamId: '2', streamRevision: 3, commitId: 3, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                    storage.addEvent({streamId: '3', streamRevision: 0, commitId: 4, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                        storage.addEvent({streamId: '3', streamRevision: 1, commitId: 5, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                            storage.addSnapshot({snapshotId: '1', streamId: '3', snapshotRevision: 1, data: 'data'}, function(){
-                                callback(storage);
-                            });
-                        });
-                    });
+    storage.addEvents([
+        {streamId: '2', streamRevision: 0, commitId: 0, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 1, commitId: 1, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 2, commitId: 2, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 3, commitId: 3, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+    ],
+    function (err) {
+        storage.addEvents([
+            {streamId: '3', streamRevision: 0, commitId: 4, payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '3', streamRevision: 1, commitId: 5, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+            ], 
+            function (err) {
+                storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                    callback(storage);
                 });
-            });
-        });
+            }
+        );
     });
-}
+ };
