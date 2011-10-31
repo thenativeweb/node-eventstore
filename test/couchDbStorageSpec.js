@@ -124,7 +124,6 @@ function fillStore(storage, callback) {
             ], 
             function (err) {
                 storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function(err) {
-                    console.log('err: '+JSON.stringify(err));
                     callback(null, storage);
                 });
             }

@@ -2,6 +2,8 @@ var vows = require('vows')
   , assert = require('assert')
   , eventstore = require('../lib/eventStore').createStore();
  
+eventstore.start();
+ 
 vows.describe('The EventStore')
 .addBatch({
     'An unconfigured eventstore': {
@@ -88,7 +90,7 @@ vows.describe('The EventStore')
         
         'you can request it': {
             topic: function(stream) {
-                stream.createSnapshot('data', this.callback);
+                eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', this.callback);
             },
         
             'you can request it': {
