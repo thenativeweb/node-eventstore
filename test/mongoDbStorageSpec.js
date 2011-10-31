@@ -97,7 +97,7 @@ vows.describe('The ' + storageName + ' Storage')
             
             'we can assert if snapshot is right': function (snapshot) {
                 assert.equal(snapshot.data, 'data');
-                assert.equal(snapshot.id, '1');
+                assert.equal(snapshot.snapshotId, '1');
                 assert.equal(snapshot.streamId, '3');
                 assert.equal(snapshot.revision, '1');
             }
@@ -123,7 +123,7 @@ function fillStore(storage, callback) {
             {streamId: '3', streamRevision: 1, commitId: 5, payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
             ], 
             function (err) {
-                storage.addSnapshot({id: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
                     callback(null, storage);
                 });
             }

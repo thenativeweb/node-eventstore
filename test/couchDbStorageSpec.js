@@ -2,7 +2,7 @@ var vows = require('vows')
   , assert = require('assert');
   
 var options = {
-    collectionName: 'testevents'
+    dbName: 'testeventstore'
 }
 
 var storageName = "couchDb";
@@ -11,11 +11,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
-                storage._clear(function() {
-                    this.callback(null, storage);
-                }.bind(this));
-            }.bind(this));
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, this.callback);
         },
         
         'has a function getId': function(storage) {
@@ -23,23 +19,23 @@ vows.describe('The ' + storageName + ' Storage')
         },
         
         'getId returns a string': function(storage) {
-            storage.getId(function(id) {
+            storage.getId(function(err, id) {
                 assert.isString(id);
             });
         },
         
         'a second id returned by getId won\'t equal the first': function(storage) {
-            storage.getId(function(id1) {
-                storage.getId(function(id2) {
+            storage.getId(function(err, id1) {
+                storage.getId(function(err, id2) {
                     assert.notEqual(id1, id2);
                 });
             });
         },
         
         'can be filled with events': function(storage) {
-            var id = "1";
-            storage.addEvent({'streamId': id, 'payload': {event:'bla'}}, function() {
-                storage.getEvents(id, 0, -1, function(events) {
+            var id = "1234-abcd";
+            storage.addEvents([{'streamId': id, commitId: id, id: '0', 'streamRevision': 0, 'payload': {event:'bla'}}], function() {
+                storage.getEvents(id, 0, -1, function(err, events) {
                     assert.length(events, 1);
                 });
             });
@@ -49,20 +45,14 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An filled  Storage': {
        topic: function() {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(storage) {
-                storage._clear(function() {
-                    fillStore(storage, function(storage) {
-                        this.callback(null, storage);
-                    }.bind(this));
-                }.bind(this));
+            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
+                fillStore(storage, this.callback);
             }.bind(this));
         },
         
         'after a successful `fill` we get events for id 2': {
             topic: function (storage) {
-                storage.getEvents('2', 0, -1, function(events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('2', 0, -1, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -72,9 +62,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 3': {
             topic: function (storage) {
-                storage.getEvents('3', 0, -1, function(events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('3', 0, -1, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -84,9 +72,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get events for id 2 from 1 to 3': {
             topic: function (storage) {
-                storage.getEvents('2', 1, 3, function(events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getEvents('2', 1, 3, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -96,9 +82,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill` we get all undispatched events': {
             topic: function (storage) {
-                storage.getUndispatchedEvents(function(events) {
-                    this.callback(null, events);
-                }.bind(this));
+                storage.getUndispatchedEvents(this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -108,36 +92,42 @@ vows.describe('The ' + storageName + ' Storage')
         
         'after a successful `fill with a snapshot` we get the snapshot': {
             topic: function (storage) {
-                storage.getSnapshot('3', -1, function(snapshot) {
-                    this.callback(null, snapshot);
-                }.bind(this));
+                storage.getSnapshot('3', -1, this.callback);
             },
             
-            'we can assert if snapshot is right': function (snapshot) {
+            'we can assert if snapshot is right': function (err, snapshot) {
                 assert.equal(snapshot.data, 'data');
-                assert.equal(snapshot.snapshotId, '1');
+                assert.equal(snapshot.snapshotId, 'snap1');
                 assert.equal(snapshot.streamId, '3');
-                assert.equal(snapshot.snapshotRevision, '1');
+                assert.equal(snapshot.revision, '1');
             }
+        },
+        
+        teardown:  function(storage) { 
+            storage.client.destroy();
         }
     }
 }).export(module);
 
 
 function fillStore(storage, callback) {
-    storage.addEvent({streamId: '2', streamRevision: 0, commitId: '10', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-        storage.addEvent({streamId: '2', streamRevision: 1, commitId: '11', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-            storage.addEvent({streamId: '2', streamRevision: 2, commitId: '12', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                storage.addEvent({streamId: '2', streamRevision: 3, commitId: '13', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                    storage.addEvent({streamId: '3', streamRevision: 0, commitId: '14', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                        storage.addEvent({streamId: '3', streamRevision: 1, commitId: '15', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}, function(){
-                            storage.addSnapshot({snapshotId: '1', streamId: '3', snapshotRevision: 1, data: 'data'}, function(){
-                                callback(storage);
-                            });
-                        });
-                    });
+    storage.addEvents([
+        {streamId: '2', streamRevision: 0, commitId: '0', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 1, commitId: '1', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 2, commitId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+        {streamId: '2', streamRevision: 3, commitId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+    ],
+    function (err) {
+        storage.addEvents([
+            {streamId: '3', streamRevision: 0, commitId: '4', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '3', streamRevision: 1, commitId: '5', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+            ], 
+            function (err) {
+                storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function(err) {
+                    console.log('err: '+JSON.stringify(err));
+                    callback(null, storage);
                 });
-            });
-        });
+            }
+        );
     });
-}
+ };
