@@ -13,14 +13,8 @@ vows.describe('The EventStore')
             assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function (error, es) {})});
         },
         
-        'but returns an error in the callback': function(es) {
-            es.getEventStream('1', 0, -1, function (error, es) {
-                assert.include(error.toString(), 'Configure');
-            });
-        },
-        
         'does not throw error when committing': function(es) {
-            assert.doesNotThrow(function() {es.commit([])});
+            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []})});
         }
     }
 })
@@ -37,7 +31,7 @@ vows.describe('The EventStore')
         },
         
         'requesting and eventstream won`t throw': function(es) {
-             assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function(err, stream){})}, /Configure/);
+            assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function(err, stream){})}, /Configure/);
         },
         
         'committing won`t throw': function(es) {
