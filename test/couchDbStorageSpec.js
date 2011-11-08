@@ -123,7 +123,20 @@ vows.describe('The ' + storageName + ' Storage')
                 storage.getSnapshot('3', -1, this.callback);
             },
             
-            'we can assert if snapshot is right': function (err, snapshot) {
+            'we can assert if snapshot is right': function (snapshot) {
+                assert.equal(snapshot.data, 'dataPlus');
+                assert.equal(snapshot.snapshotId, 'snap2');
+                assert.equal(snapshot.streamId, '3');
+                assert.equal(snapshot.revision, '2');
+            }
+        },
+        
+        'after a successful `fill with a snapshot` we get the snapshot with maxRev': {
+            topic: function (storage) {
+                storage.getSnapshot('3', 1, this.callback);
+            },
+            
+            'we can assert if snapshot is right': function (snapshot) {
                 assert.equal(snapshot.data, 'data');
                 assert.equal(snapshot.snapshotId, 'snap1');
                 assert.equal(snapshot.streamId, '3');
@@ -172,8 +185,10 @@ function fillStore(storage, callback) {
                 {streamId: '3', streamRevision: 1, commitId: '5', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
                 ], 
                 function (err) {
-                    storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function(err) {
-                        callback(null, storage);
+                    storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function() {
+                        storage.addSnapshot({snapshotId: 'snap2', streamId: '3', revision: 2, data: 'dataPlus'}, function() {
+                            callback(null, storage);
+                        });
                     });
                 }
             );

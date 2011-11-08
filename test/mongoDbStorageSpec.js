@@ -124,6 +124,19 @@ vows.describe('The ' + storageName + ' Storage')
             },
             
             'we can assert if snapshot is right': function (snapshot) {
+                assert.equal(snapshot.data, 'dataPlus');
+                assert.equal(snapshot.snapshotId, '2');
+                assert.equal(snapshot.streamId, '3');
+                assert.equal(snapshot.revision, '2');
+            }
+        },
+        
+        'after a successful `fill with a snapshot` we get the snapshot with maxRev': {
+            topic: function (storage) {
+                storage.getSnapshot('3', 1, this.callback);
+            },
+            
+            'we can assert if snapshot is right': function (snapshot) {
                 assert.equal(snapshot.data, 'data');
                 assert.equal(snapshot.snapshotId, '1');
                 assert.equal(snapshot.streamId, '3');
@@ -153,7 +166,9 @@ function fillStore(storage, callback) {
                 ], 
                 function (err) {
                     storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                        callback(null, storage);
+                        storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, function() {
+                            callback(null, storage);
+                        });
                     });
                 }
             );
