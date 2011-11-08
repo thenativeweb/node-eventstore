@@ -107,6 +107,22 @@ vows.describe('The ' + storageName + ' Storage')
             }
         },
         
+        'after a successful `fill` we get all events': {
+            topic: function (storage) {
+                storage.getAllEvents(this.callback);
+            },
+            
+            'we can assert if length is right': function (events) {
+                assert.length(events, 6);
+            },
+            
+            'we can assert if sorting is right': function (events) {
+                assert.equal(events[0].commitId, '0');
+                assert.equal(events[2].commitId, '2');
+                assert.equal(events[5].commitId, '5');
+            }
+        },
+        
         'after a successful `fill with a snapshot` we get the snapshot': {
             topic: function (storage) {
                 storage.getSnapshot('3', -1, this.callback);
