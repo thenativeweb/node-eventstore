@@ -57,6 +57,12 @@ vows.describe('The ' + storageName + ' Storage')
             
             'we can assert if length is right': function (events) {
                 assert.length(events, 4);
+            },
+            
+            'we can assert if sorting is right': function (events) {
+                assert.equal(events[0].commitId, '0');
+                assert.equal(events[1].commitId, '1');
+                assert.equal(events[3].commitId, '3');
             }
         },
         
