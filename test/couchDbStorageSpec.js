@@ -87,6 +87,12 @@ vows.describe('The ' + storageName + ' Storage')
             
             'we can assert if length is right': function (events) {
                 assert.length(events, 6);
+            },
+            
+            'we can assert if sorting is right': function (events) {
+                assert.equal(events[0].commitId, '0');
+                assert.equal(events[2].commitId, '2');
+                assert.equal(events[5].commitId, '5');
             }
         },
         
@@ -109,24 +115,46 @@ vows.describe('The ' + storageName + ' Storage')
     }
 }).export(module);
 
+function clear(storage, callback) {
+    storage.client.all(function(err, doc) {
+        if (!err) {
+            for(var i = 0; i < doc.length; i++) {
+                /* Don't delete design documents. */
+                if(doc[i].id.indexOf("_design") == -1) {
+                    storage.client.remove(doc[i].id, doc[i].value.rev, function(err, doc) {
+                        if (err) {
+                            callback(err);
+                        }
+                    });
+                }
+                if (i === doc.length-1) {
+                    callback(null);
+                }
+            }
+
+         }
+    });
+}
 
 function fillStore(storage, callback) {
-    storage.addEvents([
-        {streamId: '2', streamRevision: 0, commitId: '0', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-        {streamId: '2', streamRevision: 1, commitId: '1', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-        {streamId: '2', streamRevision: 2, commitId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-        {streamId: '2', streamRevision: 3, commitId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
-    ],
-    function (err) {
+    clear(storage, function(err) {
         storage.addEvents([
-            {streamId: '3', streamRevision: 0, commitId: '4', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-            {streamId: '3', streamRevision: 1, commitId: '5', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
-            ], 
-            function (err) {
-                storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function(err) {
-                    callback(null, storage);
-                });
-            }
-        );
+            {streamId: '2', streamRevision: 0, commitId: '0', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '2', streamRevision: 1, commitId: '1', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '2', streamRevision: 2, commitId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '2', streamRevision: 3, commitId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+        ],
+        function (err) {
+            storage.addEvents([
+                {streamId: '3', streamRevision: 0, commitId: '4', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
+                {streamId: '3', streamRevision: 1, commitId: '5', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+                ], 
+                function (err) {
+                    storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function(err) {
+                        callback(null, storage);
+                    });
+                }
+            );
+        });
     });
  };
