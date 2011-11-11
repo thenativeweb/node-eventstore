@@ -16,4 +16,6 @@
   , "devDependencies": {
       "vows": ">= 0.0.1"
   }
+  , "scripts" : { 
+      "test" : "vows test/* --spec" } 
 }

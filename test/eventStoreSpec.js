@@ -14,7 +14,7 @@ vows.describe('The EventStore')
         },
         
         'committing': function(es) {
-            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []})});
+            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []})}, this.callback);
         }
     }
 })
@@ -29,31 +29,20 @@ vows.describe('The EventStore')
                 }.bind(this));
             }.bind(this));
         },
-        
-        'does not throw error when requesting an eventstream': function(es) {
-            assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function(err, stream){})}, /Configure/);
-        },
-        
-        'does not throw error when committing': function(es) {
-            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []})}, /Configure/);
-        },
-        
+                
         'can commit a single event': {
             topic: function() {
-                eventstore.commit({currentRevision: function() {return 0;}, events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}]});
-                return eventstore;
+                eventstore.commit({currentRevision: function() {return 0;}, events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}]}, this.callback);
             },
             
             'and can commit an additional array of events': {
-                topic: function(es) {
-                    es.commit({currentRevision: function() {return 0;},events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}, {streamId: 'e1', payload: {event:'bla'}}]}, function() {
-                        this.callback(null, es);
-                    }.bind(this));
+                topic: function() {
+                    eventstore.commit({currentRevision: function() {return 0;},events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}, {streamId: 'e1', payload: {event:'bla'}}]}, this.callback);
                 },
                 
                 'and can request it`s full eventstream': {
-                    topic: function(es) {
-                        es.getEventStream('e1', 0, -1, this.callback);
+                    topic: function() {
+                        eventstore.getEventStream('e1', 0, -1, this.callback);
                     },
                     
                     'correctly': function(err, stream) {
@@ -69,11 +58,11 @@ vows.describe('The EventStore')
         
         'can work with eventstream': {
             topic: function() {
-                eventstore.getEventStream('e1', 0, -1, this.callback);
+                eventstore.getEventStream('e2', 0, -1, this.callback);
             },
             
             'so to add events to the stream': function(err, stream) {
-                 stream.addEvent({streamId: 'e1', payload: null});
+                 stream.addEvent({streamId: 'e2', payload: null});
             },
             
             'and commit it': function(err, stream) {
