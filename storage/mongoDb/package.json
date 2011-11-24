@@ -1,6 +1,6 @@
 {
   "author": "Kaba CC EAC"
-  , "name": "nodeEventStore"
+  , "name": "nodeEventStore.mongoDb"
   , "version": "0.0.1"
   , "private": true
   , "main": "index.js"
@@ -9,6 +9,7 @@
     }
   , "dependencies": {
       "async": ">= 0.0.1"
+    , "mongodb": ">= 0.0.1"
   }
   , "devDependencies": {
       "vows": ">= 0.0.1"
