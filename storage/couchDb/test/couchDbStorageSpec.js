@@ -11,7 +11,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An empty  Storage': {
         topic: function () {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, this.callback);
+            require('../storage').createStorage(options, this.callback);
         },
         
         'has a function getId': function(storage) {
@@ -45,7 +45,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An filled  Storage': {
        topic: function() {
-            require('../lib/storage/' + storageName + '/storage').createStorage(options, function(err, storage) {
+            require('../storage').createStorage(options, function(err, storage) {
                 fillStore(storage, this.callback);
             }.bind(this));
         },
