@@ -10,11 +10,11 @@ vows.describe('The EventStore')
         topic: eventstore,
         
         'requesting an eventstream': function(es) {
-            assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function (error, es) {})});
+            assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function (error, es) {});});
         },
         
         'committing': function(es) {
-            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []})}, this.callback);
+            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []});}, this.callback);
         }
     }
 })

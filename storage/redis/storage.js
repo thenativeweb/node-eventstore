@@ -29,7 +29,7 @@ Storage = function(options, callback) {
         database: 0,
         eventsCollectionName: 'events',
         snapshotsCollectionName: 'snapshots'
-    }
+    };
     
     this.options = mergeOptions(options, defaults);
     this.client = redis.createClient(this.options.port, this.options.host);
@@ -54,10 +54,10 @@ Storage.prototype = {
 
     // This function saves an event in the storage.
     addEvents: function(events, callback) {
-        if (!events || events.length == 0) { 
+        if (!events || events.length === 0) { 
             callback(null);
             return;
-        };
+        }
         
         var self = this
           , args = [];
@@ -106,7 +106,7 @@ Storage.prototype = {
             } else {
                 var arr = [];
 
-                if (res.length == 0) {
+                if (res.length === 0) {
                     callback(null, arr);
                 } else {
                     var last = res[res.length - 1];
@@ -121,6 +121,47 @@ Storage.prototype = {
                             }
                             
                             if (key == last) {
+                                callback(null, arr);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    },
+
+    // This function returns a range of events.
+    getEventRange: function(index, amount, callback) {
+        var self = this;
+        
+        this.client.keys(this.options.eventsCollectionName + ':*', function (err, res) {
+            if (err) {
+                callback(err);
+            } else {
+                var arr = [];
+
+                if (res.length === 0) {
+                    callback(null, arr);
+                } else {
+                    var last = res[res.length - 1];
+                    res.forEach(function(key) {
+                        self.client.lrange(key, 0, -1, function (err, res) {
+                            if (err) {
+                                callback(err);
+                            } else {
+                                res.forEach(function(item) {
+                                    arr.push(JSON.parse(item));
+
+                                    if (arr.length >= (index + amount)) {
+                                        return;
+                                    }
+                                });
+                            }
+                            
+                            if (key == last) {
+
+                                arr = arr.slice(index, (index + amount));
+
                                 callback(null, arr);
                             }
                         });
@@ -153,10 +194,11 @@ Storage.prototype = {
                 if (err) {
                     callback(err);
                 } else if (res && res.length > 0) {
-                    for (var i = res.length -1; i >= 0; i--) {
-                        if (res[i].revision <= maxRev) {
-                            callback(null, res[i]);
-                            return;
+                    for (var i = res.length - 1; i >= 0; i--) {
+                        var snap = JSON.parse(res[i]);
+                        if (snap.revision <= maxRev) {
+                            callback(null, snap);
+                            break;
                         }
                     }
                 }

@@ -149,7 +149,36 @@ Storage.prototype = {
                 else {
                     callback(err);
                 }
-            }.bind(this));
+            }.bind(this)
+        );
+
+    },
+
+    // This function returns a range of events.
+    getEventRange: function(index, amount, callback) {
+        
+        this.client.view(this.options.dbName+'/allEvents', {descending: false}, 
+            function(err, res) {
+                if(!err) {
+                    var result = [];
+                    for (var i in res) {
+                        result.push(res[i].value);
+
+                        if (result.length >= (index + amount)) {
+                            break;
+                        }
+                    }
+
+                    result = result.slice(index, (index + amount));
+
+                    callback(null, result);
+                }
+                else {
+                    callback(err);
+                }
+            }.bind(this)
+        );
+
     },
 
     // This function returns the wished snapshot.
@@ -175,9 +204,9 @@ Storage.prototype = {
                             callback(null, result[result.length-1]);
                         }
                         else {
-                            for (var i = result.length -1; i >= 0; i--) {
-                                if (result[i].revision <= maxRev) {
-                                    callback(null, result[i]);
+                            for (var j = result.length -1; j >= 0; j--) {
+                                if (result[j].revision <= maxRev) {
+                                    callback(null, result[j]);
                                     return;
                                 }
                             }

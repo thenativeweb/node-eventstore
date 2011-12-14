@@ -3,7 +3,7 @@ var vows = require('vows')
   
 var options = {
     dbName: 'testeventstore'
-}
+};
 
 var storageName = "mongoDb";
 
@@ -36,7 +36,7 @@ vows.describe('The ' + storageName + ' Storage')
             var id = "1234-abcd";
             storage.addEvents([{'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}], function() {
                 storage.getEvents(id, 0, -1, function(err, events) {
-                    assert.length(events, 1);
+                    assert.equal(events.length, 1);
                 });
             });
         }
@@ -45,7 +45,7 @@ vows.describe('The ' + storageName + ' Storage')
 .addBatch({
     'An filled  Storage': {
        topic: function() {
-            require('..//storage').createStorage(options, function(err, storage) {
+            require('../storage').createStorage(options, function(err, storage) {
                 fillStore(storage, this.callback);
             }.bind(this));
         },
@@ -56,7 +56,7 @@ vows.describe('The ' + storageName + ' Storage')
             },
             
             'we can assert if length is right': function (events) {
-                assert.length(events, 4);
+                assert.equal(events.length, 4);
             },
             
             'we can assert if sorting is right': function (events) {
@@ -72,7 +72,7 @@ vows.describe('The ' + storageName + ' Storage')
             },
             
             'we can assert if length is right': function (events) {
-                assert.length(events, 2);
+                assert.equal(events.length, 2);
             }
         },
         
@@ -82,7 +82,7 @@ vows.describe('The ' + storageName + ' Storage')
             },
             
             'we can assert if length is right': function (events) {
-                assert.length(events, 2);
+                assert.equal(events.length, 2);
             }
         },
         
@@ -92,7 +92,7 @@ vows.describe('The ' + storageName + ' Storage')
             },
             
             'we can assert if length is right': function (events) {
-                assert.length(events, 6);
+                assert.equal(events.length, 6);
             },
             
             'we can assert if sorting is right': function (events) {
@@ -108,13 +108,28 @@ vows.describe('The ' + storageName + ' Storage')
             },
             
             'we can assert if length is right': function (events) {
-                assert.length(events, 6);
+                assert.equal(events.length, 6);
             },
             
             'we can assert if sorting is right': function (events) {
                 assert.equal(events[0].commitId, '0');
                 assert.equal(events[2].commitId, '2');
                 assert.equal(events[5].commitId, '5');
+            }
+        },
+
+        'after a successful `fill` we get a range of events': {
+            topic: function (storage) {
+                storage.getEventRange(1, 2, this.callback);
+            },
+            
+            'we can assert if length is right': function (events) {
+                assert.equal(events.length, 2);
+            },
+            
+            'we can assert if sorting is right': function (events) {
+                assert.equal(events[0].commitId, '1');
+                assert.equal(events[1].commitId, '2');
             }
         },
         

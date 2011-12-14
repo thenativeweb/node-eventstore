@@ -90,6 +90,11 @@ Storage.prototype = {
         this.events.find({}, {sort:[['commitStamp','asc']]}).toArray(callback);
     },
 
+    // This function returns a range of events.
+    getEventRange: function(index, amount, callback) {
+        this.events.find({}, {sort:[['commitStamp','asc']], skip: index, limit: amount}).toArray(callback);
+    },
+
     // This function returns the wished snapshot.
     // If revMax is -1 returns the latest snapshot.
     getSnapshot: function(streamId, maxRev, callback) {
