@@ -232,7 +232,7 @@ Storage.prototype = {
             }
         });
     }
-}
+};
 
 // helpers
 var handleResultSet = function(err, res, callback) {
