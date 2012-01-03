@@ -1,3 +1,16 @@
+//     storage.js v0.0.1
+//     (c) 2012 Kaba AG, MIC AWM; under MIT License
+//     (by) Jan Muehlemann (jamuhl)
+//        , Adriano Raiano (adrai)
+
+// The storage is the database driver for mongoDb.
+//
+// __Example:__
+//
+//      require('[pathToStorage]/storage').createStorage({}, function(err, storage) {
+//          ...
+//      });
+
 var mongo = require('mongodb')
   , ObjectID = mongo.BSONPure.ObjectID
   , root = this
@@ -18,9 +31,7 @@ mongoDbStorage.createStorage = function(options, callback) {
 };
 
 
-/*******************************************
-* Storage 
-*/
+// ## MongoDb storage
 Storage = function(options, callback) {
     if (typeof options === 'function')
         callback = options;
@@ -52,7 +63,12 @@ Storage = function(options, callback) {
 
 Storage.prototype = {
 
-    // This function saves an event in the storage.
+    // __addEvents:__ saves all events.
+    //
+    // `storage.addEvents(events, callback)`
+    //
+    // - __events:__ the events array
+    // - __callback:__ `function(err){}`
     addEvents: function(events, callback) {
         for(var i in events) {
             events[i]._id = events[i].commitId;
@@ -60,13 +76,25 @@ Storage.prototype = {
         this.events.insertAll(events, {keepGoing: true}, callback);
     },
 
-    // This function saves a snapshot in the storage.
+    // __addSnapshot:__ stores the snapshot
+    // 
+    // `storage.addSnapshot(snapshot, callback)`
+    //
+    // - __snapshot:__ the snaphot to store
+    // - __callback:__ `function(err){}` [optional]
     addSnapshot: function(snapshot, callback) {
         snapshot._id = snapshot.snapshotId;
         this.snapshots.insert(snapshot, callback);
     },
 
-    // This function returns the wished events.
+    // __getEvents:__ loads the events from _minRev_ to _maxRev_.
+    // 
+    // `storage.getEvents(streamId, minRev, maxRev, callback)`
+    //
+    // - __streamId:__ id for requested stream
+    // - __minRev:__ revision startpoint
+    // - __maxRev:__ revision endpoint (hint: -1 = to end) [optional]
+    // - __callback:__ `function(err, snapshot, eventStream){}`
     getEvents: function(streamId, minRev, maxRev, callback) {
         
         if (typeof maxRev === 'function') {
@@ -85,18 +113,36 @@ Storage.prototype = {
         this.events.find(findStatement, {sort:[['streamRevision','asc']]}).toArray(callback);
     },
 
-    // This function returns all events.
+    // __getAllEvents:__ loads the events.
+    //
+    // __warning:__ don't use this in production!!!
+    // 
+    // `storage.getAllEvents(callback)`
+    //
+    // - __callback:__ `function(err, events){}`
     getAllEvents: function(callback) {
         this.events.find({}, {sort:[['commitStamp','asc']]}).toArray(callback);
     },
 
-    // This function returns a range of events.
+    // __getEventRange:__ loads the range of events from given storage.
+    // 
+    // `storage.getEventRange(index, amount, callback)`
+    //
+    // - __index:__ entry index
+    // - __amount:__ amount of events
+    // - __callback:__ `function(err, events){}`
     getEventRange: function(index, amount, callback) {
         this.events.find({}, {sort:[['commitStamp','asc']], skip: index, limit: amount}).toArray(callback);
     },
 
-    // This function returns the wished snapshot.
-    // If revMax is -1 returns the latest snapshot.
+    // __getSnapshot:__ loads the next snapshot back from given max revision or the latest if you 
+    // don't pass in a _maxRev_.
+    // 
+    // `storage.getSnapshot(streamId, maxRev, callback)`
+    //
+    // - __streamId:__ id for requested stream
+    // - __maxRev:__ revision endpoint (hint: -1 = to end)
+    // - __callback:__ `function(err, snapshot){}`
     getSnapshot: function(streamId, maxRev, callback) {
 
         if (typeof maxRev === 'function') {
@@ -116,22 +162,37 @@ Storage.prototype = {
         });
     },
 
-    // This function returns all undispatched events.
+    // __getUndispatchedEvents:__ loads all undispatched events.
+    //
+    // `storage.getUndispatchedEvents(callback)`
+    //
+    // - __callback:__ `function(err, events){}`
     getUndispatchedEvents: function(callback) {
         this.events.find({'dispatched' : false}, {sort:[['streamId','asc'], ['streamRevision','asc']]}).toArray(callback);
     },
 
-    // This function set an event to dispatched.
+    // __setEventToDispatched:__ sets the given event to dispatched.
+    //
+    // __hint:__ instead of the whole event object you can pass: {_id: 'commitId'}
+    //
+    // `storage.setEventToDispatched(event, callback)`
+    //
+    // - __event:__ the event
+    // - __callback:__ `function(err, events){}` [optional]
     setEventToDispatched: function(event, callback) {
         var updateCommand = { '$set' : {'dispatched': true} };
         this.events.update({'_id' : event._id}, updateCommand, callback);
     },
 
-    // This function returns a new id.
+    // __getId:__ loads a new id from storage.
+    //
+    // `storage.getId(callback)`
+    //
+    // - __callback:__ `function(err, id){}`
     getId: function(callback) {
         callback(null, new ObjectID().toString());
     }
-}
+};
 
 // helper
 var mergeOptions = function(options, defaultOptions) {
