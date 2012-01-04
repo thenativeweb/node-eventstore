@@ -1,6 +1,7 @@
 //     Jakefile.js v0.0.1
-//     (c) 2011 Kaba AG, CC EAC
+//     (c) 2012 Kaba AG, MIC AWM
 //     (by) Jan Muehlemann (jamuhl)
+//        , Adriano Raiano (adrai)
 
 // Here we will document the common [jake](https://github.com/mde/jake) tasks generic to all other jake 
 // files in other projects.
@@ -61,7 +62,7 @@ var pathDepth = function(str) {
         sep += ' ';
     }
     return sep;
-}
+};
 
 // ### function dirs
 // will generate an array of folders out of a string   

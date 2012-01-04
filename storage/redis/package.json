@@ -1,5 +1,5 @@
 {
-  "author": "Kaba CC EAC"
+  "author": "Kaba MIC AWM"
   , "name": "nodeEventStore.redis"
   , "version": "0.0.1"
   , "private": true
@@ -8,8 +8,7 @@
         "node": "~v0.4.12"
     }
   , "dependencies": {
-      "async": ">= 0.0.1"
-    , "redis": ">= 0.0.1"
+      "redis": ">= 0.0.1"
     , "hiredis": ">= 0.0.1"
   }
   , "devDependencies": {
