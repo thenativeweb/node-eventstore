@@ -1,4 +1,4 @@
-//     storage.js v0.0.1
+//     storage.js v0.3.0
 //     (c) 2012 Kaba AG, MIC AWM; under MIT License
 //     (by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
@@ -23,7 +23,7 @@ if (typeof exports !== 'undefined') {
     mongoDbStorage = root.mongoDbStorage = {};
 }
 
-mongoDbStorage.VERSION = '0.0.1';
+mongoDbStorage.VERSION = '0.3.0';
 
 // Create new instance of storage.
 mongoDbStorage.createStorage = function(options, callback) {

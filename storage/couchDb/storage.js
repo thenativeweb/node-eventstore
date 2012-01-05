@@ -1,4 +1,4 @@
-//     storage.js v0.0.1
+//     storage.js v0.3.0
 //     (c) 2012 Kaba AG, MIC AWM; under MIT License
 //     (by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
@@ -22,7 +22,7 @@ if (typeof exports !== 'undefined') {
     couchDbStorage = root.couchDbStorage = {};
 }
 
-couchDbStorage.VERSION = '0.0.1';
+couchDbStorage.VERSION = '0.3.0';
 
 // Create new instance of storage.
 couchDbStorage.createStorage = function(options, callback) {

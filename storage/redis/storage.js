@@ -1,4 +1,4 @@
-//     storage.js v0.0.1
+//     storage.js v0.3.0
 //     (c) 2012 Kaba AG, MIC AWM; under MIT License
 //     (by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
@@ -22,7 +22,7 @@ if (typeof exports !== 'undefined') {
     redisStorage = root.redisStorage = {};
 }
 
-redisStorage.VERSION = '0.0.1';
+redisStorage.VERSION = '0.3.0';
 
 // Create new instance of storage.
 redisStorage.createStorage = function(options, callback) {
