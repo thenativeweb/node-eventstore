@@ -16,7 +16,7 @@
         "node": ">= v0.4.0"
     }
   , "dependencies": {
-      "mongodb": ">= 0.0.1"
+      "cradle": ">= 0.0.1"
   }
   , "devDependencies": { }
   , "scripts" : { 

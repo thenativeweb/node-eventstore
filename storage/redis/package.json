@@ -16,7 +16,8 @@
         "node": ">= v0.4.0"
     }
   , "dependencies": {
-      "mongodb": ">= 0.0.1"
+        "redis": ">= 0.0.1"
+      , "hiredis": ">= 0.0.1"
   }
   , "devDependencies": { }
   , "scripts" : { 
