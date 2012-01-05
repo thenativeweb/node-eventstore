@@ -1,18 +1,24 @@
 {
-  "author": "Kaba MIC AWM"
-  , "name": "nodeEventStore.mongoDb"
-  , "version": "0.0.1"
-  , "private": true
-  , "main": "index.js"
+    "author": "Kaba MIC AWM"
+  , "name": "eventstore.mongoDb"
+  , "version": "0.3.0"
+  , "contributors": [ 
+    { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }, 
+    { "name": "Adriano Raiano", "email": "adriano.raiano@kaba.com" }
+  ]
+  , "private": false
+  , "repository": {
+      "type": "git"
+    , "url": "git@github.com:KABA-CCEAC/nodeEventStore.git"
+  }
+  , "main": "./index.js"
   , "engines": {
-        "node": "~v0.4.12"
+        "node": ">= v0.4.0"
     }
   , "dependencies": {
       "mongodb": ">= 0.0.1"
   }
-  , "devDependencies": {
-      "vows": ">= 0.0.1"
-  }
+  , "devDependencies": { }
   , "scripts" : { 
       "test" : "vows test/* --spec" } 
 }
