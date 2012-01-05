@@ -276,7 +276,9 @@ Storage.prototype = {
     // - __event:__ the event
     // - __callback:__ `function(err, events){}` [optional]
     setEventToDispatched: function(event) {
-        this.client.lrem('undispatched:' + this.options.eventsCollectionName, JSON.stringify(event), 0);
+        this.client.lrem('undispatched:' + this.options.eventsCollectionName, JSON.stringify(event), 0, function (err) {
+            callback(err);
+        });
     },
 
     // __getId:__ loads a new id from storage.
