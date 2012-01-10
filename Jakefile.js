@@ -34,7 +34,7 @@ task('doc', [], function() {
                 files: ['lib/*.js',
                         'lib/logger/consoleLogger.js',
                         'lib/publisher/fakePublisher.js', 
-                        'storage/inMemory/storage.js'],
+                        'lib/storage/inMemory/storage.js'],
                 target: 'build/docs'}
     ];
 
