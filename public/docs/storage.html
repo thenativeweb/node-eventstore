@@ -1,0 +1,211 @@
+<!DOCTYPE html>  <html> <head>   <title>storage.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="eventDispatcher.html">                 eventDispatcher.js               </a>                                           <a class="source" href="eventStore.html">                 eventStore.js               </a>                                           <a class="source" href="interfaces.html">                 interfaces.js               </a>                                           <a class="source" href="consoleLogger.html">                 consoleLogger.js               </a>                                           <a class="source" href="fakePublisher.html">                 fakePublisher.js               </a>                                           <a class="source" href="storage.html">                 storage.js               </a>                                           <a class="source" href="util.html">                 util.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               storage.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <pre><code>lib/storage/inMemory/storage.js v0.3.0
+(c) 2012 Kaba AG, MIC AWM; under MIT License
+(by) Jan Muehlemann (jamuhl)
+   , Adriano Raiano (adrai)
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>An <strong>inMemory</strong> implemetation for storage. <strong>Use only for development purpose.</strong> <br />
+For production there is a wide range of options (mongoDb, redis, couchDb) or role your own implementation.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">uuid</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./uuid&#39;</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">root</span> <span class="o">=</span> <span class="k">this</span>
+  <span class="p">,</span> <span class="nx">inMemoryStorage</span>
+  <span class="p">,</span> <span class="nx">Storage</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">inMemoryStorage</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">inMemoryStorage</span> <span class="o">=</span> <span class="nx">root</span><span class="p">.</span><span class="nx">inMemoryStorage</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="p">}</span>
+
+<span class="nx">inMemoryStorage</span><span class="p">.</span><span class="nx">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.3.0&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Create new instance of storage.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">inMemoryStorage</span><span class="p">.</span><span class="nx">createStorage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">new</span> <span class="nx">Storage</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>inMemory storage</h2>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Storage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">options</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span>
+        <span class="nx">callback</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">store</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span> <span class="o">=</span> <span class="p">{};</span>
+    
+    <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">Storage</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><strong>addEvents:</strong> saves all events.</p>
+
+<p><code>storage.addEvents(events, callback)</code></p>
+
+<ul>
+<li><strong>events:</strong> the events array</li>
+<li><strong>callback:</strong> <code>function(err){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">addEvents</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">events</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">events</span> <span class="o">||</span> <span class="nx">events</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> 
+            <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">events</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">streamId</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">events</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">streamId</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="p">}</span>
+        
+        <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">events</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">streamId</span><span class="p">]</span> <span class="o">=</span>  <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">events</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">streamId</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">events</span><span class="p">);</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p><strong>addSnapshot:</strong> stores the snapshot</p>
+
+<p><code>storage.addSnapshot(snapshot, callback)</code></p>
+
+<ul>
+<li><strong>snapshot:</strong> the snaphot to store</li>
+<li><strong>callback:</strong> <code>function(err){}</code> [optional]</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">addSnapshot</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">snapshot</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">streamId</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">streamId</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="p">}</span>
+        
+        <span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">snapshot</span><span class="p">.</span><span class="nx">streamId</span><span class="p">].</span><span class="nx">push</span><span class="p">(</span><span class="nx">snapshot</span><span class="p">);</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p><strong>getEvents:</strong> loads the events from <em>minRev</em> to <em>maxRev</em>.</p>
+
+<p><code>storage.getEvents(streamId, minRev, maxRev, callback)</code></p>
+
+<ul>
+<li><strong>streamId:</strong> id for requested stream</li>
+<li><strong>minRev:</strong> revision startpoint</li>
+<li><strong>maxRev:</strong> revision endpoint (hint: -1 = to end) [optional]</li>
+<li><strong>callback:</strong> <code>function(err, snapshot, eventStream){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getEvents</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">streamId</span><span class="p">,</span> <span class="nx">minRev</span><span class="p">,</span> <span class="nx">maxRev</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">maxRev</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">callback</span> <span class="o">=</span> <span class="nx">maxRev</span><span class="p">;</span>
+            <span class="nx">maxRev</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">streamId</span><span class="p">])</span> <span class="p">{</span>
+           <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">[]);</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">maxRev</span> <span class="o">===</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">streamId</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="nx">minRev</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">streamId</span><span class="p">].</span><span class="nx">slice</span><span class="p">(</span><span class="nx">minRev</span><span class="p">,</span> <span class="nx">maxRev</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p><strong>getAllEvents:</strong> loads the events.</p>
+
+<p><strong>warning:</strong> don't use this in production!!!</p>
+
+<p><code>storage.getAllEvents(callback)</code></p>
+
+<ul>
+<li><strong>callback:</strong> <code>function(err, events){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getAllEvents</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">events</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">events</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        
+        <span class="nx">events</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+             <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">commitStamp</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">commitStamp</span><span class="p">;</span>
+        <span class="p">});</span>
+        
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">events</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p><strong>getEventRange:</strong> loads the range of events from given storage.</p>
+
+<p><code>storage.getEventRange(index, amount, callback)</code></p>
+
+<ul>
+<li><strong>index:</strong> entry index</li>
+<li><strong>amount:</strong> amount of events</li>
+<li><strong>callback:</strong> <code>function(err, events){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getEventRange</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">amount</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">events</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">events</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nx">events</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="nx">index</span> <span class="o">+</span> <span class="nx">amount</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="nx">events</span> <span class="o">=</span> <span class="nx">events</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="p">(</span><span class="nx">index</span> <span class="o">+</span> <span class="nx">amount</span><span class="p">));</span>
+
+        <span class="nx">events</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">){</span>
+             <span class="k">return</span> <span class="nx">a</span><span class="p">.</span><span class="nx">commitStamp</span> <span class="o">-</span> <span class="nx">b</span><span class="p">.</span><span class="nx">commitStamp</span><span class="p">;</span>
+        <span class="p">});</span>
+
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">events</span><span class="p">);</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p><strong>getSnapshot:</strong> loads the next snapshot back from given max revision or the latest if you 
+don't pass in a <em>maxRev</em>.</p>
+
+<p><code>storage.getSnapshot(streamId, maxRev, callback)</code></p>
+
+<ul>
+<li><strong>streamId:</strong> id for requested stream</li>
+<li><strong>maxRev:</strong> revision endpoint (hint: -1 = to end)</li>
+<li><strong>callback:</strong> <code>function(err, snapshot){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getSnapshot</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">streamId</span><span class="p">,</span> <span class="nx">maxRev</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">maxRev</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">callback</span> <span class="o">=</span> <span class="nx">maxRev</span><span class="p">;</span>
+            <span class="nx">maxRev</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">streamId</span><span class="p">])</span> <span class="p">{</span>
+           <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{});</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">maxRev</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">streamId</span><span class="p">][</span><span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">streamId</span><span class="p">].</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">snaps</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">snapshots</span><span class="p">[</span><span class="nx">streamId</span><span class="p">];</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">snaps</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">snaps</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">revision</span> <span class="o">&lt;=</span> <span class="nx">maxRev</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">snaps</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+                        <span class="k">return</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p><strong>getUndispatchedEvents:</strong> loads all undispatched events.</p>
+
+<p><code>storage.getUndispatchedEvents(callback)</code></p>
+
+<ul>
+<li><strong>callback:</strong> <code>function(err, events){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getUndispatchedEvents</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">array</span> <span class="o">=</span> <span class="p">[];</span>
+        
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">ele</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">elem</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">store</span><span class="p">[</span><span class="nx">ele</span><span class="p">];</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">evt</span> <span class="k">in</span> <span class="nx">elem</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">elem</span><span class="p">[</span><span class="nx">evt</span><span class="p">].</span><span class="nx">dispatched</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">array</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">elem</span><span class="p">[</span><span class="nx">evt</span><span class="p">]);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">array</span><span class="p">);</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p><strong>setEventToDispatched:</strong> sets the given event to dispatched.</p>
+
+<p><strong>hint:</strong> instead of the whole event object you can pass: {_id: 'commitId'}</p>
+
+<p><code>storage.setEventToDispatched(event, callback)</code></p>
+
+<ul>
+<li><strong>event:</strong> the event</li>
+<li><strong>callback:</strong> <code>function(err, events){}</code> [optional]</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">setEventToDispatched</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">evt</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">evt</span><span class="p">.</span><span class="nx">dispatched</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">},</span>
+    </pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p><strong>getId:</strong> loads a new id from storage.</p>
+
+<p><code>storage.getId(callback)</code></p>
+
+<ul>
+<li><strong>callback:</strong> <code>function(err, id){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getId</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">callback</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">uuid</span><span class="p">().</span><span class="nx">toString</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

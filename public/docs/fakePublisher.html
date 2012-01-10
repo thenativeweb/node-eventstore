@@ -1,0 +1,46 @@
+<!DOCTYPE html>  <html> <head>   <title>fakePublisher.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="eventDispatcher.html">                 eventDispatcher.js               </a>                                           <a class="source" href="eventStore.html">                 eventStore.js               </a>                                           <a class="source" href="interfaces.html">                 interfaces.js               </a>                                           <a class="source" href="consoleLogger.html">                 consoleLogger.js               </a>                                           <a class="source" href="fakePublisher.html">                 fakePublisher.js               </a>                                           <a class="source" href="storage.html">                 storage.js               </a>                                           <a class="source" href="util.html">                 util.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               fakePublisher.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <pre><code>lib/publisher/fakePublisher.js v0.3.0
+(c) 2012 Kaba AG, MIC AWM; under MIT License
+(by) Jan Muehlemann (jamuhl)
+   , Adriano Raiano (adrai)
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>A <strong>fake</strong> implemetation for publishing. <strong>Use only for development purpose.</strong> <br />
+For production role your own implementation providing a <em>publish</em> function.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">root</span> <span class="o">=</span> <span class="k">this</span>
+  <span class="p">,</span> <span class="nx">fakePublisher</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">fakePublisher</span> <span class="o">=</span> <span class="nx">exports</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">fakePublisher</span> <span class="o">=</span> <span class="nx">root</span><span class="p">.</span><span class="nx">fakePublisher</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="p">}</span>
+
+<span class="nx">fakePublisher</span><span class="p">.</span><span class="nx">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.3.0&#39;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>create new publisher instance</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">fakePublisher</span><span class="p">.</span><span class="nx">createPublisher</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Publisher</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+<span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Publisher</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">Publisher</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">published</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="p">};</span>
+
+<span class="nx">Publisher</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p><strong>subscribe:</strong> subscribes for all events.</p>
+
+<p><code>pub.subscribe(callback)</code></p>
+
+<ul>
+<li><strong>callback:</strong> <code>function(event){}</code></li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">subscribe</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">callback</span><span class="o">:</span> <span class="nx">callback</span><span class="p">});</span>
+    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p><strong>publish:</strong> publishes the event.</p>
+
+<p><code>pub.publish(event)</code></p>
+
+<ul>
+<li>event:__ the event that must be published</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">publish</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>    
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">subscriber</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">subscriptions</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">subscriber</span><span class="p">.</span><span class="nx">callback</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">this</span><span class="p">.</span><span class="nx">published</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">event</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

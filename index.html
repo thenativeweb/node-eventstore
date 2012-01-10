@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>nodeEventStore: Eventsourcing for node.js</title>
+        <link rel='stylesheet' href='public/css/main.css' type='text/css' media='all' />
+        <link rel="stylesheet" href="public/css/prettify.css" type="text/css" />
+        <link rel="stylesheet" href="public/css/flexible-nav.min.css" type="text/css" />
+        <script type="text/javascript" src="public/js/jquery-1.6.4.min.js"></script>
+        <script type="text/javascript" src="public/js/prettify.js"></script>
+        <script type="text/javascript" src="public/js/flexible-nav.min.js"></script>
+</head>
+
+<body>
+
+<div id="forkme">
+    <a href="https://github.com/KABA-CCEAC/nodeEventStore"><img src="public/img/gihub_ribbon.png"></a>
+</div>
+
+<header>
+    <a href="">
+        <h1 id="title" style="display: none;">nodeEventStore</h1><br />
+        <h2 id="subtitle" style="display: none;">Eventsourcing for node.js</h2>
+    </a>
+</header>
+
+<section id='content'>
+
+<h1>Introduction</h1>
+
+<p>The project goal is to provide an eventstore implementation for node.js:</p>
+
+<ul>
+<li>load and store events via EventStream object</li>
+<li>event dispatching to your publisher</li>
+<li>supported Dbs (MongoDb, CouchDb, Redis)</li>
+<li>snapshot support</li>
+</ul>
+
+<h1>Installation</h1>
+
+<pre><code><span class="pln">npm install eventstore<br /></span></code></pre>
+
+<p>choose one of the existing storage implementation or provide your own:</p>
+
+<pre><code><span class="com">// for mongoDb</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">mongoDb<br /><br /></span><span class="com">// for couchDb</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">couchDb<br /><br /></span><span class="com">// for redis</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">redis<br /></span></code></pre>
+
+<h1>Usage</h1>
+
+<h3>Require the module and init the eventstore:</h3>
+
+<pre><code><span class="kwd">var</span><span class="pln"> eventstore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">);</span><span class="pln"><br /><br /></span><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> eventstore</span><span class="pun">.</span><span class="pln">createStore</span><span class="pun">();</span><span class="pln"> </span><span class="com">// optional pass in your options</span><span class="pln"><br /></span></code></pre>
+
+<p>By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.</p>
+
+<p>To use the provided console.logger you could create the eventstore 
+with option <code>eventstore.createStore({logger: 'console'});</code>.</p>
+
+<h3>Provide implementation for storage and publishing events</h3>
+
+<p>Example will use redis storage, but same will work for mongoDb and couchDb.</p>
+
+<p>require storage = require('eventstore.redis');</p>
+
+<pre><code><span class="pln">storage</span><span class="pun">.</span><span class="pln">createStorage</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> store</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br />&nbsp; &nbsp; es</span><span class="pun">.</span><span class="pln">configure</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; es</span><span class="pun">.</span><span class="kwd">use</span><span class="pun">(</span><span class="pln">store</span><span class="pun">);</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; es</span><span class="pun">.</span><span class="kwd">use</span><span class="pun">(</span><span class="pln">publisher</span><span class="pun">);</span><span class="pln"> </span><span class="com">// your publisher must provide function 'publisher.publish(event)'</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; </span><span class="com">// es.use(logger);</span><span class="pln"><br />&nbsp; &nbsp; </span><span class="pun">});</span><span class="pln"><br /><br /></span><span class="com">// start eventstore</span><span class="pln"><br />&nbsp; &nbsp; es</span><span class="pun">.</span><span class="pln">start</span><span class="pun">();</span><span class="pln"><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
+<h3>Work with the eventstore</h3>
+
+<p>get the eventhistory of an aggregate</p>
+
+<pre><code><span class="pln">es</span><span class="pun">.</span><span class="pln">getEventStream</span><span class="pun">(</span><span class="pln">aggregateId</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> stream</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br />&nbsp; &nbsp; </span><span class="kwd">var</span><span class="pln"> history </span><span class="pun">=</span><span class="pln"> stream</span><span class="pun">.</span><span class="pln">events</span><span class="pun">;</span><span class="pln"> </span><span class="com">// the original event will be in events[i].payload</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="com">// myAggregate.loadFromHistory(history);</span><span class="pln"><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
+<p>store a new event and commit it to store</p>
+
+<pre><code><span class="pln">es</span><span class="pun">.</span><span class="pln">getEventStream</span><span class="pun">(</span><span class="pln">aggregateId</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> stream</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br /><br />&nbsp; &nbsp; stream</span><span class="pun">.</span><span class="pln">addEvent</span><span class="pun">(</span><span class="kwd">new</span><span class="pln"> </span><span class="kwd">event</span><span class="pun">);</span><span class="pln"><br />&nbsp; &nbsp; stream</span><span class="pun">.</span><span class="pln">commit</span><span class="pun">();</span><span class="pln"><br /><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
+<p>the committed event will be dispatched to the provided publisher</p>
+
+<h3>Work with snapshotting</h3>
+
+<p>get snapshot and eventhistory from the snapshot point</p>
+
+<pre><code><span class="pln">es</span><span class="pun">.</span><span class="pln">getFromSnapshot</span><span class="pun">(</span><span class="pln">aggregateId</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> snapshot</span><span class="pun">,</span><span class="pln"> stream</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="kwd">var</span><span class="pln"> snap </span><span class="pun">=</span><span class="pln"> snapshot</span><span class="pun">.</span><span class="pln">data</span><span class="pun">;</span><span class="pln"><br />&nbsp; &nbsp; </span><span class="kwd">var</span><span class="pln"> history </span><span class="pun">=</span><span class="pln"> stream</span><span class="pun">.</span><span class="pln">events</span><span class="pun">;</span><span class="pln"> </span><span class="com">// events history from given snapshot</span><span class="pln"><br /><br />&nbsp; &nbsp; myAggregate</span><span class="pun">.</span><span class="pln">loadSnapshot</span><span class="pun">(</span><span class="pln">snap</span><span class="pun">);</span><span class="pln"><br />&nbsp; &nbsp; myAggregate</span><span class="pun">.</span><span class="pln">loadFromHistory</span><span class="pun">(</span><span class="pln">history</span><span class="pun">);</span><span class="pln"><br /><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
+<p>create a snapshot point</p>
+
+<pre><code><span class="pln">es</span><span class="pun">.</span><span class="pln">getFromSnapshot</span><span class="pun">(</span><span class="pln">aggregateId</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> snapshot</span><span class="pun">,</span><span class="pln"> stream</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="kwd">var</span><span class="pln"> snap </span><span class="pun">=</span><span class="pln"> snapshot</span><span class="pun">.</span><span class="pln">data</span><span class="pun">;</span><span class="pln"><br />&nbsp; &nbsp; </span><span class="kwd">var</span><span class="pln"> history </span><span class="pun">=</span><span class="pln"> stream</span><span class="pun">.</span><span class="pln">events</span><span class="pun">;</span><span class="pln"> </span><span class="com">// events history from given snapshot</span><span class="pln"><br /><br />&nbsp; &nbsp; myAggregate</span><span class="pun">.</span><span class="pln">loadSnapshot</span><span class="pun">(</span><span class="pln">snap</span><span class="pun">);</span><span class="pln"><br />&nbsp; &nbsp; myAggregate</span><span class="pun">.</span><span class="pln">loadFromHistory</span><span class="pun">(</span><span class="pln">history</span><span class="pun">);</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="com">// create a new snapshot depending on your rules</span><span class="pln"><br />&nbsp; &nbsp; </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">history</span><span class="pun">.</span><span class="pln">length </span><span class="pun">&gt;</span><span class="pln"> myRange</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; es</span><span class="pun">.</span><span class="pln">createSnapshot</span><span class="pun">(</span><span class="pln">aggregateId</span><span class="pun">,</span><span class="pln"> stream</span><span class="pun">.</span><span class="pln">currentRevision</span><span class="pun">(),</span><span class="pln"> myAggregate</span><span class="pun">.</span><span class="pln">getSnap</span><span class="pun">());</span><span class="pln"><br />&nbsp; &nbsp; </span><span class="pun">}</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="com">// go on: store new event and commit it</span><span class="pln"><br /><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
+<h1>Sample Integration</h1>
+
+<ul>
+<li><a href="https://github.com/jamuhl/nodeCQRS">nodeCQRS</a> A CQRS sample integrating eventstore</li>
+</ul>
+
+<h1>Annotated Code</h1>
+
+<p>You can find the code documentation <a href="public/docs/eventStore.html">here</a>.</p>
+
+<h1>Inspiration</h1>
+
+<ul>
+<li>Jonathan Oliver's <a href="https://github.com/joliver/EventStore">EventStore</a> for .net.</li>
+</ul>
+
+<h2>Release Notes</h2>
+
+<h3>v0.3.0</h3>
+
+<ul>
+<li>eventstreams</li>
+<li>snapshoting</li>
+<li>get all events with paging for replay</li>
+<li>console.logger</li>
+<li>db implementations for mongoDb, couchDb, redis</li>
+</ul>
+
+</section>
+
+<footer>
+        <p>Copyright 2012 Kaba AG, MIC AWM</p>
+</footer>
+
+
+<script type="text/javascript" >
+    $(window).load(function () {
+        $('#title').fadeIn(1000, function(){
+            $('#subtitle').fadeIn(2000);            
+        });
+
+        var nav = new FlexibleNavMaker('#content h1, #content h2, #content h3').make().prependTo('body');
+        new FlexibleNav(nav);
+        $(".flexible-nav").hide();
+    });
+
+    var fadeout = null;
+    window.onscroll = function() {
+        
+        clearTimeout(fadeout);
+                
+        $(".flexible-nav").fadeIn('slow')
+        
+        fadeout = setTimeout(outlineFadeOut,4000);
+    }
+    
+    var outlineFadeOut = function() {
+        $(".flexible-nav").fadeOut()
+    }
+
+</script>
+
+</body>
+
+</html>

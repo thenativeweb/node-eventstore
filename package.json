@@ -1,0 +1,15 @@
+{
+  "author": "jamuhl"
+  , "name": "i18next_pages"
+  , "version": "0.0.1"
+  , "private": false
+  , "engines": {
+        "node": "~v0.6.5"
+    }
+  , "dependencies": { }
+  , "devDependencies": {
+      "jake": ">=0.0.1"
+  }
+  , "scripts": {
+  }
+}
