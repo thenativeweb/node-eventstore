@@ -139,7 +139,7 @@ to the given <em>maxRev</em>.</p>
 
 <ul>
 <li><strong>streamId:</strong> id for requested stream (equal to aggregateId)</li>
-<li><strong>maxRev:</strong> revision endpoint (hint: -1 = to end)</li>
+<li><strong>maxRev:</strong> revision endpoint (hint: -1 = to end) [optional]</li>
 <li><strong>callback:</strong> <code>function(err, snapshot, eventStream){}</code></li>
 </ul>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">getFromSnapshot</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">streamId</span><span class="p">,</span> <span class="nx">maxRev</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
             
@@ -420,5 +420,6 @@ to the given <em>maxRev</em>.</p>
     <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
 <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>attach public classes</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">Store</span><span class="p">.</span><span class="nx">Event</span> <span class="o">=</span> <span class="nx">Event</span><span class="p">;</span>
 <span class="nx">Store</span><span class="p">.</span><span class="nx">EventStream</span> <span class="o">=</span> <span class="nx">EventStream</span><span class="p">;</span>
+<span class="nx">Store</span><span class="p">.</span><span class="nx">Snapshot</span> <span class="o">=</span> <span class="nx">Snapshot</span><span class="p">;</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
