@@ -275,7 +275,7 @@ Storage.prototype = {
     //
     // - __event:__ the event
     // - __callback:__ `function(err, events){}` [optional]
-    setEventToDispatched: function(event) {
+    setEventToDispatched: function(event, callback) {
         this.client.lrem('undispatched:' + this.options.eventsCollectionName, 0, JSON.stringify(event), function (err) {
             callback(err);
         });
