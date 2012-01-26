@@ -164,6 +164,31 @@ Storage.prototype = {
         });
     },
 
+    // __getLastEventOfStream:__ loads the last event from the given stream in storage.
+    // 
+    // `storage.getLastEventOfStream(streamId, callback)`
+    //
+    // - __streamId:__ the stream id
+    // - __callback:__ `function(err, event){}`
+    getLastEventOfStream: function(streamId, callback) {
+        var self =this;
+        this.client.llen(this.options.eventsCollectionName + ':' + streamId, function (err, length) {
+            if (err) {
+                callback(err);
+            } else {
+                self.client.lrange(self.options.eventsCollectionName + ':' + streamId, length - 2, length, function (err, res) {
+                    handleResultSet(err, res, function (err, events) {
+                        var event = null;
+                        if (events.length) {
+                            event = events[events.length - 1];
+                        }
+                        callback(err, event);
+                    });
+                });
+            }
+        });
+    },
+
     // __getEventRange:__ loads the range of events from given storage.
     // 
     // `storage.getEventRange(index, amount, callback)`

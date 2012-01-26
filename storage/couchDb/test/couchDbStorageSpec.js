@@ -132,6 +132,16 @@ vows.describe('The ' + storageName + ' Storage')
                 assert.equal(events[1].commitId, '2');
             }
         },
+
+        'after a successful `fill` we get the latest event': {
+            topic: function (storage) {
+                storage.getLastEventOfStream('2', this.callback);
+            },
+            
+            'we can assert if it is really the last event': function (event) {
+                assert.equal(event.streamRevision, 3);
+            }
+        },
         
         'after a successful `fill with a snapshot` we get the snapshot': {
             topic: function (storage) {

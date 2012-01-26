@@ -138,7 +138,7 @@ Storage.prototype = {
             maxRev = -1;
         }
         
-        this.client.view(this.options.dbName+'/eventsByStreamId', { 'key': streamId }, 
+        this.client.view(this.options.dbName+'/eventsByStreamId', { key: streamId }, 
             function(err, res) {
                 if(!err) {
                     var result = [];
@@ -159,7 +159,8 @@ Storage.prototype = {
                 else {
                     callback(err);
                 }
-            });
+            }
+        );
     },
 
     // __getAllEvents:__ loads the events.
@@ -186,6 +187,29 @@ Storage.prototype = {
             }.bind(this)
         );
 
+    },
+
+    // __getLastEventOfStream:__ loads the last event from the given stream in storage.
+    // 
+    // `storage.getLastEventOfStream(streamId, callback)`
+    //
+    // - __streamId:__ the stream id
+    // - __callback:__ `function(err, event){}`
+    getLastEventOfStream: function(streamId, callback) {
+        this.client.view(this.options.dbName+'/eventsByStreamId', { key: streamId, descending: true }, 
+            function(err, res) {
+                if(!err) {
+                    if (res.length) {
+                        callback(null, res[0].value);
+                    } else {
+                        callback(null, null);
+                    }
+                }
+                else {
+                    callback(err);
+                }
+            }
+        );
     },
 
     // __getEventRange:__ loads the range of events from given storage.
