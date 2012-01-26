@@ -124,6 +124,22 @@ Storage.prototype = {
         this.events.find({}, {sort:[['commitStamp','asc']]}).toArray(callback);
     },
 
+    // __getLastEventOfStream:__ loads the last event from the given stream in storage.
+    // 
+    // `storage.getLastEventOfStream(streamId, callback)`
+    //
+    // - __streamId:__ the stream id
+    // - __callback:__ `function(err, event){}`
+    getLastEventOfStream: function(streamId, callback) {
+        
+        var findStatement = {
+            'streamId' : streamId
+        };
+        
+        this.events.find(findStatement, {sort:[['streamRevision','desc']]}).nextObject(callback);
+
+    },
+
     // __getEventRange:__ loads the range of events from given storage.
     // 
     // `storage.getEventRange(index, amount, callback)`
