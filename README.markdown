@@ -1,6 +1,6 @@
 # Introduction
 
-[![Build Status](https://secure.travis-ci.org/KABA-CCEAC/nodeEventStore.png)](http://travis-ci.org/jamuhl/nodeEventStore)
+[![Build Status](https://secure.travis-ci.org/KABA-CCEAC/nodeEventStore.png)](http://travis-ci.org/KABA-CCEAC/nodeEventStore)
 
 The project goal is to provide an eventstore implementation for node.js:
 
