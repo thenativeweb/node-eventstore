@@ -1,0 +1,493 @@
+info it worked if it ends with ok
+verbose cli [ 'node', '/usr/local/bin/npm', 'update' ]
+info using npm@1.1.0-alpha-6
+info using node@v0.6.5
+verbose config file /home/ara/.npmrc
+verbose config file /usr/local/etc/npmrc
+verbose config file /usr/local/lib/node_modules/npm/npmrc
+verbose caching /home/ara/projects/calix/modules/nodeEventStore/storage/mongoDb/package.json
+verbose loadDefaults eventstore.mongoDb@0.3.0
+verbose caching /home/ara/projects/calix/modules/nodeEventStore/storage/mongoDb/node_modules/async/package.json
+verbose loadDefaults async@0.1.15
+verbose caching /home/ara/projects/calix/modules/nodeEventStore/storage/mongoDb/node_modules/mongodb/package.json
+verbose loadDefaults mongodb@0.9.8-3
+verbose caching /home/ara/projects/calix/modules/nodeEventStore/storage/mongoDb/node_modules/vows/package.json
+verbose loadDefaults vows@0.5.13
+verbose cache add [ 'mongodb', '>= 0.0.1' ]
+silly cache add: name, spec, args [ 'mongodb', '>= 0.0.1', [ 'mongodb', '>= 0.0.1' ] ]
+verbose parsed url { pathname: '=', path: '=', href: '=' }
+info addNamed [ 'mongodb', '>= 0.0.1' ]
+verbose addNamed [ null, '>=0.0.1' ]
+verbose GET mongodb
+verbose raw, before any munging mongodb
+verbose url resolving [ 'https://registry.npmjs.org/', './mongodb' ]
+verbose url resolved https://registry.npmjs.org/mongodb
+verbose etag "7X9TGZ73V3FOADYFHUQPPBBNJ"
+silly get cb [ 200,
+silly get cb   { vary: 'Accept',
+silly get cb     server: 'CouchDB/1.1.0 (Erlang OTP/R14B04)',
+silly get cb     etag: '"CYEC8TMRWDEFPZOM7LFAZXPMB"',
+silly get cb     date: 'Tue, 31 Jan 2012 13:11:33 GMT',
+silly get cb     'content-type': 'application/json',
+silly get cb     'content-length': '365258' } ]
+verbose GET mongodb/0.9.8-4
+verbose raw, before any munging mongodb/0.9.8-4
+verbose url resolving [ 'https://registry.npmjs.org/', './mongodb/0.9.8-4' ]
+verbose url resolved https://registry.npmjs.org/mongodb/0.9.8-4
+silly get cb [ 200,
+silly get cb   { vary: 'Accept',
+silly get cb     server: 'CouchDB/1.1.0 (Erlang OTP/R14B04)',
+silly get cb     etag: '"CYEC8TMRWDEFPZOM7LFAZXPMB"',
+silly get cb     date: 'Tue, 31 Jan 2012 13:11:35 GMT',
+silly get cb     'content-type': 'application/json',
+silly get cb     'content-length': '20917' } ]
+verbose bin dist [ '0.6-ares1.7.5-DEV-evundefined-openssl1.0.0e-v83.6.6.11-linux-x64-3.0.0-15-generic',
+verbose bin dist   { shasum: 'b48380f55ce41853ec03e7f7efb48a9157a2be79',
+verbose bin dist     tarball: 'http://registry.npmjs.org/mongodb/-/mongodb-0.9.8-4.tgz' } ]
+verbose addRemoteTarball [ 'https://registry.npmjs.org/mongodb/-/mongodb-0.9.8-4.tgz',
+verbose addRemoteTarball   'b48380f55ce41853ec03e7f7efb48a9157a2be79' ]
+verbose mkdir (expected) error ENOENT, no such file or directory '/tmp/npm-1328015496259'
+verbose mkdir (expected) error ENOENT, no such file or directory '/tmp/npm-1328015496259/1328015496260-0.7985961323138326'
+verbose mkdir done: /tmp/npm-1328015496259/1328015496260-0.7985961323138326 755
+info fetch https://registry.npmjs.org/mongodb/-/mongodb-0.9.8-4.tgz
+verbose fetch to /tmp/npm-1328015496259/1328015496260-0.7985961323138326/tmp.tgz
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 40960
+silly updated sha bytes 32639
+info shasum b48380f55ce41853ec03e7f7efb48a9157a2be79
+info shasum /tmp/npm-1328015496259/1328015496260-0.7985961323138326/tmp.tgz
+verbose mkdir (expected) error ENOENT, no such file or directory '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm'
+verbose mkdir done: /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm 755
+verbose unpack_ uid, gid [ 1000, 1000 ]
+verbose unpackTarget /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package
+silly gunzTarPerm modes [ '755', '644' ]
+silly afterUntar undefined
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/TODO
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/install.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/.npmignore
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/HISTORY
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/Makefile
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/Readme.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/package.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/replSetServersSimple.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/queries.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/capped.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/url.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/admin.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/types.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/info.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/gridfs.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/simple.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/blog.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/strict.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/oplog.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/replSetServersQueries.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/cursor.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/examples/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/map_reduce_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/objectid_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/raw_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/connect_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/error_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/index_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/find_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/collection_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/reaper_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/multiple_dbs_on_connection_pool_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/db_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/custom_pk_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/authentication_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/connection_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/insert_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/remove_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/exception_handling_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/unicode_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/cursor_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/streaming_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/logging_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/regexp_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/admin_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/count_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/query_secondaries_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/connect_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/read_preference_replicaset_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/tags_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/insert_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/changing_replicaset_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/two_server_tests.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/replicaset/read_preferences_single_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/bson
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/bson/bson_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/bson/commands_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/test_gs_working_field_read.pdf
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/test_gs_weird_bug.png
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/grid_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/grid_store_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/iya_logo_final_bw.jpg
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/grid_store_file_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/gridstore/grid_store_stream_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/auxilliary
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/auxilliary/ssl_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/auxilliary/repl_set_ssl_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/auxilliary/authentication_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/auxilliary/replicaset_auth_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/auxilliary/single_server_kill_reconnect.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/certificates
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/certificates/mycert.pem
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/grids_fs_compatibility_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/simple_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/issue_replicaset_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/single_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/manual_lock.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/replicaset_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/server_load.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/manual_tests/test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/connection
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/connection/connection_pool_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/connection/message_parser_test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/tools
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/tools/replica_set_manager.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/tools/server_manager.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/tools/sharding_manager.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/test/tools/keyfile.txt
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/harness
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/harness/memory_leak_harness.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/hammer_replicaset.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/streaming_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/hammer.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/bson_native_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/bson_buffalo_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/emit_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/bson_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/gridfs_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/benchmark/grid_fs_write_benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/test_all.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/test_set_runner.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/build-docs.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/gleak.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/doc-templates
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/doc-templates/index.ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/doc-templates/function.ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/dev/tools/doc-templates/class.ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/wscript
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/Makefile
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/bson.cc
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/bson.h
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/build
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/build/.wafpickle-7
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/test
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/test/test_bson.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/test/test_stackless_bson.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/external-libs/bson/test/test_full_bson.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/cursorstream.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/collection.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/admin.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/db.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/utils.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/cursor.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/responses
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/responses/mongo_reply.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/objectid.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/double.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/max_key.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/binary_parser.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/bson.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/code.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/binary_utils.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/float_parser.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/min_key.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/timestamp.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/binary.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/db_ref.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/bson/symbol.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/gridfs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/gridfs/grid.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/gridfs/gridstore.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/gridfs/chunk.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/delete_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/query_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/db_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/get_more_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/update_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/kill_cursor_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/base_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/commands/insert_command.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/connection_pool.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/connection_utils.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/server.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/simple_emitter.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/repl_set_servers.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/connection.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/strategies
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/strategies/statistics_strategy.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/connection/strategies/ping_strategy.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/goog
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/goog/math
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/lib/mongodb/goog/math/long.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/templates
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/templates/.mongodb
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/build
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/build/html
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/build/html/.buildinfo
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/source
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/source/.static
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/source/.static/.mongodb
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/docs/sphinx-docs/source/.static/logo-mongodb.png
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/README.markdown
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/package.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/lib
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/lib/step.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test/parallelTest.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test/callbackTest.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test/helper.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test/groupTest.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test/fnTest.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/step/test/errorTest.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/README.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/.npmignore
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/History.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/Makefile
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/package.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/test
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/gleak/test/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/README.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/.npmignore
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/nodelint.cfg
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/LICENSE
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/CONTRIBUTORS.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/Makefile
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/package.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/man1
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/man1/nodeunit.1
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/doc
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/doc/nodeunit.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/share
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/share/license.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/share/nodeunit.css
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/share/junit.xml.ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/bin
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/bin/nodeunit.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/bin/nodeunit
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/img
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/img/example_pass.png
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/img/example_fail.png
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/img/example_machineout.png
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/types.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/utils.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/nodeunit.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/core.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/track.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/assert.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/machineout.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/default.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/html.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/skip_passed.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/tap.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/minimal.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/junit.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/verbose.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/browser.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/nested.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/lib/reporters/eclipse.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/browser
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/browser/suite2.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/browser/suite1.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/browser/suite3.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/browser/nodeunit.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/browser/test.html
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/nested
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/examples/nested/nested_reporter_test.unit.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/async.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/console.log.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/json2.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/ejs.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/History.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/ejs.min.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/Makefile
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/benchmark.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/Readme.md
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/package.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/lib
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/lib/ejs.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/lib/utils.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/lib/filters.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/examples
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/examples/list.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/examples/client.html
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/examples/list.ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/support
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/support/compile.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/test
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/deps/ejs/test/ejs.test.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-runfiles.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-runtest.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-failing-callbacks.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-httputil.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-testcase.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-runmodule.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test.html
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-testcase-legacy.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-base.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/test-sandbox.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/raw_jscode1.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/raw_jscode2.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/mock_module2.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/raw_jscode3.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/mock_module1.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/dir
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/dir/mock_module3.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/dir/mock_module4.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/coffee
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/test/fixtures/coffee/mock_coffee_module.coffee
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/package.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/share
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/share/license.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/share/nodeunit.css
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/share/junit.xml.ejs
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/bin
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/bin/nodeunit.json
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/bin/nodeunit
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/deps
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/deps/ejs.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/deps/async.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/deps/console.log.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/deps/json2.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/types.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/utils.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/nodeunit.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/core.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/.swp
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/assert.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/track.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/machineout.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/default.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/html.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/skip_passed.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/tap.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/minimal.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/junit.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/verbose.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/index.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/browser.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/nested.js
+silly asyncMap in gTP /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package/deps/nodeunit/dist/nodeunit/lib/reporters/eclipse.js
+verbose gunzed /tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package
+verbose rm'ed /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package
+verbose renamed [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/___package.npm/package',
+verbose renamed   '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package' ]
+verbose caching /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/package.json
+verbose loadDefaults mongodb@0.9.8-4
+verbose tarball contents [ 'tmp.tgz', 'package' ]
+verbose from cache /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/package.json
+verbose pack /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package /home/ara/.npm/mongodb/0.9.8-4/package.tgz
+silly makeList /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package
+verbose caching /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/step/package.json
+verbose loadDefaults step@0.0.4
+verbose caching /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/nodeunit/package.json
+verbose loadDefaults nodeunit@0.6.4
+verbose caching /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/gleak/package.json
+verbose loadDefaults gleak@0.2.1
+silly dir, dirLen [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/step',
+silly dir, dirLen   74 ]
+silly dir, dirLen [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/gleak',
+silly dir, dirLen   75 ]
+verbose caching /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/nodeunit/dist/nodeunit/package.json
+verbose loadDefaults nodeunit@0.6.1
+verbose caching /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/nodeunit/deps/ejs/package.json
+verbose loadDefaults ejs@0.4.3
+silly dir, dirLen [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/nodeunit/deps/ejs',
+silly dir, dirLen   87 ]
+silly dir, dirLen [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/nodeunit/dist/nodeunit',
+silly dir, dirLen   92 ]
+silly dir, dirLen [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package/deps/nodeunit',
+silly dir, dirLen   78 ]
+silly dir, dirLen [ '/tmp/npm-1328015496259/1328015496260-0.7985961323138326/package',
+silly dir, dirLen   64 ]
+verbose tarball /home/ara/.npm/mongodb/0.9.8-4/package.tgz
+verbose parent /tmp/npm-1328015496259/1328015496260-0.7985961323138326/package
+verbose unpack_ uid, gid [ 1000, 1000 ]
+verbose unpackTarget /home/ara/.npm/mongodb/0.9.8-4/package
+silly gunzTarPerm modes [ '755', '644' ]
+ERR! Error: ENOENT, no such file or directory '/home/ara/.npm/mongodb/0.9.8-4/___package.npm/package/deps/nodeunit/examples/browser/nodeunit.js'
+ERR! Report this *entire* log at:
+ERR!     <http://github.com/isaacs/npm/issues>
+ERR! or email it to:
+ERR!     <npm-@googlegroups.com>
+ERR! 
+ERR! System Linux 3.0.0-15-generic
+ERR! command "node" "/usr/local/bin/npm" "update"
+ERR! cwd /home/ara/projects/calix/modules/nodeEventStore/storage/mongoDb
+ERR! node -v v0.6.5
+ERR! npm -v 1.1.0-alpha-6
+ERR! path /home/ara/.npm/mongodb/0.9.8-4/___package.npm/package/deps/nodeunit/examples/browser/nodeunit.js
+ERR! fstream_path /home/ara/.npm/mongodb/0.9.8-4/___package.npm/package/deps/nodeunit/examples/browser/nodeunit.js
+ERR! fstream_type File
+ERR! fstream_class FileWriter
+ERR! fstream_finish_call chmod
+ERR! code ENOENT
+ERR! message ENOENT, no such file or directory '/home/ara/.npm/mongodb/0.9.8-4/___package.npm/package/deps/nodeunit/examples/browser/nodeunit.js'
+ERR! fstream_stack Object.oncomplete (/usr/local/lib/node_modules/npm/node_modules/fstream/lib/writer.js:285:17)
+verbose exit [ 1, true ]
