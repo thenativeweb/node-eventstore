@@ -73,7 +73,7 @@ Storage.prototype = {
         for(var i in events) {
             events[i]._id = events[i].commitId;
         }
-        this.events.insertAll(events, {keepGoing: true}, callback);
+        this.events.insert(events, {keepGoing: true}, callback);
     },
 
     // __addSnapshot:__ stores the snapshot
