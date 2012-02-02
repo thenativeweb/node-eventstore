@@ -1,7 +1,7 @@
 {
     "author": "Kaba MIC AWM"
   , "name": "eventstore.redis"
-  , "version": "0.3.1"
+  , "version": "0.4.0"
   , "contributors": [ 
     { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }, 
     { "name": "Adriano Raiano", "email": "adriano.raiano@kaba.com" }

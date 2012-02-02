@@ -1,4 +1,4 @@
-//     storage.js v0.3.0
+//     storage.js v0.4.0
 //     (c) 2012 Kaba AG, MIC AWM; under MIT License
 //     (by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
