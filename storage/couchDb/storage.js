@@ -32,6 +32,9 @@ couchDbStorage.createStorage = function(options, callback) {
 
 // ## CouchDb storage
 Storage = function(options, callback) {
+
+    this.filename = __filename;
+    
     if (typeof options === 'function')
         callback = options;
         

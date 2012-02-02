@@ -33,6 +33,9 @@ mongoDbStorage.createStorage = function(options, callback) {
 
 // ## MongoDb storage
 Storage = function(options, callback) {
+
+    this.filename = __filename;
+
     if (typeof options === 'function')
         callback = options;
         

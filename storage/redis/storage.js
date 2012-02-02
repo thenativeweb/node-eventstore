@@ -31,6 +31,9 @@ redisStorage.createStorage = function(options, callback) {
 
 // ## redis storage
 Storage = function(options, callback) {
+
+    this.filename = __filename;
+    
     if (typeof options === 'function')
         callback = options;
         
