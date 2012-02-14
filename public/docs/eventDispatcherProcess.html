@@ -1,0 +1,65 @@
+<!DOCTYPE html>  <html> <head>   <title>eventDispatcherProcess.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="eventDispatcher.html">                 eventDispatcher.js               </a>                                           <a class="source" href="eventDispatcherProcess.html">                 eventDispatcherProcess.js               </a>                                           <a class="source" href="eventStore.html">                 eventStore.js               </a>                                           <a class="source" href="interfaces.html">                 interfaces.js               </a>                                           <a class="source" href="json.html">                 json.js               </a>                                           <a class="source" href="consoleLogger.html">                 consoleLogger.js               </a>                                           <a class="source" href="fakePublisher.html">                 fakePublisher.js               </a>                                           <a class="source" href="storage.html">                 storage.js               </a>                                           <a class="source" href="util.html">                 util.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               eventDispatcherProcess.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <pre><code>lib/eventDispatcherProcess.js v0.5.0
+(c) 2012 Kaba AG, MIC AWM; under MIT License
+(by) Jan Muehlemann (jamuhl)
+   , Adriano Raiano (adrai)
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>This is the event dispatcher process that will be called as separate process...
+<strong>Example:</strong></p>
+
+<pre><code> var self = this;
+ this.dispatcher = cp.fork(__dirname + '/eventDispatcherProcess.js');
+ this.dispatcher.send({ action: 'use', payload: { options: this.options, storageModulePath: this.storage.filename } });
+ this.dispatcher.on('message', function(m) {
+     if (m.action === 'publish') {
+         self.publisher.publish(JSON.deserialize(m.payload));
+     }
+ });
+ this.dispatcher.send({ action: 'start' });
+
+ // create a handle function on fork
+ this.dispatcher.addUndispatchedEvents = function(evts) {
+     self.dispatcher.send({ action: 'addUndispatchedEvents', payload: JSON.stringify(evts) });
+ };
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">EventDispatcher</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./eventDispatcher&#39;</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">util</span> <span class="o">=</span>  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./util&#39;</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">options</span> <span class="o">=</span> <span class="kc">null</span>
+  <span class="p">,</span> <span class="nx">logger</span> <span class="o">=</span> <span class="kc">null</span>
+  <span class="p">,</span> <span class="nx">publisher</span> <span class="o">=</span> <span class="kc">null</span>
+  <span class="p">,</span> <span class="nx">storageModulePath</span> <span class="o">=</span> <span class="kc">null</span>
+  <span class="p">,</span> <span class="nx">eventDispatcher</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>when receiving a message from parent process...</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">action</span> <span class="o">===</span> <span class="s1">&#39;use&#39;</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">options</span> <span class="o">=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">storageModulePath</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">storageModulePath</span> <span class="o">=</span> <span class="nx">m</span><span class="p">.</span><span class="nx">payload</span><span class="p">.</span><span class="nx">storageModulePath</span><span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">action</span> <span class="o">===</span> <span class="s1">&#39;start&#39;</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="kd">var</span> <span class="nx">publisher</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">publish</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">process</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="nx">action</span><span class="o">:</span> <span class="s1">&#39;publish&#39;</span><span class="p">,</span> <span class="nx">payload</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>prepare event dispatcher</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">eventDispatcher</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventDispatcher</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+        <span class="nx">eventDispatcher</span><span class="p">.</span><span class="nx">usePublisher</span><span class="p">(</span><span class="nx">publisher</span><span class="p">);</span>
+
+        <span class="nx">require</span><span class="p">(</span><span class="nx">storageModulePath</span><span class="p">).</span><span class="nx">createStorage</span><span class="p">(</span>
+            <span class="nx">options</span><span class="p">.</span><span class="nx">repository</span><span class="p">,</span>
+            <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">storage</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">eventDispatcher</span><span class="p">.</span><span class="nx">useStorage</span><span class="p">(</span><span class="nx">storage</span><span class="p">)</span>
+                                   <span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+                    <span class="nx">process</span><span class="p">.</span><span class="nx">send</span><span class="p">({</span> <span class="nx">action</span><span class="o">:</span> <span class="s1">&#39;start&#39;</span> <span class="p">});</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">);</span>
+                       
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">action</span> <span class="o">===</span> <span class="s1">&#39;addUndispatchedEvents&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">eventDispatcher</span><span class="p">.</span><span class="nx">addUndispatchedEvents</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">deserialize</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">payload</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

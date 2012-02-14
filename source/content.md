@@ -41,22 +41,17 @@ Example will use redis storage, but same will work for mongoDb and couchDb.
 
     var storage = require('eventstore.redis');
 
-    storage.createStorage(function(err, store) {
-        es.configure(function() {
-            es.use(store);
-            es.use(publisher); // your publisher must provide function 'publisher.publish(event)'
-            // es.use(logger);
-        });
-
-        // start eventstore
-        es.start();
-    });
+    es.configure(function() {
+        es.use(storage.createStorage());
+        es.use(publisher); // your publisher must provide function 'publisher.publish(event)'
+        // es.use(logger);
+    }).start();
 
 ### Work with the eventstore
 
 get the eventhistory of an aggregate
 
-    es.getEventStream(aggregateId, 0, function(err, stream) {                    
+    es.getEventStream(aggregateId, function(err, stream) {                    
         var history = stream.events; // the original event will be in events[i].payload
 
         // myAggregate.loadFromHistory(history);
@@ -64,14 +59,19 @@ get the eventhistory of an aggregate
 
 store a new event and commit it to store
 
-    es.getEventStream(aggregateId, 0, function(err, stream) {                    
+    es.getEventStream(aggregateId, function(err, stream) {                    
         
         stream.addEvent(new event);
         stream.commit();
 
     });
 
-the committed event will be dispatched to the provided publisher
+the committed event will be dispatched to the provided publisher.
+
+you can even get an eventstream from a starting revision to an ending revision number:
+
+    es.getEventStream(aggregateId, 5 /*minRev*/, 10 /*maxRev*/, function(err, stream) {                    
+    });
 
 ### Work with snapshotting
 
@@ -119,6 +119,11 @@ You can find the code documentation [here](public/docs/eventStore.html).
 - Jonathan Oliver's [EventStore](https://github.com/joliver/EventStore) for .net.
 
 ## Release Notes
+
+### v0.5.0
+
+- simplified API for storage usage
+- if possible fork dispatching to own childprocess
 
 ### v0.3.0
 
