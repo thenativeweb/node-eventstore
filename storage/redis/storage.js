@@ -1,4 +1,4 @@
-//     storage.js v0.4.0
+//     storage.js v0.5.0
 //     (c) 2012 Kaba AG, MIC AWM; under MIT License
 //     (by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
@@ -22,17 +22,18 @@ if (typeof exports !== 'undefined') {
     redisStorage = root.redisStorage = {};
 }
 
-redisStorage.VERSION = '0.3.0';
+redisStorage.VERSION = '0.5.0';
 
 // Create new instance of storage.
 redisStorage.createStorage = function(options, callback) {
-    new Storage(options, callback);
+    return new Storage(options, callback);
 };
 
 // ## redis storage
 Storage = function(options, callback) {
 
     this.filename = __filename;
+    this.isConnected = false;
     
     if (typeof options === 'function')
         callback = options;
@@ -46,25 +47,39 @@ Storage = function(options, callback) {
     };
     
     this.options = mergeOptions(options, defaults);
-    this.client = redis.createClient(this.options.port, this.options.host);
-    
-    var self = this;
-    this.client.on('ready', function () {
-        if (options.database !== 0) {
-            self.client.select(self.options.database, function(err, ok) {
-                if (err) {
-                    callback(err);
-                } else {
-                    callback(null, self);
-                }
-            });
-        } else {
-            callback(null, self);
-        }
-    });
+
+    if (callback) {
+        this.connect(callback);
+    }
 };
 
 Storage.prototype = {
+
+    // __connect:__ connects the underlaying database.
+    //
+    // `storage.connect(callback)`
+    //
+    // - __callback:__ `function(err, storage){}`
+    connect: function(callback) {
+        this.client = redis.createClient(this.options.port, this.options.host);
+    
+        var self = this;
+        this.client.on('ready', function () {
+            if (self.options.database !== 0) {
+                self.client.select(self.options.database, function(err, ok) {
+                    if (err) {
+                        if (callback) callback(err);
+                    } else {
+                        self.isConnected = true;
+                        if (callback) callback(null, self);
+                    }
+                });
+            } else {
+                self.isConnected = true;
+                if (callback) callback(null, self);
+            }
+        });
+    },
 
     // __addEvents:__ saves all events.
     //
@@ -351,6 +366,6 @@ var mergeOptions = function(options, defaultOptions) {
     
     var merged = {};
     for (var attrname in defaultOptions) { merged[attrname] = defaultOptions[attrname]; }
-    for (var attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
+    for (attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
     return merged;  
 };

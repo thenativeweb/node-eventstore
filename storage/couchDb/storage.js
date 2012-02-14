@@ -22,11 +22,11 @@ if (typeof exports !== 'undefined') {
     couchDbStorage = root.couchDbStorage = {};
 }
 
-couchDbStorage.VERSION = '0.3.0';
+couchDbStorage.VERSION = '0.5.0';
 
 // Create new instance of storage.
 couchDbStorage.createStorage = function(options, callback) {
-    new Storage(options, callback);
+    return new Storage(options, callback);
 };
 
 
@@ -34,6 +34,7 @@ couchDbStorage.createStorage = function(options, callback) {
 Storage = function(options, callback) {
 
     this.filename = __filename;
+    this.isConnected = false;
     
     if (typeof options === 'function')
         callback = options;
@@ -47,60 +48,76 @@ Storage = function(options, callback) {
     };
     
     this.options = mergeOptions(options, defaults);
-    
-    this.store = new(cradle.Connection)();
-    this.client = this.store.database(this.options.dbName);
-    this.client.exists(function(err, res) {
-        if (err) {
-			callback(err);
-		}
-		else if (res === false) {
-            this.client.create(function(err) {
-                if (err) {
-                    callback(err);
-                }
-                else {
-                    this.client.save('_design/'+this.options.dbName, {
-                        eventsByStreamId: {
-                            map: function (evt) {
-                                if (!evt.snapshotId) {
-                                    emit(evt.streamId, evt);
-                                }
-                            }
-                        },
-                        allUndispatched: {
-                            map: function (evt) {
-                                if (!evt.snapshotId && !evt.dispatched) {
-                                    emit(evt._id, evt);
-                                }
-                            }
-                        },
-                        snapshotsByStreamId: {
-                            map: function (snapshot) {
-                                if (snapshot.snapshotId) {
-                                    emit(snapshot.streamId, snapshot);
-                                }
-                            }
-                        },
-                        allEvents: {
-                            map: function (evt) {
-                                if (!evt.snapshotId) {
-                                    emit(evt._id, evt);
-                                }
-                            }
-                        }
-                    });
-                    callback(null, this);
-                }
-            }.bind(this));
-        }
-        else {
-            callback(null, this);
-        }
-    }.bind(this));
+
+    if (callback) {
+        this.connect(callback);
+    }
 };
 
 Storage.prototype = {
+
+    // __connect:__ connects the underlaying database.
+    //
+    // `storage.connect(callback)`
+    //
+    // - __callback:__ `function(err, storage){}`
+    connect: function(callback) {
+        var self = this;
+
+        this.store = new(cradle.Connection)();
+        this.client = this.store.database(this.options.dbName);
+        this.client.exists(function(err, res) {
+            if (err) {
+                if (callback) callback(err);
+            }
+            else if (res === false) {
+                self.client.create(function(err) {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        self.client.save('_design/' + self.options.dbName, {
+                            eventsByStreamId: {
+                                map: function (evt) {
+                                    if (!evt.snapshotId) {
+                                        emit(evt.streamId, evt);
+                                    }
+                                }
+                            },
+                            allUndispatched: {
+                                map: function (evt) {
+                                    if (!evt.snapshotId && !evt.dispatched) {
+                                        emit(evt._id, evt);
+                                    }
+                                }
+                            },
+                            snapshotsByStreamId: {
+                                map: function (snapshot) {
+                                    if (snapshot.snapshotId) {
+                                        emit(snapshot.streamId, snapshot);
+                                    }
+                                }
+                            },
+                            allEvents: {
+                                map: function (evt) {
+                                    if (!evt.snapshotId) {
+                                        emit(evt._id, evt);
+                                    }
+                                }
+                            }
+                        });
+                        
+                        self.isConnected = true;
+                        if (callback) callback(null, self);
+                    }
+                });
+            }
+            else {
+                self.isConnected = true;
+                if (callback) callback(null, self);
+            }
+        });
+    },
 
     // __addEvents:__ saves all events.
     //
@@ -358,6 +375,6 @@ var mergeOptions = function(options, defaultOptions) {
     
     var merged = {};
     for (var attrname in defaultOptions) { merged[attrname] = defaultOptions[attrname]; }
-    for (var attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
+    for (attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
     return merged;  
 };

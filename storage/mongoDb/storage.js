@@ -1,4 +1,4 @@
-//     storage.js v0.4.0
+//     storage.js v0.5.0
 //     (c) 2012 Kaba AG, MIC AWM; under MIT License
 //     (by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
@@ -23,11 +23,11 @@ if (typeof exports !== 'undefined') {
     mongoDbStorage = root.mongoDbStorage = {};
 }
 
-mongoDbStorage.VERSION = '0.3.0';
+mongoDbStorage.VERSION = '0.5.0';
 
 // Create new instance of storage.
 mongoDbStorage.createStorage = function(options, callback) {
-    new Storage(options, callback);
+    return new Storage(options, callback);
 };
 
 
@@ -35,6 +35,7 @@ mongoDbStorage.createStorage = function(options, callback) {
 Storage = function(options, callback) {
 
     this.filename = __filename;
+    this.isConnected = false;
 
     if (typeof options === 'function')
         callback = options;
@@ -49,22 +50,36 @@ Storage = function(options, callback) {
     
     this.options = mergeOptions(options, defaults);
     
-    var server = new mongo.Server(this.options.host, this.options.port, {});
-    new mongo.Db(this.options.dbName , server, {}).open(function(err, client) {
-        if (err) {
-            callback(err);
-        } else {
-            this.client = client;
-            
-            this.events = new mongo.Collection(client, this.options.eventsCollectionName);
-            this.snapshots = new mongo.Collection(client, this.options.snapshotsCollectionName);
-
-            callback(null, this);
-        }        
-    }.bind(this));
+    if (callback) {
+        this.connect(callback);
+    }
 };
 
 Storage.prototype = {
+
+    // __connect:__ connects the underlaying database.
+    //
+    // `storage.connect(callback)`
+    //
+    // - __callback:__ `function(err, storage){}`
+    connect: function(callback) {
+        var self = this;
+
+        var server = new mongo.Server(this.options.host, this.options.port, {});
+        new mongo.Db(this.options.dbName , server, {}).open(function(err, client) {
+            if (err) {
+                if (callback) callback(err);
+            } else {
+                self.isConnected = true;
+                self.client = client;
+                
+                self.events = new mongo.Collection(client, self.options.eventsCollectionName);
+                self.snapshots = new mongo.Collection(client, self.options.snapshotsCollectionName);
+
+                if (callback) callback(null, self);
+            }        
+        });
+    },
 
     // __addEvents:__ saves all events.
     //
@@ -221,6 +236,6 @@ var mergeOptions = function(options, defaultOptions) {
     
     var merged = {};
     for (var attrname in defaultOptions) { merged[attrname] = defaultOptions[attrname]; }
-    for (var attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
+    for (attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
     return merged;  
 };

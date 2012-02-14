@@ -34,7 +34,7 @@ vows.describe('The ' + storageName + ' Storage')
         
         'can be filled with events': function(storage) {
             var id = "1234-abcd";
-            storage.addEvents([{'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}], function() {
+            storage.addEvents([{'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}], function(err) {
                 storage.getEvents(id, 0, -1, function(err, events) {
                     assert.equal(events.length, 1);
                 });
