@@ -58,7 +58,7 @@ task('doc', [], function() {
 var pathDepth = function(str) {
     var deep = (str.split("/").length - 1) * 2;
     var sep = '';
-    for (i = 0; i < deep; i++) {
+    for (var i = 0; i < deep; i++) {
         sep += ' ';
     }
     return sep;
@@ -72,7 +72,7 @@ var pathDepth = function(str) {
 var dirs = function(path) {
     var parts = path.split('/')
       , arr = [];
-    for (i = 0, y = 0, len = parts.length; i < len; i++) {
+    for (var i = 0, y = 0, len = parts.length; i < len; i++) {
         var dir = parts[0];
         for (z = 1; z <= y; z++) {
             dir +=  '/' + parts[z];
