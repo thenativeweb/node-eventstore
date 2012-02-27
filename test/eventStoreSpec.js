@@ -72,22 +72,32 @@ vows.describe('The EventStore')
         
         'can work with snapshots': {
             topic: function() {
-                eventstore.getEventStream('e1', 0, -1, this.callback);
+                eventstore.getEventStream('e3', 0, -1, function(err, stream) {
+                    stream.addEvent({streamId: 'e3', payload: null});
+                    stream.commit(function(err) {
+                        eventstore.getEventStream('e3', 0, -1, this.callback);
+                    }.bind(this));
+                }.bind(this));
             },
             
             'so create a snapshot from eventstream': {
                 topic: function(stream) {
+                    assert.equal(stream.currentRevision(), 0);
+                    assert.equal(stream.currentRevision(), stream.lastRevision);
                     eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', this.callback);
                 },
             
                 'and request it': {
                     topic: function(err) {
-                        eventstore.getFromSnapshot('e1', -1, this.callback);
+                        eventstore.getFromSnapshot('e3', this.callback);
                     },
                     
                     'correctly': function(err, snapshot, stream) {
                         assert.equal(snapshot.data, 'data');
-                        assert.equal(snapshot.streamId, 'e1');
+                        assert.equal(snapshot.streamId, 'e3');
+                        assert.equal(stream.currentRevision(), 0);
+                        assert.equal(snapshot.revision, stream.lastRevision);
+                        assert.equal(snapshot.revision, stream.currentRevision());
                     }
                 }
             }
