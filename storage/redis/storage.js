@@ -254,6 +254,82 @@ Storage.prototype = {
         });
     },
 
+    // __getEventRangeMatching:__ loads the range of events from given storage.
+    // 
+    // `storage.getEventRangeMatching(match, amount, callback)`
+    //
+    // - __match:__ match query in inner event (payload)
+    // - __amount:__ amount of events
+    // - __callback:__ `function(err, events){}`
+    getEventRangeMatching: function(match, amount, callback) {
+        var self = this;
+        
+        this.client.keys(this.options.eventsCollectionName + ':*', function (err, res) {
+            if (err) {
+                callback(err);
+            } else {
+                var arr = [];
+
+                if (res.length === 0) {
+                    callback(null, arr);
+                } else {
+                    var last = res[res.length - 1];
+                    res.forEach(function(key) {
+                        self.client.lrange(key, 0, -1, function (err, res) {
+                            if (err) {
+                                callback(err);
+                            } else {
+                                res.forEach(function(item) {
+                                    arr.push(JSON.parse(item));
+                                });
+                            }
+                            
+                            if (key == last) {
+
+                                arr.sort(function(a, b){
+                                     return a.commitStamp - b.commitStamp;
+                                });
+
+                                var index = 0;
+
+                                if (match) {
+                                    for (var m in match) {
+                                        if (match.hasOwnProperty(m)) {
+
+                                            for (var len = arr.length; index < len; index++) {
+                                                var evt = arr[index];
+                                                
+                                                if (evt.payload[m] === match[m]) {
+                                                    break;
+                                                }
+                                            }
+                                            
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (arr.length > index + 1) {
+
+                                    var endIndex = 0;
+                                    if (arr.length > index + 1 + amount) {
+                                        endIndex = index + 1 + amount;
+                                    } else if (arr.length <= index + 1 + amount) {
+                                        endIndex = arr.length - 1;
+                                    }
+
+                                    arr = arr.slice(index + 1, endIndex);
+                                }
+
+                                callback(null, arr);
+                            }
+                        });
+                    });
+                }
+            }
+        });
+    },
+
     // __getSnapshot:__ loads the next snapshot back from given max revision or the latest if you 
     // don't pass in a _maxRev_.
     // 

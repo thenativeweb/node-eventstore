@@ -265,6 +265,69 @@ Storage.prototype = {
 
     },
 
+    // __getEventRangeMatching:__ loads the range of events from given storage.
+    // 
+    // `storage.getEventRangeMatching(match, amount, callback)`
+    //
+    // - __match:__ match query in inner event (payload)
+    // - __amount:__ amount of events
+    // - __callback:__ `function(err, events){}`
+    getEventRangeMatching: function(match, amount, callback) {
+
+        this.client.view(this.options.dbName+'/allEvents', {descending: false}, 
+            function(err, res) {
+                if(!err) {
+                    var result = [];
+                    for (var i in res) {
+                        result.push(res[i].value);
+                    }
+
+                    
+                    result.sort(function(a, b){
+                         return a.commitStamp - b.commitStamp;
+                    });
+
+                    var index = 0;
+
+                    if (match) {
+                        for (var m in match) {
+                            if (match.hasOwnProperty(m)) {
+
+                                for (var len = result.length; index < len; index++) {
+                                    var evt = result[index];
+                                    
+                                    if (evt.payload[m] === match[m]) {
+                                        break;
+                                    }
+                                }
+                                
+                                break;
+                            }
+                        }
+                    }
+
+                    if (result.length > index + 1) {
+
+                        var endIndex = 0;
+                        if (result.length > index + 1 + amount) {
+                            endIndex = index + 1 + amount;
+                        } else if (result.length <= index + 1 + amount) {
+                            endIndex = result.length - 1;
+                        }
+
+                        result = result.slice(index + 1, endIndex);
+                    }
+
+                    callback(null, result);
+                }
+                else {
+                    callback(err);
+                }
+            }.bind(this)
+        );
+
+    },
+
     // __getSnapshot:__ loads the next snapshot back from given max revision or the latest if you 
     // don't pass in a _maxRev_.
     // 

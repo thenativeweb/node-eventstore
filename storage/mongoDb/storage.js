@@ -169,6 +169,40 @@ Storage.prototype = {
         this.events.find({}, {sort:[['commitStamp','asc']], skip: index, limit: amount}).toArray(callback);
     },
 
+    // __getEventRangeMatching:__ loads the range of events from given storage.
+    // 
+    // `storage.getEventRangeMatching(match, amount, callback)`
+    //
+    // - __match:__ match query in inner event (payload)
+    // - __amount:__ amount of events
+    // - __callback:__ `function(err, events){}`
+    getEventRangeMatching: function(match, amount, callback) {
+        var self = this;
+        var query = {};
+
+        if (match) {
+            for (var m in match) {
+                if (match.hasOwnProperty(m)) {
+
+                    query['payload.' + m] = match[m];
+
+                    break;
+                }
+            }
+        }
+
+        this.events.findOne(query, function(err, evt) {
+
+            self.events.find({
+                'commitStamp': {'$gte': evt.commitStamp},
+                '$or': [
+                    { 'streamId': {'$ne': evt.streamId}},
+                    {'commitId': {'$ne': evt.commitId}} ]},
+                {sort:[['commitStamp','asc']], limit: amount}).toArray(callback);
+
+        });
+    },
+
     // __getSnapshot:__ loads the next snapshot back from given max revision or the latest if you 
     // don't pass in a _maxRev_.
     // 

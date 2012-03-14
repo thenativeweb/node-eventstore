@@ -133,6 +133,21 @@ vows.describe('The ' + storageName + ' Storage')
             }
         },
 
+        'after a successful `fill` we get a range of events searching by event id': {
+            topic: function (storage) {
+                storage.getEventRangeMatching({id: '2'}, 2, this.callback);
+            },
+            
+            'we can assert if length is right': function (events) {
+                assert.equal(events.length, 2);
+            },
+            
+            'we can assert if sorting is right': function (events) {
+                assert.equal(events[0].commitId, '2');
+                assert.equal(events[1].commitId, '3');
+            }
+        },
+
         'after a successful `fill` we get the latest event': {
             topic: function (storage) {
                 storage.getLastEventOfStream('2', this.callback);
@@ -199,19 +214,19 @@ function clear(storage, callback) {
 function fillStore(storage, callback) {
     clear(storage, function(err) {
         storage.addEvents([
-            {streamId: '2', streamRevision: 0, commitId: '0', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-            {streamId: '2', streamRevision: 1, commitId: '1', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-            {streamId: '2', streamRevision: 2, commitId: '2', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-            {streamId: '2', streamRevision: 3, commitId: '3', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+            {streamId: '2', streamRevision: 0, commitId: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '2', streamRevision: 1, commitId: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '2', streamRevision: 2, commitId: 2, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
+            {streamId: '2', streamRevision: 3, commitId: 3, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
         ],
         function (err) {
             storage.addEvents([
-                {streamId: '3', streamRevision: 0, commitId: '4', payload: {event:'blaaaaaaaaaaa'}, dispatched: false},
-                {streamId: '3', streamRevision: 1, commitId: '5', payload: {event:'blaaaaaaaaaaa'}, dispatched: false}
+                {streamId: '3', streamRevision: 0, commitId: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
+                {streamId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
                 ], 
                 function (err) {
-                    storage.addSnapshot({snapshotId: 'snap1', streamId: '3', revision: 1, data: 'data'}, function() {
-                        storage.addSnapshot({snapshotId: 'snap2', streamId: '3', revision: 2, data: 'dataPlus'}, function() {
+                    storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                        storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, function() {
                             callback(null, storage);
                         });
                     });
@@ -219,4 +234,4 @@ function fillStore(storage, callback) {
             );
         });
     });
- };
+ }
