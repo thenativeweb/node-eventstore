@@ -312,7 +312,7 @@ Storage.prototype = {
                         if (result.length > index + 1 + amount) {
                             endIndex = index + 1 + amount;
                         } else if (result.length <= index + 1 + amount) {
-                            endIndex = result.length - 1;
+                            endIndex = result.length;
                         }
 
                         result = result.slice(index + 1, endIndex);

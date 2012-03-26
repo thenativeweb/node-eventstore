@@ -101,6 +101,31 @@ vows.describe('The EventStore')
                     }
                 }
             }
+        },
+
+        'can request events by eventId': {
+            topic: function() {
+                eventstore.getEventStream('e4', 0, -1, function(err, stream) {
+                    stream.addEvent({ id: '1'});
+                    stream.addEvent({ id: '2'});
+                    stream.addEvent({ id: '3'});
+                    stream.addEvent({ id: '4'});
+                    stream.addEvent({ id: '5'});
+                    stream.commit(this.callback);
+                }.bind(this));
+            },
+
+            '': {
+                topic: function(err) {
+                    eventstore.getEventRangeMatching({id: '2'}, 2, function(err, evts) {
+                        evts.next(this.callback);
+                    }.bind(this));
+                },
+                
+                'correctly': function(err, events) {
+                    assert.equal(events[0].payload.id, '5');
+                }
+            }
         }
     }
 }).export(module);
