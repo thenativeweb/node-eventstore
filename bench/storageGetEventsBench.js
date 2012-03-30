@@ -30,14 +30,8 @@ util.prepare(function() {
             util.redisStorage.addEvents(events, function(err) {
                 callback(err);
             });
-        },
-        
-        function(callback){
-            util.couchDbStorage.addEvents(events, function(err) {
-                callback(err);
-            });
         }
-        
+     
     ],
 
     function(err, results){
@@ -54,11 +48,6 @@ util.prepare(function() {
 		}, {defer: true})
 		.add('redisStorage#getEvents', function(deferred) {
 			util.redisStorage.getEvents('2', 0, -1, function(err, events) {
-				deferred.resolve();
-			});
-		}, {defer: true})
-		.add('couchDbStorage#getEvents', function(deferred) {
-			util.couchDbStorage.getEvents('2', 0, -1, function(err, events) {
 				deferred.resolve();
 			});
 		}, {defer: true})

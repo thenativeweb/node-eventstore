@@ -112,7 +112,7 @@ Storage.prototype = {
     // - __streamId:__ id for requested stream
     // - __minRev:__ revision startpoint
     // - __maxRev:__ revision endpoint (hint: -1 = to end) [optional]
-    // - __callback:__ `function(err, snapshot, eventStream){}`
+    // - __callback:__ `function(err, events){}`
     getEvents: function(streamId, minRev, maxRev, callback) {
         
         if (typeof maxRev === 'function') {
@@ -131,52 +131,14 @@ Storage.prototype = {
         this.events.find(findStatement, {sort:[['streamRevision','asc']]}).toArray(callback);
     },
 
-    // __getAllEvents:__ loads the events.
-    //
-    // __warning:__ don't use this in production!!!
-    // 
-    // `storage.getAllEvents(callback)`
-    //
-    // - __callback:__ `function(err, events){}`
-    getAllEvents: function(callback) {
-        this.events.find({}, {sort:[['commitStamp','asc']]}).toArray(callback);
-    },
-
-    // __getLastEventOfStream:__ loads the last event from the given stream in storage.
-    // 
-    // `storage.getLastEventOfStream(streamId, callback)`
-    //
-    // - __streamId:__ the stream id
-    // - __callback:__ `function(err, event){}`
-    getLastEventOfStream: function(streamId, callback) {
-        
-        var findStatement = {
-            'streamId' : streamId
-        };
-        
-        this.events.find(findStatement, {sort:[['streamRevision','desc']]}).nextObject(callback);
-
-    },
-
     // __getEventRange:__ loads the range of events from given storage.
     // 
-    // `storage.getEventRange(index, amount, callback)`
-    //
-    // - __index:__ entry index
-    // - __amount:__ amount of events
-    // - __callback:__ `function(err, events){}`
-    getEventRange: function(index, amount, callback) {
-        this.events.find({}, {sort:[['commitStamp','asc']], skip: index, limit: amount}).toArray(callback);
-    },
-
-    // __getEventRangeMatching:__ loads the range of events from given storage.
-    // 
-    // `storage.getEventRangeMatching(match, amount, callback)`
+    // `storage.getEventRange(match, amount, callback)`
     //
     // - __match:__ match query in inner event (payload)
     // - __amount:__ amount of events
     // - __callback:__ `function(err, events){}`
-    getEventRangeMatching: function(match, amount, callback) {
+    getEventRange: function(match, amount, callback) {
         var self = this;
         var query = {};
 

@@ -103,7 +103,7 @@ vows.describe('The EventStore')
             }
         },
 
-        'can request events by eventId': {
+        'can request': {
             topic: function() {
                 eventstore.getEventStream('e4', 0, -1, function(err, stream) {
                     stream.addEvent({ id: '1'});
@@ -115,9 +115,20 @@ vows.describe('The EventStore')
                 }.bind(this));
             },
 
-            '': {
+            'all events of a stream': {
                 topic: function(err) {
-                    eventstore.getEventRangeMatching({id: '2'}, 2, function(err, evts) {
+                    eventstore.getEvents('e4', this.callback);
+                },
+                
+                'correctly': function(err, events) {
+                    assert.equal(events[0].payload.id, '1');
+                    assert.equal(events.length, 5);
+                }
+            },
+
+            'events by eventId': {
+                topic: function(err) {
+                    eventstore.getEventRange({id: '2'}, 2, function(err, evts) {
                         evts.next(this.callback);
                     }.bind(this));
                 },

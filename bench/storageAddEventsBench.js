@@ -20,11 +20,6 @@ util.prepare(function() {
 			deferred.resolve();
 		});
 	}, {defer: true})
-	.add('couchDbStorage#addEvents', function(deferred) {
-		util.couchDbStorage.addEvents([{streamId: uuid().toString(), commitId: uuid().toString(), payload: {event:'bla'}}], function() {
-			deferred.resolve();
-		});
-	}, {defer: true})
 	// add listeners
 	.on('cycle', function(event, bench) {
 		console.log(String(bench));

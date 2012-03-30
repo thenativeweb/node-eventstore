@@ -33,13 +33,6 @@ index.prepare = function(clb) {
                 index.redisStorage = storage;
                 callback(err, storage);
             });
-        },
-        
-        function(callback){
-            require('../storage/couchDb/storage').createStorage(options, function(err, storage) {
-                index.couchDbStorage = storage;
-                callback(err, storage);
-            });
         }
         
     ],

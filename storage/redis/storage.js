@@ -126,7 +126,7 @@ Storage.prototype = {
     // - __streamId:__ id for requested stream
     // - __minRev:__ revision startpoint
     // - __maxRev:__ revision endpoint (hint: -1 = to end) [optional]
-    // - __callback:__ `function(err, snapshot, eventStream){}`
+    // - __callback:__ `function(err, events){}`
     getEvents: function(streamId, minRev, maxRev, callback) {
         
         if (typeof maxRev === 'function') {
@@ -141,127 +141,14 @@ Storage.prototype = {
         });
     },
 
-    // __getAllEvents:__ loads the events.
-    //
-    // __warning:__ don't use this in production!!!
-    // 
-    // `storage.getAllEvents(callback)`
-    //
-    // - __callback:__ `function(err, events){}`
-    getAllEvents: function(callback) {
-        
-        var self = this;
-        
-        this.client.keys(this.options.eventsCollectionName + ':*', function (err, res) {
-            if (err) {
-                callback(err);
-            } else {
-                var arr = [];
-
-                if (res.length === 0) {
-                    callback(null, arr);
-                } else {
-                    var last = res[res.length - 1];
-                    res.forEach(function(key) {
-                        self.client.lrange(key, 0, -1, function (err, res) {
-                            if (err) {
-                                callback(err);
-                            } else {
-                                res.forEach(function(item) {
-                                    arr.push(JSON.parse(item));
-                                });
-                            }
-                            
-                            if (key == last) {
-                                callback(null, arr);
-                            }
-                        });
-                    });
-                }
-            }
-        });
-    },
-
-    // __getLastEventOfStream:__ loads the last event from the given stream in storage.
-    // 
-    // `storage.getLastEventOfStream(streamId, callback)`
-    //
-    // - __streamId:__ the stream id
-    // - __callback:__ `function(err, event){}`
-    getLastEventOfStream: function(streamId, callback) {
-        var self =this;
-        this.client.llen(this.options.eventsCollectionName + ':' + streamId, function (err, length) {
-            if (err) {
-                callback(err);
-            } else {
-                self.client.lrange(self.options.eventsCollectionName + ':' + streamId, length - 2, length, function (err, res) {
-                    handleResultSet(err, res, function (err, events) {
-                        var event = null;
-                        if (events.length) {
-                            event = events[events.length - 1];
-                        }
-                        callback(err, event);
-                    });
-                });
-            }
-        });
-    },
-
     // __getEventRange:__ loads the range of events from given storage.
     // 
-    // `storage.getEventRange(index, amount, callback)`
-    //
-    // - __index:__ entry index
-    // - __amount:__ amount of events
-    // - __callback:__ `function(err, events){}`
-    getEventRange: function(index, amount, callback) {
-        var self = this;
-        
-        this.client.keys(this.options.eventsCollectionName + ':*', function (err, res) {
-            if (err) {
-                callback(err);
-            } else {
-                var arr = [];
-
-                if (res.length === 0) {
-                    callback(null, arr);
-                } else {
-                    var last = res[res.length - 1];
-                    res.forEach(function(key) {
-                        self.client.lrange(key, 0, -1, function (err, res) {
-                            if (err) {
-                                callback(err);
-                            } else {
-                                res.forEach(function(item) {
-                                    arr.push(JSON.parse(item));
-
-                                    if (arr.length >= (index + amount)) {
-                                        return;
-                                    }
-                                });
-                            }
-                            
-                            if (key == last) {
-
-                                arr = arr.slice(index, (index + amount));
-
-                                callback(null, arr);
-                            }
-                        });
-                    });
-                }
-            }
-        });
-    },
-
-    // __getEventRangeMatching:__ loads the range of events from given storage.
-    // 
-    // `storage.getEventRangeMatching(match, amount, callback)`
+    // `storage.getEventRange(match, amount, callback)`
     //
     // - __match:__ match query in inner event (payload)
     // - __amount:__ amount of events
     // - __callback:__ `function(err, events){}`
-    getEventRangeMatching: function(match, amount, callback) {
+    getEventRange: function(match, amount, callback) {
         var self = this;
         
         this.client.keys(this.options.eventsCollectionName + ':*', function (err, res) {

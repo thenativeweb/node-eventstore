@@ -19,11 +19,6 @@ util.prepare(function() {
 			//deferred.resolve();
 		});
 	}, {defer: false})
-	.add('couchDbStorage#getId', function(deferred) {
-		util.couchDbStorage.getId(function(err, id) {
-			//deferred.resolve();
-		});
-	}, {defer: false})
 	// add listeners
 	.on('cycle', function(event, bench) {
 		console.log(String(bench));

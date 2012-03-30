@@ -35,7 +35,7 @@ vows.describe('The ' + storageName + ' Storage')
         'can be filled with events': function(storage) {
             var id = "1234-abcd";
             storage.addEvents([{'streamId': id, 'streamRevision': 0, 'payload': {event:'bla'}}], function(err) {
-                storage.getEvents(id, 0, -1, function(err, events) {console.log(err);
+                storage.getEvents(id, 0, -1, function(err, events) {
                     assert.equal(events.length, 1);
                 });
             });
@@ -101,41 +101,10 @@ vows.describe('The ' + storageName + ' Storage')
                 assert.equal(events[5].commitId, '5');
             }
         },
-        
-        'after a successful `fill` we get all events': {
-            topic: function (storage) {
-                storage.getAllEvents(this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 6);
-            },
-            
-            'we can assert if sorting is right': function (events) {
-                assert.equal(events[0].commitId, '0');
-                assert.equal(events[2].commitId, '2');
-                assert.equal(events[5].commitId, '5');
-            }
-        },
-
-        'after a successful `fill` we get a range of events': {
-            topic: function (storage) {
-                storage.getEventRange(1, 2, this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 2);
-            },
-            
-            'we can assert if sorting is right': function (events) {
-                assert.equal(events[0].commitId, '1');
-                assert.equal(events[1].commitId, '2');
-            }
-        },
 
         'after a successful `fill` we get a range of events searching by event id': {
             topic: function (storage) {
-                storage.getEventRangeMatching({id: '2'}, 2, this.callback);
+                storage.getEventRange({id: '2'}, 2, this.callback);
             },
             
             'we can assert if length is right': function (events) {
@@ -145,16 +114,6 @@ vows.describe('The ' + storageName + ' Storage')
             'we can assert if sorting is right': function (events) {
                 assert.equal(events[0].commitId, '2');
                 assert.equal(events[1].commitId, '3');
-            }
-        },
-
-        'after a successful `fill` we get the latest event': {
-            topic: function (storage) {
-                storage.getLastEventOfStream('2', this.callback);
-            },
-            
-            'we can assert if it is really the last event': function (event) {
-                assert.equal(event.streamRevision, 3);
             }
         },
         
