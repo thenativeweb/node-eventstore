@@ -19,7 +19,10 @@
         "redis": ">= 0.0.1"
       , "hiredis": ">= 0.0.1"
   }
-  , "devDependencies": { }
+  , "devDependencies": {
+      "mocha": ">= 0.0.1"
+    , "expect.js": ">= 0.0.1"
+  }
   , "scripts" : { 
-      "test" : "vows test/* --spec" } 
+      "test" : "mocha" } 
 }

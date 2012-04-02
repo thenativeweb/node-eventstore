@@ -1,179 +1,266 @@
-var vows = require('vows')
-  , assert = require('assert');
-  
-var storageName = "redis";
+var expect = require('expect.js')
+  , storageModule = require('../storage');
+ 
+ describe('Storage', function() {
 
-var options = {
-    database: 1
-};
+    var storage;
 
-vows.describe('The ' + storageName + ' Storage')
-.addBatch({
-    'An empty  Storage': {
-        topic: function () {
-            require('../storage').createStorage(options, function(err, storage) {
-                storage.client.flushdb();
-                this.callback(null, storage);
-            }.bind(this));
-        },
-        
-        'has a function getId': function(storage) {
-            assert.isFunction(storage.getId);
-        },
-        
-        'getId returns a string': function(storage) {
-            storage.getId(function(err, id) {
-                assert.isString(id);
-            });
-        },
-        
-        'a second id returned by getId won\'t equal the first': function(storage) {
-            storage.getId(function(err, id1) {
-                storage.getId(function(err, id2) {
-                    assert.notEqual(id1, id2);
+    describe('beeing not connected', function() {
+
+        describe('calling createStorage', function() {
+
+            describe('without a callback', function() {
+
+                before(function() {
+                    storage = storageModule.createStorage({ dbName: 'testeventstore' });
                 });
-            });
-        },
-        
-        'can be filled with events': function(storage) {
-            var id = '1';
-            storage.addEvents([{'streamId': id, commitId: '10', 'payload': {event:'bla'}}], function() {
-                storage.getEvents(id, 0, -1, function(err, events) {
-                    assert.isArray(events);
-                    assert.equal(events.length, 1);
+
+                describe('calling connect', function() {
+
+                    it('it should connect successfully', function(done) {
+
+                        storage.connect(function(err) {
+                            expect(err).to.eql(null);
+                            done();
+                        });
+
+                    });
+
                 });
+
             });
-        }
-    }
-})
-.addBatch({
-    'An filled  Storage': {
-       topic: function() {
-            require('../storage').createStorage(options, function(err, storage) {
-                storage.client.flushdb();
-                fillStore(storage, this.callback);
-            }.bind(this));
-        },
-        
-        'after a successful `fill` we get events for id 2': {
-            topic: function (storage) {
-                storage.getEvents('2', 0, -1, this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 4);
-            },
-            
-            'we can assert if sorting is right': function (events) {
-                assert.equal(events[0].commitId, '0');
-                assert.equal(events[1].commitId, '1');
-                assert.equal(events[3].commitId, '3');
-            }
-        },
-        
-        'after a successful `fill` we get events for id 3': {
-            topic: function (storage) {
-                storage.getEvents('3', 0, -1, this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 2);
-            }
-        },
-        
-        'after a successful `fill` we get events for id 2 from 1 to 3': {
-            topic: function (storage) {
-                storage.getEvents('2', 1, 3, this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 2);
-            }
-        },
-        
-        'after a successful `fill` we get all undispatched events': {
-            topic: function (storage) {
-                storage.getUndispatchedEvents(this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 6);
-            },
-            
-            'we can assert if sorting is right': function (events) {
-                assert.equal(events[0].commitId, '0');
-                assert.equal(events[2].commitId, '2');
-                assert.equal(events[5].commitId, '5');
-            }
-        },
-        
-        'after a successful `fill` we get a range of events searching by event id': {
-            topic: function (storage) {
-                storage.getEventRange({id: '2'}, 2, this.callback);
-            },
-            
-            'we can assert if length is right': function (events) {
-                assert.equal(events.length, 2);
-            },
-            
-            'we can assert if sorting is right': function (events) {
-                assert.equal(events[0].commitId, '2');
-                assert.equal(events[1].commitId, '3');
-            }
-        },
-        
-        'after a successful `fill with a snapshot` we get the snapshot': {
-            topic: function (storage) {
-                storage.getSnapshot('3', -1, this.callback);
-            },
-            
-            'we can assert if snapshot is right': function (snapshot) {
-                assert.equal(snapshot.data, 'dataPlus');
-                assert.equal(snapshot.snapshotId, '2');
-                assert.equal(snapshot.streamId, '3');
-                assert.equal(snapshot.revision, '2');
-            }
-        },
-        
-        'after a successful `fill with a snapshot` we get the snapshot with maxRev': {
-            topic: function (storage) {
-                storage.getSnapshot('3', 1, this.callback);
-            },
-            
-            'we can assert if snapshot is right': function (snapshot) {
-                assert.equal(snapshot.data, 'data');
-                assert.equal(snapshot.snapshotId, '1');
-                assert.equal(snapshot.streamId, '3');
-                assert.equal(snapshot.revision, '1');
-            }
-        },
-        
-        teardown:  function(storage) { 
+
+            describe('with a callback', function() {
+
+                it('it should connect successfully', function(done) {
+
+                    storageModule.createStorage({ dbName: 'testeventstore' }, function(err, str) {
+                        storage = str;
+                        expect(err).to.eql(null);
+                        expect(str).to.not.eql(null);
+                        done();
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
+    describe('beeing connected', function() {
+
+        before(function(done) {
             storage.client.flushdb();
-        }
-    }
-}).export(module);
+            done();
+        });
 
+        describe('calling getId', function() {
 
-function fillStore(storage, callback) {
-    storage.addEvents([
-        {streamId: '2', streamRevision: 0, commitId: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
-        {streamId: '2', streamRevision: 1, commitId: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
-        {streamId: '2', streamRevision: 2, commitId: 2, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
-        {streamId: '2', streamRevision: 3, commitId: 3, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
-    ],
-    function (err) {
-        storage.addEvents([
-            {streamId: '3', streamRevision: 0, commitId: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
-            {streamId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
-            ], 
-            function (err) {
-                storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                    storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, function() {
-                        callback(null, storage);
+            it('it should callback with a new id', function(done) {
+
+                storage.getId(function(err, id) {
+                    expect(err).to.eql(null);
+                    expect(id).to.be.an('string');
+                    done();
+                });
+
+            });
+
+        });
+
+        describe('calling addEvents', function() {
+
+            it('it should save the events', function(done) {
+
+                var events = [
+                    {
+                        streamId: 'id1',
+                        streamRevision: 0,
+                        commitId: '10',
+                        payload: {
+                            event:'bla'
+                        }
+                    }
+                ];
+
+                storage.addEvents(events, function(err) {
+                    expect(err).to.eql(null);
+
+                    storage.getEvents('id1', -1, function(err, evts) {
+                        expect(err).to.eql(null);
+                        expect(evts).to.be.an('array');
+                        expect(evts).to.have.length(1);
+
+                        done();
                     });
                 });
-            }
-        );
+
+            });
+
+        });
+
+        describe('calling addSnapshot', function() {
+
+            it('it should save the snapshot', function(done) {
+
+                var snapshot = {
+                    snapshotId: '1',
+                    streamId: '3',
+                    revision: 1,
+                    data: 'data'
+                };
+
+                storage.addSnapshot(snapshot, function(err) {
+                    expect(err).to.eql(null);
+
+                    storage.getSnapshot('3', function(err, snap) {
+                        expect(err).to.eql(null);
+                        expect(snap.data).to.eql(snapshot.data);
+                        expect(snap.snapshotId).to.eql(snapshot.snapshotId);
+                        expect(snap.revision).to.eql(snapshot.revision);
+                        expect(snap.streamId).to.eql(snapshot.streamId);
+
+                        done();
+                    });
+                });
+
+            });
+
+        });
+
+        describe('having a filled store with example data', function() {
+
+            before(function(done) {
+                storage.client.flushdb();
+                storage.addEvents([
+                    {streamId: '2', streamRevision: 0, commitId: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
+                    {streamId: '2', streamRevision: 1, commitId: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
+                    {streamId: '2', streamRevision: 2, commitId: 2, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
+                    {streamId: '2', streamRevision: 3, commitId: 3, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
+                ],
+                function (err) {
+                    storage.addEvents([
+                        {streamId: '3', streamRevision: 0, commitId: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
+                        {streamId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
+                        ], 
+                        function (err) {
+                            storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                                storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
+                            });
+                        }
+                    );
+                });
+            });
+
+            describe('calling getEvents for id 2', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getEvents('2', 0, -1, function(err, events) {
+                        expect(err).to.eql(null);
+                        expect(events).to.have.length(4);
+                        expect(events[0].commitId).to.eql('0');
+                        expect(events[1].commitId).to.eql('1');
+                        expect(events[3].commitId).to.eql('3');
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getEvents for id 3', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getEvents('3', 0, -1, function(err, events) {
+                        expect(err).to.eql(null);
+                        expect(events).to.have.length(2);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getEvents for id 2 from 1 to 3', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getEvents('2', 1, 3, function(err, events) {
+                        expect(err).to.eql(null);
+                        expect(events).to.have.length(2);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getUndispatchedEvents', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getUndispatchedEvents(function(err, events) {
+                        expect(err).to.eql(null);
+                        expect(events).to.have.length(6);
+                        expect(events[0].commitId).to.eql('0');
+                        expect(events[2].commitId).to.eql('2');
+                        expect(events[5].commitId).to.eql('5');
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getEventRange searching by event id', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getEventRange({id: '2'}, 2, function(err, events) {
+                        expect(err).to.eql(null);
+                        expect(events).to.have.length(2);
+                        expect(events[0].commitId).to.eql('2');
+                        expect(events[1].commitId).to.eql('3');
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getSnapshot for id 3', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getSnapshot('3', -1, function(err, snap) {
+                        expect(err).to.eql(null);
+                        expect(snap.data).to.eql('dataPlus');
+                        expect(snap.snapshotId).to.eql('2');
+                        expect(snap.streamId).to.eql('3');
+                        expect(snap.revision).to.eql('2');
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getSnapshot for id 3 with maxRev 1', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getSnapshot('3', 1, function(err, snap) {
+                        expect(err).to.eql(null);
+                        expect(snap.data).to.eql('data');
+                        expect(snap.snapshotId).to.eql('1');
+                        expect(snap.streamId).to.eql('3');
+                        expect(snap.revision).to.eql('1');
+
+                        done();
+                    });
+                });
+
+            });
+
+        });
+
     });
- }
+
+ });
