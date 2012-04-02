@@ -1,142 +1,252 @@
-var vows = require('vows')
-  , assert = require('assert')
-  , eventstore = require('../lib/eventStore').createStore();
+var expect = require('expect.js')
+  , eventstoreModule = require('../lib/eventStore')
+  , storageModule = require('../lib/storage/inMemory/storage');
  
-eventstore.start();
- 
-vows.describe('The EventStore')
-.addBatch({
-    'An unconfigured eventstore does not throw error when': {
-        topic: eventstore,
-        
-        'requesting an eventstream': function(es) {
-            assert.doesNotThrow(function() {es.getEventStream('1', 0, -1, function (error, es) {});});
-        },
-        
-        'committing': function(es) {
-            assert.doesNotThrow(function() {es.commit({currentRevision: function() {return 0;}, events: [], uncommittedEvents: []});}, this.callback);
-        }
-    }
-})
-.addBatch({    
-    'A configured eventstore': {
-        topic: function() {
-            require('../lib/storage/inMemory/storage').createStorage(function(err, storage) {
-                eventstore.configure(function() {
-                    // configure eventstore
-                    eventstore.use(storage);
-                    this.callback(null, eventstore);
-                }.bind(this));
-            }.bind(this));
-        },
-                
-        'can commit a single event': {
-            topic: function() {
-                eventstore.commit({currentRevision: function() {return 0;}, events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}]}, this.callback);
-            },
-            
-            'and can commit an additional array of events': {
-                topic: function() {
-                    eventstore.commit({currentRevision: function() {return 0;},events: [],uncommittedEvents:[{streamId: 'e1', payload: {event:'bla'}}, {streamId: 'e1', payload: {event:'bla'}}]}, this.callback);
-                },
-                
-                'and can request it`s full eventstream': {
-                    topic: function() {
-                        eventstore.getEventStream('e1', 0, -1, this.callback);
-                    },
-                    
-                    'correctly': function(err, stream) {
-                        assert.equal(stream.events.length, 3);
-                    },
-                    
-                    'the eventstream has no uncommitted events': function(err, stream) {
-                        assert.equal(stream.uncommittedEvents.length, 0);
-                    }
-                }
-            }
-        },
-        
-        'can work with eventstream': {
-            topic: function() {
-                eventstore.getEventStream('e2', 0, -1, this.callback);
-            },
-            
-            'so to add events to the stream': function(err, stream) {
-                 stream.addEvent({streamId: 'e2', payload: null});
-            },
-            
-            'and commit it': function(err, stream) {
-                stream.commit();
-            }
-        },
-        
-        'can work with snapshots': {
-            topic: function() {
-                eventstore.getEventStream('e3', 0, -1, function(err, stream) {
-                    stream.addEvent({streamId: 'e3', payload: null});
-                    stream.commit(function(err) {
-                        eventstore.getEventStream('e3', 0, -1, this.callback);
-                    }.bind(this));
-                }.bind(this));
-            },
-            
-            'so create a snapshot from eventstream': {
-                topic: function(stream) {
-                    assert.equal(stream.currentRevision(), 0);
-                    assert.equal(stream.currentRevision(), stream.lastRevision);
-                    eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', this.callback);
-                },
-            
-                'and request it': {
-                    topic: function(err) {
-                        eventstore.getFromSnapshot('e3', this.callback);
-                    },
-                    
-                    'correctly': function(err, snapshot, stream) {
-                        assert.equal(snapshot.data, 'data');
-                        assert.equal(snapshot.streamId, 'e3');
-                        assert.equal(stream.currentRevision(), 0);
-                        assert.equal(snapshot.revision, stream.lastRevision);
-                        assert.equal(snapshot.revision, stream.currentRevision());
-                    }
-                }
-            }
-        },
+ describe('EventStore', function() {
 
-        'can request': {
-            topic: function() {
+    var eventstore;
+
+    describe('not beeing configured', function() {
+
+        before(function() {
+            eventstore = eventstoreModule.createStore();
+        });
+
+        describe('requesting an eventstream', function() {
+
+            it('it should callback with an error', function(done) {
+
+                eventstore.getEventStream('1', 0, -1, function(err) {
+                    expect(err).to.not.eql(null);
+                    done();
+                });
+
+            });
+
+        });
+
+        describe('committing', function() {
+
+            it('it should callback with an error', function(done) {
+
+                var fakeEventStream = {
+                    currentRevision: function() {
+                        return 0;
+                    },
+                    events: [],
+                    uncommittedEvents: []
+                };
+
+                eventstore.commit(fakeEventStream, function(err) {
+                    expect(err).to.not.eql(null);
+                    done();
+                });
+
+            });
+
+        });
+
+    });
+
+    describe('beeing configured', function() {
+
+        before(function(done) {
+            eventstore = eventstoreModule.createStore();
+            storageModule.createStorage(function(err, storage) {
+                eventstore.configure(function() {
+                    // to use the in process dispatcher 
+                    delete storage.filename;
+                    this.use(storage);
+                });
+                eventstore.start();
+                done();
+            });
+        });
+
+        describe('requesting an eventstream', function() {
+
+            it('it should callback without an error', function(done) {
+
+                eventstore.getEventStream('1', 0, -1, function(err, es) {
+                    expect(err).to.eql(null);
+                    done();
+                });
+
+            });
+
+        });
+
+        describe('requesting all events of a stream', function() {
+
+            before(function(done) {
                 eventstore.getEventStream('e4', 0, -1, function(err, stream) {
                     stream.addEvent({ id: '1'});
                     stream.addEvent({ id: '2'});
                     stream.addEvent({ id: '3'});
                     stream.addEvent({ id: '4'});
                     stream.addEvent({ id: '5'});
-                    stream.commit(this.callback);
-                }.bind(this));
-            },
+                    stream.commit(done);
+                });
+            });
 
-            'all events of a stream': {
-                topic: function(err) {
-                    eventstore.getEvents('e4', this.callback);
-                },
-                
-                'correctly': function(err, events) {
-                    assert.equal(events[0].payload.id, '1');
-                    assert.equal(events.length, 5);
-                }
-            },
+            it('it should callback with the correct values', function(done) {
 
-            'events by eventId': {
-                topic: function(err) {
-                    eventstore.getEventRange({id: '2'}, 2, function(err, evts) {
-                        evts.next(this.callback);
-                    }.bind(this));
-                },
-                
-                'correctly': function(err, events) {
-                    assert.equal(events[0].payload.id, '5');
-                }
-            }
-        }
-    }
-}).export(module);
+                eventstore.getEvents('e4', function(err, events) {
+                    expect(err).to.eql(null);
+                    expect(events[0].payload.id).to.eql('1');
+                    expect(events).to.have.length(5);
+                    done();
+                });
+
+            });
+
+        });
+
+        describe('requesting an event range', function() {
+
+            before(function(done) {
+                eventstore.getEventStream('e5', 0, -1, function(err, stream) {
+                    stream.addEvent({ id: '11'});
+                    stream.addEvent({ id: '22'});
+                    stream.addEvent({ id: '33'});
+                    stream.addEvent({ id: '44'});
+                    stream.addEvent({ id: '55'});
+                    stream.commit(done);
+                });
+            });
+
+            var events;
+
+            it('it should callback with the correct values', function(done) {
+
+                eventstore.getEventRange({id: '22'}, 2, function(err, evts) {
+                    events = evts;
+                    expect(err).to.eql(null);
+                    expect(events[0].payload.id).to.eql('33');
+                    expect(events).to.have.length(2);
+                    done();
+                });
+
+            });
+
+            describe('requesting the next range', function() {
+
+                it('it should callback with the correct values', function(done) {
+
+                    events.next(function(err, evts) {
+                        expect(err).to.eql(null);
+                        expect(evts[0].payload.id).to.eql('55');
+                        expect(evts).to.have.length(1);
+                        done();
+                    });
+
+                });
+
+            });
+
+        });
+
+        describe('committing', function() {
+
+            it('it should callback without an error', function(done) {
+
+                var fakeEventStream = {
+                    currentRevision: function() {
+                        return 0;
+                    },
+                    events: [],
+                    uncommittedEvents: [
+                        {streamId: 'e1', payload: { event:'bla' } },
+                        {streamId: 'e1', payload: { event:'blabli' } }
+                    ]
+                };
+
+                eventstore.commit(fakeEventStream, function(err) {
+                    expect(err).to.eql(null);
+                    done();
+                });
+
+            });
+
+            describe('requesting the full eventstream', function() {
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEventStream('e1', 0, -1, function(err, es) {
+                        expect(es.events).to.have.length(2);
+                        expect(es.uncommittedEvents).to.have.length(0);
+                        done();
+                    });
+
+                });
+
+            });
+
+        });
+
+        describe('adding an event to an eventstream', function() {
+
+            before(function(done) {
+                eventstore.getEventStream('e2', 0, -1, function(err, es) {
+                    es.addEvent({streamId: 'e2', payload: 'test'});
+                    es.commit(done);
+                });
+            });
+
+            describe('requesting the full eventstream', function() {
+
+                var stream;
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEventStream('e2', 0, -1, function(err, es) {
+                        stream = es;
+                        expect(es.currentRevision()).to.be(0);
+                        expect(es.currentRevision()).to.be(es.lastRevision);
+                        expect(es.events).to.have.length(1);
+                        expect(es.uncommittedEvents).to.have.length(0);
+                        expect(es.events[0].streamId).to.eql('e2');
+                        expect(es.events[0].payload.payload).to.eql('test');
+                        done();
+                    });
+
+                });
+
+                describe('creating a snapshot', function() {
+
+                    it('it should callback without an error', function(done) {
+
+                        eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', function(err) {
+                            expect(err).to.eql(null);
+                            done();
+                        });
+
+                    });
+
+                    describe('calling getFromSnapshot', function() {
+
+                        it('it should callback with the correct values', function(done) {
+
+                            eventstore.getFromSnapshot('e2', function(err, snapshot, es) {
+                                expect(err).to.eql(null);
+                                expect(snapshot.data).to.eql('data');
+                                expect(snapshot.streamId).to.eql('e2');
+                                expect(es.currentRevision()).to.be(0);
+                                expect(snapshot.revision).to.be(es.lastRevision);
+                                expect(snapshot.revision).to.be(es.currentRevision());
+                                done();
+                            });
+
+                        });
+
+                    });
+
+                });
+
+            });
+
+        });
+
+    });
+
+ });

@@ -23,8 +23,9 @@
       "async": ">= 0.0.1"
   }
   , "devDependencies": {
-      "vows": ">= 0.0.1"
+      "mocha": ">= 0.0.1"
+    , "expect.js": ">= 0.0.1"
   }
   , "scripts" : { 
-      "test" : "vows test/* --spec" } 
+      "test" : "mocha" } 
 }
