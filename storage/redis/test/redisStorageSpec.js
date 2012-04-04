@@ -20,7 +20,7 @@ var expect = require('expect.js')
                     it('it should connect successfully', function(done) {
 
                         storage.connect(function(err) {
-                            expect(err).to.eql(null);
+                            expect(err).not.to.be.ok();
                             done();
                         });
 
@@ -36,7 +36,7 @@ var expect = require('expect.js')
 
                     storageModule.createStorage({ dbName: 'testeventstore' }, function(err, str) {
                         storage = str;
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(str).to.not.eql(null);
                         done();
                     });
@@ -61,7 +61,7 @@ var expect = require('expect.js')
             it('it should callback with a new id', function(done) {
 
                 storage.getId(function(err, id) {
-                    expect(err).to.eql(null);
+                    expect(err).not.to.be.ok();
                     expect(id).to.be.an('string');
                     done();
                 });
@@ -72,24 +72,23 @@ var expect = require('expect.js')
 
         describe('calling addEvents', function() {
 
+            var event = {
+                streamId: 'id1',
+                streamRevision: 0,
+                commitId: '10',
+                dispatched: false,
+                payload: {
+                    event:'bla'
+                }
+            };
+
             it('it should save the events', function(done) {
 
-                var events = [
-                    {
-                        streamId: 'id1',
-                        streamRevision: 0,
-                        commitId: '10',
-                        payload: {
-                            event:'bla'
-                        }
-                    }
-                ];
-
-                storage.addEvents(events, function(err) {
-                    expect(err).to.eql(null);
+                storage.addEvents([event], function(err) {
+                    expect(err).not.to.be.ok();
 
                     storage.getEvents('id1', -1, function(err, evts) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(evts).to.be.an('array');
                         expect(evts).to.have.length(1);
 
@@ -97,6 +96,40 @@ var expect = require('expect.js')
                     });
                 });
 
+            });
+
+            describe('calling getUndispatchedEvents', function() {
+
+                it('it should be in the array', function(done) {
+                    storage.getUndispatchedEvents(function(err, evts) {
+                        expect(err).not.to.be.ok();
+                        expect(evts).to.be.an('array');
+                        expect(evts).to.have.length(1);
+                        expect(event).to.eql(evts[0]);
+
+                        done();
+                    });
+                });
+
+                describe('calling setEventToDispatched', function() {
+
+                    it('it should not be in the undispatched array anymore', function(done) {
+
+                        storage.setEventToDispatched(event, function(err) {
+                            expect(err).not.to.be.ok();
+                            storage.getUndispatchedEvents(function(err, evts) {
+                                expect(err).not.to.be.ok();
+                                expect(evts).to.be.an('array');
+                                expect(evts).to.have.length(0);
+
+                                done();
+                            });
+                        });
+
+                    });
+
+                });
+                
             });
 
         });
@@ -113,10 +146,10 @@ var expect = require('expect.js')
                 };
 
                 storage.addSnapshot(snapshot, function(err) {
-                    expect(err).to.eql(null);
+                    expect(err).not.to.be.ok();
 
                     storage.getSnapshot('3', function(err, snap) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(snap.data).to.eql(snapshot.data);
                         expect(snap.snapshotId).to.eql(snapshot.snapshotId);
                         expect(snap.revision).to.eql(snapshot.revision);
@@ -133,7 +166,6 @@ var expect = require('expect.js')
         describe('having a filled store with example data', function() {
 
             before(function(done) {
-                storage.client.flushdb();
                 storage.addEvents([
                     {streamId: '2', streamRevision: 0, commitId: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
                     {streamId: '2', streamRevision: 1, commitId: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
@@ -158,7 +190,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getEvents('2', 0, -1, function(err, events) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(events).to.have.length(4);
                         expect(events[0].commitId).to.eql('0');
                         expect(events[1].commitId).to.eql('1');
@@ -174,7 +206,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getEvents('3', 0, -1, function(err, events) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(events).to.have.length(2);
 
                         done();
@@ -187,7 +219,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getEvents('2', 1, 3, function(err, events) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(events).to.have.length(2);
 
                         done();
@@ -200,7 +232,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getUndispatchedEvents(function(err, events) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(events).to.have.length(6);
                         expect(events[0].commitId).to.eql('0');
                         expect(events[2].commitId).to.eql('2');
@@ -216,7 +248,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getEventRange({id: '2'}, 2, function(err, events) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(events).to.have.length(2);
                         expect(events[0].commitId).to.eql('2');
                         expect(events[1].commitId).to.eql('3');
@@ -231,7 +263,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getSnapshot('3', -1, function(err, snap) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(snap.data).to.eql('dataPlus');
                         expect(snap.snapshotId).to.eql('2');
                         expect(snap.streamId).to.eql('3');
@@ -247,7 +279,7 @@ var expect = require('expect.js')
 
                 it('it should callback with the correct values', function(done) {
                     storage.getSnapshot('3', 1, function(err, snap) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(snap.data).to.eql('data');
                         expect(snap.snapshotId).to.eql('1');
                         expect(snap.streamId).to.eql('3');

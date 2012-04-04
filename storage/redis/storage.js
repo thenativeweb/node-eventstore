@@ -267,7 +267,6 @@ Storage.prototype = {
     //
     // - __callback:__ `function(err, events){}`
     getUndispatchedEvents: function(callback) {
-    
         this.client.lrange('undispatched:' + this.options.eventsCollectionName, 0, -1, function (err, res) {
             handleResultSet(err, res, callback);
         });
