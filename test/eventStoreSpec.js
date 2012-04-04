@@ -17,7 +17,7 @@ var expect = require('expect.js')
             it('it should callback with an error', function(done) {
 
                 eventstore.getEventStream('1', 0, -1, function(err) {
-                    expect(err).to.not.eql(null);
+                    expect(err).to.be.ok();
                     done();
                 });
 
@@ -38,7 +38,7 @@ var expect = require('expect.js')
                 };
 
                 eventstore.commit(fakeEventStream, function(err) {
-                    expect(err).to.not.eql(null);
+                    expect(err).to.be.ok();
                     done();
                 });
 
@@ -68,7 +68,7 @@ var expect = require('expect.js')
             it('it should callback without an error', function(done) {
 
                 eventstore.getEventStream('1', 0, -1, function(err, es) {
-                    expect(err).to.eql(null);
+                    expect(err).not.to.be.ok();
                     done();
                 });
 
@@ -92,7 +92,7 @@ var expect = require('expect.js')
             it('it should callback with the correct values', function(done) {
 
                 eventstore.getEvents('e4', function(err, events) {
-                    expect(err).to.eql(null);
+                    expect(err).not.to.be.ok();
                     expect(events[0].payload.id).to.eql('1');
                     expect(events).to.have.length(5);
                     done();
@@ -121,7 +121,7 @@ var expect = require('expect.js')
 
                 eventstore.getEventRange({id: '22'}, 2, function(err, evts) {
                     events = evts;
-                    expect(err).to.eql(null);
+                    expect(err).not.to.be.ok();
                     expect(events[0].payload.id).to.eql('33');
                     expect(events).to.have.length(2);
                     done();
@@ -134,7 +134,7 @@ var expect = require('expect.js')
                 it('it should callback with the correct values', function(done) {
 
                     events.next(function(err, evts) {
-                        expect(err).to.eql(null);
+                        expect(err).not.to.be.ok();
                         expect(evts[0].payload.id).to.eql('55');
                         expect(evts).to.have.length(1);
                         done();
@@ -162,7 +162,7 @@ var expect = require('expect.js')
                 };
 
                 eventstore.commit(fakeEventStream, function(err) {
-                    expect(err).to.eql(null);
+                    expect(err).not.to.be.ok();
                     done();
                 });
 
@@ -217,7 +217,7 @@ var expect = require('expect.js')
                     it('it should callback without an error', function(done) {
 
                         eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', function(err) {
-                            expect(err).to.eql(null);
+                            expect(err).not.to.be.ok();
                             done();
                         });
 
@@ -228,7 +228,7 @@ var expect = require('expect.js')
                         it('it should callback with the correct values', function(done) {
 
                             eventstore.getFromSnapshot('e2', function(err, snapshot, es) {
-                                expect(err).to.eql(null);
+                                expect(err).not.to.be.ok();
                                 expect(snapshot.data).to.eql('data');
                                 expect(snapshot.streamId).to.eql('e2');
                                 expect(es.currentRevision()).to.be(0);
