@@ -1,6 +1,5 @@
 //     storage.js v0.5.0
-//     (c) 2012 Kaba AG, MIC AWM; under MIT License
-//     (by) Jan Muehlemann (jamuhl)
+//     (c)(by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
 
 // The storage is the database driver for redis.

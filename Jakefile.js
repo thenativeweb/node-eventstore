@@ -1,6 +1,5 @@
 //     Jakefile.js v0.0.1
-//     (c) 2012 Kaba AG, MIC AWM
-//     (by) Jan Muehlemann (jamuhl)
+//     (c)(by) Jan Muehlemann (jamuhl)
 //        , Adriano Raiano (adrai)
 
 // Here we will document the common [jake](https://github.com/mde/jake) tasks generic to all other jake 

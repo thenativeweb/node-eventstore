@@ -1,10 +1,10 @@
 {
-    "author": "Kaba MIC AWM"
+    "author": "Jan Muehlemann, Adriano Raiano"
   , "name": "eventstore.redis"
   , "version": "0.5.0"
   , "contributors": [ 
     { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }, 
-    { "name": "Adriano Raiano", "email": "adriano.raiano@kaba.com" }
+    { "name": "Adriano Raiano", "email": "adriano@raiano.ch" }
   ]
   , "private": false
   , "repository": {
@@ -13,7 +13,7 @@
   }
   , "main": "./index.js"
   , "engines": {
-        "node": ">= v0.4.0"
+        "node": ">= v0.6.15"
     }
   , "dependencies": {
         "redis": ">= 0.0.1"
