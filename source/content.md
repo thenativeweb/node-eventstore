@@ -4,7 +4,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher
-- supported Dbs (MongoDb, CouchDb, Redis)
+- supported Dbs (MongoDb, Redis)
 - snapshot support
 
 # Installation
@@ -15,9 +15,6 @@ choose one of the existing storage implementation or provide your own:
 
     // for mongoDb
     npm install eventstore.mongoDb
-
-    // for couchDb
-    npm install eventstore.couchDb
 
     // for redis
     npm install eventstore.redis
@@ -37,7 +34,7 @@ with option `eventstore.createStore({logger: 'console'});`.
 
 ### Provide implementation for storage and publishing events
 
-Example will use redis storage, but same will work for mongoDb and couchDb.
+Example will use redis storage, but same will work for mongoDb.
 
     var storage = require('eventstore.redis');
 
@@ -120,10 +117,17 @@ You can find the code documentation [here](public/docs/eventStore.html).
 
 ## Release Notes
 
+### v0.6.0
+
+- removed couchDb implementation
+- rewritten tests in mocha and expect.js
+- updated to node.js 0.6.15
+
 ### v0.5.0
 
 - simplified API for storage usage
 - if possible fork dispatching to own childprocess
+- optimized lastRevision handling
 
 ### v0.3.0
 

@@ -35,7 +35,7 @@
 <ul>
 <li>load and store events via EventStream object</li>
 <li>event dispatching to your publisher</li>
-<li>supported Dbs (MongoDb, CouchDb, Redis)</li>
+<li>supported Dbs (MongoDb, Redis)</li>
 <li>snapshot support</li>
 </ul>
 
@@ -45,7 +45,7 @@
 
 <p>choose one of the existing storage implementation or provide your own:</p>
 
-<pre><code><span class="com">// for mongoDb</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">mongoDb<br /><br /></span><span class="com">// for couchDb</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">couchDb<br /><br /></span><span class="com">// for redis</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">redis<br /></span></code></pre>
+<pre><code><span class="com">// for mongoDb</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">mongoDb<br /><br /></span><span class="com">// for redis</span><span class="pln"><br />npm install eventstore</span><span class="pun">.</span><span class="pln">redis<br /></span></code></pre>
 
 <h1>Usage</h1>
 
@@ -60,7 +60,7 @@ with option <code>eventstore.createStore({logger: 'console'});</code>.</p>
 
 <h3>Provide implementation for storage and publishing events</h3>
 
-<p>Example will use redis storage, but same will work for mongoDb and couchDb.</p>
+<p>Example will use redis storage, but same will work for mongoDb.</p>
 
 <pre><code><span class="kwd">var</span><span class="pln"> storage </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore.redis'</span><span class="pun">);</span><span class="pln"><br /><br />es</span><span class="pun">.</span><span class="pln">configure</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br />&nbsp; &nbsp; es</span><span class="pun">.</span><span class="kwd">use</span><span class="pun">(</span><span class="pln">storage</span><span class="pun">.</span><span class="pln">createStorage</span><span class="pun">());</span><span class="pln"><br />&nbsp; &nbsp; es</span><span class="pun">.</span><span class="kwd">use</span><span class="pun">(</span><span class="pln">publisher</span><span class="pun">);</span><span class="pln"> </span><span class="com">// your publisher must provide function 'publisher.publish(event)'</span><span class="pln"><br />&nbsp; &nbsp; </span><span class="com">// es.use(logger);</span><span class="pln"><br /></span><span class="pun">}).</span><span class="pln">start</span><span class="pun">();</span><span class="pln"><br /></span></code></pre>
 
@@ -108,11 +108,20 @@ with option <code>eventstore.createStore({logger: 'console'});</code>.</p>
 
 <h2>Release Notes</h2>
 
+<h3>v0.6.0</h3>
+
+<ul>
+<li>removed couchDb implementation</li>
+<li>rewritten tests in mocha and expect.js</li>
+<li>updated to node.js 0.6.15</li>
+</ul>
+
 <h3>v0.5.0</h3>
 
 <ul>
 <li>simplified API for storage usage</li>
 <li>if possible fork dispatching to own childprocess</li>
+<li>optimized lastRevision handling</li>
 </ul>
 
 <h3>v0.3.0</h3>
