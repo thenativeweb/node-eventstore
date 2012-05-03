@@ -82,13 +82,19 @@ Storage.prototype = {
 
     // __addEvents:__ saves all events.
     //
-    // `storage.addEvents(events, callback)`
+    // `storage.addEvents(events[, type], callback)`
     //
     // - __events:__ the events array
+    // - __type:__ the stream type [optional]
     // - __callback:__ `function(err){}`
-    addEvents: function(events, callback) {
+    addEvents: function(events, type, callback) {
+        if (!callback) {
+            callback = type;
+            type = null;
+        }
         for(var i in events) {
             events[i]._id = events[i].commitId;
+            events[i].type = type;
         }
         this.events.insert(events, {keepGoing: true}, callback);
     },
@@ -126,7 +132,7 @@ Storage.prototype = {
             'streamId' : streamId,
             'streamRevision': options
         };
-        
+
         this.events.find(findStatement, {sort:[['streamRevision','asc']]}).toArray(callback);
     },
 
@@ -164,6 +170,26 @@ Storage.prototype = {
         });
     },
 
+    // __getEventsOfType:__ loads the events.
+    // 
+    // `storage.getEventsOfType(type, callback)`
+    //
+    // - __type:__ type for requested streams (equal to saga type)
+    // - __callback:__ `function(err, events){}`
+    getEventsOfType: function(type, callback) {
+        this.events.find({ 'type': type }, {sort:[['streamRevision','asc']]}).toArray(callback);
+    },
+
+    // __removeEvents:__ removes all events.
+    //
+    // `storage.removeEvents(streamId, callback)`
+    //
+    // - __streamId:__ id for requested stream
+    // - __callback:__ `function(err){}`
+    removeEvents: function(streamId, callback) {
+        this.events.remove({ 'streamId': streamId}, callback);
+    },
+
     // __getSnapshot:__ loads the next snapshot back from given max revision or the latest if you 
     // don't pass in a _maxRev_.
     // 
@@ -197,7 +223,7 @@ Storage.prototype = {
     //
     // - __callback:__ `function(err, events){}`
     getUndispatchedEvents: function(callback) {
-        this.events.find({'dispatched' : false}, {sort:[['streamId','asc'], ['streamRevision','asc']]}).toArray(callback);
+        this.events.find({'dispatched' : { '$ne': true }}, {sort:[['streamId','asc'], ['streamRevision','asc']]}).toArray(callback);
     },
 
     // __setEventToDispatched:__ sets the given event to dispatched.
@@ -210,7 +236,7 @@ Storage.prototype = {
     // - __callback:__ `function(err, events){}` [optional]
     setEventToDispatched: function(event, callback) {
         var updateCommand = { '$set' : {'dispatched': true} };
-        this.events.update({'_id' : event._id}, updateCommand, callback);
+        this.events.update({'_id' : event.commitId}, updateCommand, callback);
     },
 
     // __getId:__ loads a new id from storage.

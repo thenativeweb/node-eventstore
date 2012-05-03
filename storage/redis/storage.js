@@ -82,11 +82,16 @@ Storage.prototype = {
 
     // __addEvents:__ saves all events.
     //
-    // `storage.addEvents(events, callback)`
+    // `storage.addEvents(events[, type], callback)`
     //
     // - __events:__ the events array
+    // - __type:__ the stream type [optional]
     // - __callback:__ `function(err){}`
-    addEvents: function(events, callback) {
+    addEvents: function(events, type, callback) {
+        if (!callback) {
+            callback = type;
+            type = null;
+        }
         if (!events || events.length === 0) { 
             callback(null);
             return;
@@ -98,14 +103,30 @@ Storage.prototype = {
         events.forEach(function(event) {
             args.push(JSON.stringify(event));
         });
-        
-        this.client.rpush(this.options.eventsCollectionName + ':' + events[0].streamId, args, function(err, res) {
-            if (err) {
-                callback(err);
-            } else {
-                self.client.rpush('undispatched:' + self.options.eventsCollectionName, args, callback);
-            }
-        });
+
+        if (type) {
+            this.client.rpush(this.options.eventsCollectionName + ':' + type, args, function(err, res) {
+                if (err) {
+                    callback(err);
+                } else {
+                    self.client.rpush(self.options.eventsCollectionName + ':' + events[0].streamId, args, function(err, res) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            self.client.rpush('undispatched:' + self.options.eventsCollectionName, args, callback);
+                        }
+                    });
+                }
+            });
+        } else {
+            this.client.rpush(this.options.eventsCollectionName + ':' + events[0].streamId, args, function(err, res) {
+                if (err) {
+                    callback(err);
+                } else {
+                    self.client.rpush('undispatched:' + self.options.eventsCollectionName, args, callback);
+                }
+            });
+        }
     },
     
     // __addSnapshot:__ stores the snapshot
@@ -138,6 +159,39 @@ Storage.prototype = {
         this.client.lrange(this.options.eventsCollectionName + ':' + streamId, minRev, maxRev, function (err, res) {
             handleResultSet(err, res, callback);
         });
+    },
+
+    // __getEventsOfType:__ loads the events.
+    // 
+    // `storage.getEventsOfType(type, callback)`
+    //
+    // - __type:__ type for requested streams (equal to saga type)
+    // - __callback:__ `function(err, events){}`
+    getEventsOfType: function(type, callback) {
+        if (!this.store[type]) {
+           callback(null, []);
+        }
+        else {
+            callback(null, this.store[type]);
+        }
+    },
+
+    // __removeEvents:__ removes all events.
+    //
+    // `storage.removeEvents(streamId, callback)`
+    //
+    // - __streamId:__ id for requested stream
+    // - __callback:__ `function(err){}`
+    removeEvents: function(streamId, callback) {
+        for (var ele in this.store) {
+            var elem = this.store[ele];
+            for (var evt in elem) {
+                if (elem[evt].streamId === streamId) {
+                    delete this.store[ele];
+                }
+            }
+        }
+        if (callback) callback(null);
     },
 
     // __getEventRange:__ loads the range of events from given storage.

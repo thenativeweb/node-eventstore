@@ -132,6 +132,70 @@ var expect = require('expect.js')
                 
             });
 
+            describe('with the optional parameter type', function() {
+
+                var event = {
+                    streamId: 'id1_with_type',
+                    streamRevision: 0,
+                    commitId: '10_type',
+                    dispatched: false,
+                    payload: {
+                        event:'bla'
+                    }
+                };
+
+                it('it should save the events', function(done) {
+
+                    storage.addEvents([event], 'type', function(err) {
+                        expect(err).not.to.be.ok();
+
+                        storage.getEvents(event.streamId, -1, function(err, evts) {
+                            expect(err).not.to.be.ok();
+                            expect(evts).to.be.an('array');
+                            expect(evts).to.have.length(1);
+
+                            done();
+                        });
+                    });
+
+                });
+
+                describe('calling getUndispatchedEvents', function() {
+
+                    it('it should be in the array', function(done) {
+                        storage.getUndispatchedEvents(function(err, evts) {
+                            expect(err).not.to.be.ok();
+                            expect(evts).to.be.an('array');
+                            expect(evts).to.have.length(1);
+                            expect(event).to.eql(evts[0]);
+
+                            done();
+                        });
+                    });
+
+                    describe('calling setEventToDispatched', function() {
+
+                        it('it should not be in the undispatched array anymore', function(done) {
+
+                            storage.setEventToDispatched(event, function(err) {
+                                expect(err).not.to.be.ok();
+                                storage.getUndispatchedEvents(function(err, evts) {
+                                    expect(err).not.to.be.ok();
+                                    expect(evts).to.be.an('array');
+                                    expect(evts).to.have.length(0);
+
+                                    done();
+                                });
+                            });
+
+                        });
+
+                    });
+                    
+                });
+
+            });
+
         });
 
         describe('calling addSnapshot', function() {
@@ -178,9 +242,16 @@ var expect = require('expect.js')
                         {streamId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
                         ], 
                         function (err) {
-                            storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                                storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
-                            });
+                            storage.addEvents([
+                                {streamId: '4_type', streamRevision: 0, commitId: 6, commitStamp: new Date(2012, 3, 19, 8, 0, 0), payload: {id: '7', event:'blaaaaaaaaaaa'}, dispatched: false},
+                                {streamId: '4_type', streamRevision: 1, commitId: 7, commitStamp: new Date(2012, 3, 21, 8, 0, 0), payload: {id: '8', event:'blaaaaaaaaaaa'}, dispatched: false}
+                                ], 'typeSaga',
+                                function (err) {
+                                    storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                                        storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
+                                    });
+                                }
+                            );
                         }
                     );
                 });
@@ -215,6 +286,32 @@ var expect = require('expect.js')
 
             });
 
+            describe('calling getEvents for id 4_type', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getEvents('4_type', 0, -1, function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(2);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getEventsOfType for type', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getEventsOfType('typeSaga', function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(2);
+
+                        done();
+                    });
+                });
+
+            });
+
             describe('calling getEvents for id 2 from 1 to 3', function() {
 
                 it('it should callback with the correct values', function(done) {
@@ -233,7 +330,7 @@ var expect = require('expect.js')
                 it('it should callback with the correct values', function(done) {
                     storage.getUndispatchedEvents(function(err, events) {
                         expect(err).not.to.be.ok();
-                        expect(events).to.have.length(6);
+                        expect(events).to.have.length(8);
                         expect(events[0].commitId).to.eql('0');
                         expect(events[2].commitId).to.eql('2');
                         expect(events[5].commitId).to.eql('5');
@@ -286,6 +383,22 @@ var expect = require('expect.js')
                         expect(snap.revision).to.eql('1');
 
                         done();
+                    });
+                });
+
+            });
+
+            describe('calling removeEvents', function() {
+
+                it('it should remove the events', function(done) {
+                    storage.removeEvents('3', function(err) {
+                        expect(err).not.to.be.ok();
+                        storage.getEvents('3', 0, -1, function(err, events) {
+                            expect(err).not.to.be.ok();
+                            expect(events).to.have.length(0);
+
+                            done();
+                        });
                     });
                 });
 
