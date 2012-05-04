@@ -15,6 +15,8 @@ var redis = require('redis')
   , redisStorage
   , Storage;
 
+require('../../lib/json');
+
 if (typeof exports !== 'undefined') {
     redisStorage = exports;
 } else {
@@ -168,12 +170,9 @@ Storage.prototype = {
     // - __type:__ type for requested streams (equal to saga type)
     // - __callback:__ `function(err, events){}`
     getEventsOfType: function(type, callback) {
-        if (!this.store[type]) {
-           callback(null, []);
-        }
-        else {
-            callback(null, this.store[type]);
-        }
+        this.client.lrange(this.options.eventsCollectionName + ':' + type, 0, -1, function (err, res) {
+            handleResultSet(err, res, callback);
+        });
     },
 
     // __removeEvents:__ removes all events.
@@ -183,15 +182,44 @@ Storage.prototype = {
     // - __streamId:__ id for requested stream
     // - __callback:__ `function(err){}`
     removeEvents: function(streamId, callback) {
-        for (var ele in this.store) {
-            var elem = this.store[ele];
-            for (var evt in elem) {
-                if (elem[evt].streamId === streamId) {
-                    delete this.store[ele];
-                }
+        var self = this;
+        
+        this.client.del(this.options.eventsCollectionName + ':' + streamId, function (err, res) {
+            if (err) {
+                callback(err);
+            } else {
+                self.client.keys(self.options.eventsCollectionName + ':*', function (err, res) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        if (res.length === 0) {
+                            callback(null);
+                        } else {
+                            var last = res[res.length - 1];
+                            res.forEach(function(key) {
+                                self.client.lrange(key, 0, -1, function (err, res) {
+                                    if (err) {
+                                        callback(err);
+                                    } else {
+                                        res.forEach(function(item) {
+                                            self.client.lrem(key, 0, item, function(err) {
+                                                if (err) {
+                                                    return callback(err);
+                                                } else {
+                                                    if (key == last) {
+                                                        callback(err);
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
             }
-        }
-        if (callback) callback(null);
+        });
     },
 
     // __getEventRange:__ loads the range of events from given storage.
@@ -220,14 +248,14 @@ Storage.prototype = {
                                 callback(err);
                             } else {
                                 res.forEach(function(item) {
-                                    arr.push(JSON.parse(item));
+                                    arr.push(JSON.deserialize(item));
                                 });
                             }
                             
                             if (key == last) {
 
-                                arr.sort(function(a, b){
-                                     return a.commitStamp - b.commitStamp;
+                                arr.sort(function(a, b) {
+                                    return a.commitStamp - b.commitStamp;
                                 });
 
                                 var index = 0;
@@ -288,7 +316,7 @@ Storage.prototype = {
         if (maxRev === -1) {
             this.client.lrange(this.options.snapshotsCollectionName + ':' + streamId, 0, 0, function (err, res) {
                 if (res && res.length === 1) {
-                    callback(err, JSON.parse(res[0]));
+                    callback(err, JSON.deserialize(res[0]));
                 } else {
                     callback(err, null);
                 }
@@ -300,7 +328,7 @@ Storage.prototype = {
                     callback(err);
                 } else if (res && res.length > 0) {
                     for (var i = res.length - 1; i >= 0; i--) {
-                        var snap = JSON.parse(res[i]);
+                        var snap = JSON.deserialize(res[i]);
                         if (snap.revision <= maxRev) {
                             callback(null, snap);
                             break;
@@ -364,7 +392,7 @@ var handleResultSet = function(err, res, callback) {
         var arr = [];
 
         res.forEach(function(item) {
-            arr.push(JSON.parse(item));
+            arr.push(JSON.deserialize(item));
         });
         
         callback(null, arr);
