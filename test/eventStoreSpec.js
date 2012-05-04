@@ -76,6 +76,19 @@ var expect = require('expect.js')
 
         });
 
+        describe('requesting a eventstreams', function() {
+
+            it('it should callback without an error', function(done) {
+
+                eventstore.getEventStreams('type', function(err, es) {
+                    expect(err).not.to.be.ok();
+                    done();
+                });
+
+            });
+
+        });
+
         describe('requesting all events of a stream', function() {
 
             before(function(done) {
@@ -170,12 +183,104 @@ var expect = require('expect.js')
 
             describe('requesting the full eventstream', function() {
 
+                var stream;
+
                 it('it should callback with the correct values', function(done) {
 
                     eventstore.getEventStream('e1', 0, -1, function(err, es) {
+                        stream = es;
                         expect(es.events).to.have.length(2);
                         expect(es.uncommittedEvents).to.have.length(0);
                         done();
+                    });
+
+                });
+
+                describe('calling remove on the stream', function() {
+
+                    it('it should remove all events of that stream', function(done) {
+
+                        stream.remove(function(err) {
+                            eventstore.getEventStream('e1', 0, -1, function(err, es) {
+                                expect(es.events).to.have.length(0);
+                                expect(es.uncommittedEvents).to.have.length(0);
+                                done();
+                            });
+                        });
+
+                    });
+
+                });
+
+            });
+
+            describe('a typed stream', function() {
+
+                it('it should callback without an error', function(done) {
+
+                    var fakeEventStream = {
+                        currentRevision: function() {
+                            return 0;
+                        },
+                        type: 'typeSaga',
+                        events: [],
+                        uncommittedEvents: [
+                            {streamId: 'e1_typed', payload: { event:'bla' } },
+                            {streamId: 'e1_typed', payload: { event:'blabli' } }
+                        ]
+                    };
+
+                    eventstore.commit(fakeEventStream, function(err) {
+                        expect(err).not.to.be.ok();
+                        done();
+                    });
+
+                });
+
+                describe('requesting the full eventstreams', function() {
+
+                    it('it should callback with the correct values', function(done) {
+
+                        eventstore.getEventStreams('typeSaga', function(err, es) {
+                            expect(es).to.have.length(1);
+                            expect(es[0].events).to.have.length(2);
+                            expect(es[0].uncommittedEvents).to.have.length(0);
+                            done();
+                        });
+
+                    });
+
+                });
+
+                describe('requesting the full eventstream', function() {
+
+                    var stream;
+
+                    it('it should callback with the correct values', function(done) {
+
+                        eventstore.getEventStream('e1_typed', 0, -1, function(err, es) {
+                            stream = es;
+                            expect(es.events).to.have.length(2);
+                            expect(es.uncommittedEvents).to.have.length(0);
+                            done();
+                        });
+
+                    });
+
+                    describe('calling remove on the stream', function() {
+
+                        it('it should remove all events of that stream', function(done) {
+
+                            stream.remove(function(err) {
+                                eventstore.getEventStream('e1_typed', 0, -1, function(err, es) {
+                                    expect(es.events).to.have.length(0);
+                                    expect(es.uncommittedEvents).to.have.length(0);
+                                    done();
+                                });
+                            });
+
+                        });
+
                     });
 
                 });
