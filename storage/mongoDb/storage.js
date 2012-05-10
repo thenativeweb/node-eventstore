@@ -88,7 +88,7 @@ Storage.prototype = {
     // - __callback:__ `function(err){}`
     addEvents: function(events, callback) {
         for(var i in events) {
-            events[i]._id = events[i].commitId;
+            events[i]._id = events[i].commitId + events[i].commitSequence;
         }
         this.events.insert(events, {keepGoing: true}, callback);
     },
