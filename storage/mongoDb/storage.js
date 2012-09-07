@@ -48,6 +48,15 @@ Storage = function(options, callback) {
     };
     
     this.options = mergeOptions(options, defaults);
+
+    var defaultOpt = {
+        auto_reconnect: true,
+        ssl: false
+    };
+
+    this.options.options = this.options.options || {};
+
+    this.options.options = mergeOptions(this.options.options, defaultOpt);
     
     if (callback) {
         this.connect(callback);
@@ -64,18 +73,26 @@ Storage.prototype = {
     connect: function(callback) {
         var self = this;
 
-        var server = new mongo.Server(this.options.host, this.options.port, {});
+        var server = new mongo.Server(this.options.host, this.options.port, this.options.options);
         new mongo.Db(this.options.dbName , server, {}).open(function(err, client) {
             if (err) {
                 if (callback) callback(err);
             } else {
-                self.isConnected = true;
-                self.client = client;
-                
-                self.events = new mongo.Collection(client, self.options.eventsCollectionName);
-                self.snapshots = new mongo.Collection(client, self.options.snapshotsCollectionName);
+                var finish = function() {
+                    self.client = client;
+                    self.isConnected = true;
+                    
+                    self.events = new mongo.Collection(client, self.options.eventsCollectionName);
+                    self.snapshots = new mongo.Collection(client, self.options.snapshotsCollectionName);
 
-                if (callback) callback(null, self);
+                    if (callback) callback(null, self);
+                };
+
+                if (options.username) {
+                    client.authenticate(self.options.username, self.options.password, finish);
+                } else {
+                    finish();
+                }
             }        
         });
     },
