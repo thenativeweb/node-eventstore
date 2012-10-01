@@ -103,6 +103,36 @@ create a snapshot point
 
     });
 
+### Replaying events
+
+If you want to replay all events from the store you can do it with the function getEventRange:
+
+    var match = {} // match query in inner event (payload), for example: { id: eventId }
+                   // if {} all events will return
+      , amount = 20; // amount of events to receive per request
+
+    var handle = function(err, events) {
+      // events is the eventstream
+      if (events.length === amount) {
+        events.next(handle);
+      } else {
+        // finished to replay
+      }
+    };
+
+    es.getEventRange(match, amount, handle);
+
+
+If you want to replay all events of a particular aggregate or stream you can do it with the function getEvents:
+
+    var streamId = '1234'
+      , revMin = null  // optional, must be a number
+      , revMax = null; // optional, must be a number
+
+    es.getEvents(streamId, revMin, revMax, function(err, events) {
+      // events is the eventstream
+    });
+
 # Sample Integration
 
 - [nodeCQRS](https://github.com/jamuhl/nodeCQRS) A CQRS sample integrating eventstore
