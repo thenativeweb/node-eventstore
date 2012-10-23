@@ -38,7 +38,7 @@ with option `eventstore.createStore({logger: 'console'});`.
 
 Example will use redis storage, but same will work for mongoDb.
 
-	require storage = require('eventstore.redis');
+	var storage = require('eventstore.redis');
 
 	storage.createStorage(function(err, store) {
 	    es.configure(function() {
