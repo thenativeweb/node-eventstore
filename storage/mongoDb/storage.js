@@ -22,7 +22,7 @@ if (typeof exports !== 'undefined') {
     mongoDbStorage = root.mongoDbStorage = {};
 }
 
-mongoDbStorage.VERSION = '0.5.0';
+mongoDbStorage.VERSION = '0.6.1';
 
 // Create new instance of storage.
 mongoDbStorage.createStorage = function(options, callback) {
@@ -74,7 +74,7 @@ Storage.prototype = {
         var self = this;
 
         var server = new mongo.Server(this.options.host, this.options.port, this.options.options);
-        new mongo.Db(this.options.dbName , server, {}).open(function(err, client) {
+        new mongo.Db(this.options.dbName , server, { safe: true }).open(function(err, client) {
             if (err) {
                 if (callback) callback(err);
             } else {
@@ -88,7 +88,7 @@ Storage.prototype = {
                     if (callback) callback(null, self);
                 };
 
-                if (options.username) {
+                if (self.options.username) {
                     client.authenticate(self.options.username, self.options.password, finish);
                 } else {
                     finish();
