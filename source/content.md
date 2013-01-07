@@ -26,6 +26,7 @@ choose one of the existing storage implementation or provide your own:
     var eventstore = require('eventstore');
 
     var es = eventstore.createStore(); // optional pass in your options
+                                       // to disable forking of event dispatching set forkDispatching to false
 
 By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.
 
@@ -146,6 +147,10 @@ You can find the code documentation [here](public/docs/eventStore.html).
 - Jonathan Oliver's [EventStore](https://github.com/joliver/EventStore) for .net.
 
 ## Release Notes
+
+### v0.6.1
+
+- forking of event dispatching is configurable now
 
 ### v0.6.0
 
