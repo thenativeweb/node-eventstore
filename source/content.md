@@ -148,6 +148,10 @@ You can find the code documentation [here](public/docs/eventStore.html).
 
 ## Release Notes
 
+### v0.6.2
+
+- optimized storage initialization
+
 ### v0.6.1
 
 - forking of event dispatching is configurable now
