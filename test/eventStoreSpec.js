@@ -58,8 +58,7 @@ var expect = require('expect.js')
                     delete storage.filename;
                     this.use(storage);
                 });
-                eventstore.start();
-                done();
+                eventstore.start(done);
             });
         });
 
