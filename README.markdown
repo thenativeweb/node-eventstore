@@ -22,7 +22,7 @@ choose one of the existing storage implementation or provide your own:
 	npm install eventstore.redis
 
 	// for tingoDb
-	npm install eventstore.tingoDb
+	npm install eventstore.tingodb
 
 # Usage
 

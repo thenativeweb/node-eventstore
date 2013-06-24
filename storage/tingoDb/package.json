@@ -1,6 +1,6 @@
 {
     "author": "Jan Muehlemann, Adriano Raiano"
-  , "name": "eventstore.tingoDb"
+  , "name": "eventstore.tingodb"
   , "version": "0.1.0"
   , "contributors": [ 
     { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }, 
