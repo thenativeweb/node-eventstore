@@ -21,6 +21,9 @@ choose one of the existing storage implementation or provide your own:
 	// for redis
 	npm install eventstore.redis
 
+	// for tingoDb
+	npm install eventstore.tingoDb
+
 # Usage
 
 ### Require the module and init the eventstore:
