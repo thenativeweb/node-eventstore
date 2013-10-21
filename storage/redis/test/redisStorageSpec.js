@@ -78,7 +78,7 @@ var expect = require('expect.js')
                 commitId: '10',
                 dispatched: false,
                 payload: {
-                    event:'bla'
+                    'event':'bla'
                 }
             };
 
@@ -176,13 +176,12 @@ var expect = require('expect.js')
                     storage.addEvents([
                         {streamId: '3', streamRevision: 0, commitId: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
                         {streamId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
-                        ], 
-                        function (err) {
-                            storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                                storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
-                            });
-                        }
-                    );
+                    ],
+                    function (err) {
+                        storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
+                            storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
+                        });
+                    });
                 });
             });
 

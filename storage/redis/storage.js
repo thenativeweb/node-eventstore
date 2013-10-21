@@ -11,6 +11,8 @@
 //      });
 
 var redis = require('redis')
+  , tolerate = require('tolerance')
+  , async = require('async')
   , root = this
   , redisStorage
   , Storage;
@@ -60,12 +62,31 @@ Storage.prototype = {
     //
     // - __callback:__ `function(err, storage){}`
     connect: function(callback) {
-        this.client = redis.createClient(this.options.port, this.options.host);
-    
         var self = this;
-        this.client.on('ready', function () {
+
+        tolerate(function(callback) {
+
+            self.client = redis.createClient(self.options.port, self.options.host);
+        
+            var ansered = false;
+
+            self.client.on('error', function(msg) {
+                if (msg.indexOf('connect') >= 0) {
+                    if (!ansered && callback) callback(msg);
+                }
+            });
+
+            self.client.on('ready', callback);
+
+        }, this.options.timeout || 0, function(err) {
+            if (err) {
+                if (callback) callback(err);
+                return;
+            }
+
             if (self.options.database !== 0) {
                 self.client.select(self.options.database, function(err, ok) {
+                    ansered = true;
                     if (err) {
                         if (callback) callback(err);
                     } else {
@@ -74,6 +95,7 @@ Storage.prototype = {
                     }
                 });
             } else {
+                ansered = true;
                 self.isConnected = true;
                 if (callback) callback(null, self);
             }
@@ -87,25 +109,25 @@ Storage.prototype = {
     // - __events:__ the events array
     // - __callback:__ `function(err){}`
     addEvents: function(events, callback) {
-        if (!events || events.length === 0) { 
+        if (!events || events.length === 0) {
             callback(null);
             return;
         }
         
         var self = this
           , args = [];
-          
-        events.forEach(function(event) {
-            args.push(JSON.stringify(event));
-        });
         
-        this.client.rpush(this.options.eventsCollectionName + ':' + events[0].streamId, args, function(err, res) {
-            if (err) {
-                callback(err);
-            } else {
-                self.client.rpush('undispatched:' + self.options.eventsCollectionName, args, callback);
-            }
-        });
+        async.each(events, function(event, callback) {
+            self.client.rpush(self.options.eventsCollectionName + ':' + event.streamId, JSON.stringify(event), function(err, res) {
+                if (err) {
+                    callback(err);
+                } else {
+                    self.client.rpush('undispatched:' + self.options.eventsCollectionName, JSON.stringify(event), callback);
+                }
+            });
+        }, callback);
+        
+        
     },
     
     // __addSnapshot:__ stores the snapshot
@@ -114,7 +136,7 @@ Storage.prototype = {
     //
     // - __snapshot:__ the snaphot to store
     // - __callback:__ `function(err){}` [optional]
-    addSnapshot: function(snapshot, callback) {          
+    addSnapshot: function(snapshot, callback) {
         this.client.lpush(this.options.snapshotsCollectionName + ':' + snapshot.streamId, JSON.stringify(snapshot), callback);
     },
 
@@ -257,7 +279,7 @@ Storage.prototype = {
                     callback(null, {});
                 }
             });
-        } 
+        }
     },
 
     // __getUndispatchedEvents:__ loads all undispatched events.
@@ -328,5 +350,5 @@ var mergeOptions = function(options, defaultOptions) {
     var merged = {};
     for (var attrname in defaultOptions) { merged[attrname] = defaultOptions[attrname]; }
     for (attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
-    return merged;  
+    return merged;
 };

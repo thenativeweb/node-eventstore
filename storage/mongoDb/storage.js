@@ -11,6 +11,7 @@
 //      });
 
 var mongo = require('mongodb')
+  , tolerate = require('tolerance')
   , ObjectID = mongo.BSONPure.ObjectID
   , root = this
   , mongoDbStorage
@@ -73,8 +74,10 @@ Storage.prototype = {
     connect: function(callback) {
         var self = this;
 
-        var server = new mongo.Server(this.options.host, this.options.port, this.options.options);
-        new mongo.Db(this.options.dbName , server, { safe: true }).open(function(err, client) {
+        tolerate(function(callback) {
+            var server = new mongo.Server(self.options.host, self.options.port, self.options.options);
+            new mongo.Db(self.options.dbName , server, { safe: true }).open(callback);
+        }, this.options.timeout || 0, function(err, client) {
             if (err) {
                 if (callback) callback(err);
             } else {
@@ -93,7 +96,7 @@ Storage.prototype = {
                 } else {
                     finish();
                 }
-            }        
+            }
         });
     },
 
@@ -249,5 +252,5 @@ var mergeOptions = function(options, defaultOptions) {
     var merged = {};
     for (var attrname in defaultOptions) { merged[attrname] = defaultOptions[attrname]; }
     for (attrname in options) { if (options[attrname]) merged[attrname] = options[attrname]; }
-    return merged;  
+    return merged;
 };
