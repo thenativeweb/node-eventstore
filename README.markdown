@@ -54,6 +54,24 @@ Example will use redis storage, but same will work for mongoDb.
 	    // start eventstore
 	    es.start();
 	});
+	
+	// Mongodb storage
+	storage.createStorage({
+        host: 'localhost',
+        port: 27017,
+        dbName: 'eventstore',
+        eventsCollectionName: 'events',
+        snapshotsCollectionName: 'snapshots'
+	},function(err, store) {
+	    es.configure(function() {
+	        es.use(store);
+	        es.use(publisher); // your publisher must provide function 'publisher.publish(event)'
+	        // es.use(logger);
+	    });
+
+	    // start eventstore
+	    es.start();
+	});
 
 ### Work with the eventstore
 
