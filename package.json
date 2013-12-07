@@ -1,7 +1,7 @@
 {
     "author": "Jan Muehlemann, Adriano Raiano"
   , "name": "eventstore"
-  , "version": "0.6.2"
+  , "version": "0.7.0"
   , "contributors": [ 
     { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }, 
     { "name": "Adriano Raiano", "email": "adriano@raiano.ch" }

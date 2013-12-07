@@ -1,6 +1,6 @@
-var expect = require('expect.js')
-  , eventstoreModule = require('../lib/eventStore')
-  , storageModule = require('../lib/storage/inMemory/storage');
+var expect = require('expect.js'),
+    eventstoreModule = require('../lib/eventStore'),
+    storageModule = require('../lib/storage/inMemory/storage');
  
  describe('EventStore', function() {
 
@@ -51,11 +51,11 @@ var expect = require('expect.js')
     describe('beeing configured', function() {
 
         before(function(done) {
-            eventstore = eventstoreModule.createStore();
+            eventstore = eventstoreModule.createStore({
+                forkDispatching: false
+            });
             storageModule.createStorage(function(err, storage) {
                 eventstore.configure(function() {
-                    // to use the in process dispatcher 
-                    delete storage.filename;
                     this.use(storage);
                 });
                 eventstore.start(done);
@@ -97,6 +97,43 @@ var expect = require('expect.js')
                     done();
                 });
 
+            });
+
+            describe('calling getUndispatchedEvents', function() {
+
+                var firstEvt;
+
+                it('it should be in the array', function(done) {
+                    eventstore.getUndispatchedEvents(function(err, evts) {
+                        expect(err).not.to.be.ok();
+                        expect(evts).to.be.an('array');
+                        expect(evts).to.have.length(5);
+
+                        firstEvt = evts[0];
+
+                        done();
+                    });
+                });
+
+                describe('calling setEventToDispatched', function() {
+
+                    it('it should not be in the undispatched array anymore', function(done) {
+
+                        eventstore.setEventToDispatched(firstEvt, function(err) {
+                            expect(err).not.to.be.ok();
+                            eventstore.getUndispatchedEvents(function(err, evts) {
+                                expect(err).not.to.be.ok();
+                                expect(evts).to.be.an('array');
+                                expect(evts).to.have.length(4);
+
+                                done();
+                            });
+                        });
+
+                    });
+
+                });
+                
             });
 
         });

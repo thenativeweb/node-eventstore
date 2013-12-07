@@ -32,6 +32,7 @@ choose one of the existing storage implementation or provide your own:
 
 	var es = eventstore.createStore(); // optional pass in your options
 																		 // to disable forking of event dispatching set forkDispatching to false
+																		 // to disable complee event dispatching set enableDispatching to false
 
 By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.
 
@@ -57,11 +58,11 @@ Example will use redis storage, but same will work for mongoDb.
 	
 	// Mongodb storage
 	storage.createStorage({
-        host: 'localhost',
-        port: 27017,
-        dbName: 'eventstore',
-        eventsCollectionName: 'events',
-        snapshotsCollectionName: 'snapshots'
+      host: 'localhost',
+      port: 27017,
+      dbName: 'eventstore',
+      eventsCollectionName: 'events',
+      snapshotsCollectionName: 'snapshots'
 	},function(err, store) {
 	    es.configure(function() {
 	        es.use(store);
@@ -77,20 +78,18 @@ Example will use redis storage, but same will work for mongoDb.
 
 get the eventhistory of an aggregate
 
-    es.getEventStream(aggregateId, 0, function(err, stream) {                    
-        var history = stream.events; // the original event will be in events[i].payload
+  es.getEventStream(aggregateId, 0, function(err, stream) {                    
+      var history = stream.events; // the original event will be in events[i].payload
 
-        // myAggregate.loadFromHistory(history);
-    });
+      // myAggregate.loadFromHistory(history);
+  });
 
 store a new event and commit it to store
 
 	es.getEventStream(aggregateId, 0, function(err, stream) {                    
-        
-    	stream.addEvent(new event);
-        stream.commit();
-
-    });
+  	  stream.addEvent(new event);
+      stream.commit();
+  });
 
 the committed event will be dispatched to the provided publisher
 
@@ -157,6 +156,18 @@ If you want to replay all events of a particular aggregate or stream you can do 
 	  // events is the eventstream
 	});
 
+### own event dispatching
+
+	es.getUndispatchedEvents(function(err, evts) {
+		
+		// all undispatched events
+		console.log(evts);
+
+		// dispatch it and set the event as dispatched
+		es.setEventToDispatched(evts[0], function(err) {});
+
+	});
+
 
 # Sample Integration
 
@@ -168,7 +179,7 @@ If you want to replay all events of a particular aggregate or stream you can do 
 
 # License
 
-Copyright (c) 2012 Jan Muehlemann, Adriano Raiano
+Copyright (c) 2013 Jan Muehlemann, Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

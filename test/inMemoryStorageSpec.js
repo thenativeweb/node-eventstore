@@ -1,5 +1,5 @@
-var expect = require('expect.js')
-  , storageModule = require('../lib/storage/inMemory/storage');
+var expect = require('expect.js'),
+    storageModule = require('../lib/storage/inMemory/storage');
  
  describe('Storage', function() {
 
