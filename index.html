@@ -35,7 +35,7 @@
 <ul>
 <li>load and store events via EventStream object</li>
 <li>event dispatching to your publisher</li>
-<li>supported Dbs (MongoDb, Redis)</li>
+<li>supported Dbs (MongoDb, Redis, TingoDb)</li>
 <li>snapshot support</li>
 </ul>
 
@@ -51,7 +51,7 @@
 
 <h3>Require the module and init the eventstore:</h3>
 
-<pre><code><span class="kwd">var</span><span class="pln"> eventstore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">);</span><span class="pln"><br /><br /></span><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> eventstore</span><span class="pun">.</span><span class="pln">createStore</span><span class="pun">();</span><span class="pln"> </span><span class="com">// optional pass in your options</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable forking of event dispatching set forkDispatching to false</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable complee event dispatching set enableDispatching to false</span><span class="pln"><br /></span></code></pre>
+<pre><code><span class="kwd">var</span><span class="pln"> eventstore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">);</span><span class="pln"><br /><br /></span><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> eventstore</span><span class="pun">.</span><span class="pln">createStore</span><span class="pun">();</span><span class="pln"> </span><span class="com">// optional pass in your options</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable forking of event dispatching set forkDispatching to false</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable complete event dispatching set enableDispatching to false</span><span class="pln"><br /></span></code></pre>
 
 <p>By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.</p>
 

@@ -4,7 +4,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher
-- supported Dbs (MongoDb, Redis)
+- supported Dbs (MongoDb, Redis, TingoDb)
 - snapshot support
 
 # Installation
@@ -30,7 +30,7 @@ choose one of the existing storage implementation or provide your own:
 
     var es = eventstore.createStore(); // optional pass in your options
                                        // to disable forking of event dispatching set forkDispatching to false
-                                       // to disable complee event dispatching set enableDispatching to false
+                                       // to disable complete event dispatching set enableDispatching to false
 
 By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.
 
