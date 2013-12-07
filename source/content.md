@@ -30,6 +30,7 @@ choose one of the existing storage implementation or provide your own:
 
     var es = eventstore.createStore(); // optional pass in your options
                                        // to disable forking of event dispatching set forkDispatching to false
+                                       // to disable complee event dispatching set enableDispatching to false
 
 By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.
 
@@ -137,6 +138,18 @@ If you want to replay all events of a particular aggregate or stream you can do 
       // events is the eventstream
     });
 
+### own event dispatching
+
+    es.getUndispatchedEvents(function(err, evts) {
+        
+        // all undispatched events
+        console.log(evts);
+
+        // dispatch it and set the event as dispatched
+        es.setEventToDispatched(evts[0], function(err) {});
+
+    });
+
 # Sample Integration
 
 - [nodeCQRS](https://github.com/jamuhl/nodeCQRS) A CQRS sample integrating eventstore
@@ -150,6 +163,11 @@ You can find the code documentation [here](public/docs/eventStore.html).
 - Jonathan Oliver's [EventStore](https://github.com/joliver/EventStore) for .net.
 
 ## Release Notes
+
+### v0.7.0
+
+- make using of eventDispatcher configurable
+- map getUndispatchedEvents and setEventToDispatched to eventstore
 
 ### v0.6.2
 

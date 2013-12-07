@@ -51,7 +51,7 @@
 
 <h3>Require the module and init the eventstore:</h3>
 
-<pre><code><span class="kwd">var</span><span class="pln"> eventstore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">);</span><span class="pln"><br /><br /></span><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> eventstore</span><span class="pun">.</span><span class="pln">createStore</span><span class="pun">();</span><span class="pln"> </span><span class="com">// optional pass in your options</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable forking of event dispatching set forkDispatching to false</span><span class="pln"><br /></span></code></pre>
+<pre><code><span class="kwd">var</span><span class="pln"> eventstore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">);</span><span class="pln"><br /><br /></span><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> eventstore</span><span class="pun">.</span><span class="pln">createStore</span><span class="pun">();</span><span class="pln"> </span><span class="com">// optional pass in your options</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable forking of event dispatching set forkDispatching to false</span><span class="pln"><br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// to disable complee event dispatching set enableDispatching to false</span><span class="pln"><br /></span></code></pre>
 
 <p>By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.</p>
 
@@ -100,6 +100,10 @@ with option <code>eventstore.createStore({logger: 'console'});</code>.</p>
 
 <pre><code><span class="kwd">var</span><span class="pln"> streamId </span><span class="pun">=</span><span class="pln"> </span><span class="str">'1234'</span><span class="pln"><br />&nbsp; </span><span class="pun">,</span><span class="pln"> revMin </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pln"> &nbsp;</span><span class="com">// optional, must be a number</span><span class="pln"><br />&nbsp; </span><span class="pun">,</span><span class="pln"> revMax </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln"> </span><span class="com">// optional, must be a number</span><span class="pln"><br /><br />es</span><span class="pun">.</span><span class="pln">getEvents</span><span class="pun">(</span><span class="pln">streamId</span><span class="pun">,</span><span class="pln"> revMin</span><span class="pun">,</span><span class="pln"> revMax</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> events</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br />&nbsp; </span><span class="com">// events is the eventstream</span><span class="pln"><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
 
+<h3>own event dispatching</h3>
+
+<pre><code><span class="pln">es</span><span class="pun">.</span><span class="pln">getUndispatchedEvents</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">,</span><span class="pln"> evts</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="com">// all undispatched events</span><span class="pln"><br />&nbsp; &nbsp; console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">evts</span><span class="pun">);</span><span class="pln"><br /><br />&nbsp; &nbsp; </span><span class="com">// dispatch it and set the event as dispatched</span><span class="pln"><br />&nbsp; &nbsp; es</span><span class="pun">.</span><span class="pln">setEventToDispatched</span><span class="pun">(</span><span class="pln">evts</span><span class="pun">[</span><span class="lit">0</span><span class="pun">],</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{});</span><span class="pln"><br /><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
 <h1>Sample Integration</h1>
 
 <ul>
@@ -117,6 +121,13 @@ with option <code>eventstore.createStore({logger: 'console'});</code>.</p>
 </ul>
 
 <h2>Release Notes</h2>
+
+<h3>v0.7.0</h3>
+
+<ul>
+<li>make using of eventDispatcher configurable</li>
+<li>map getUndispatchedEvents and setEventToDispatched to eventstore</li>
+</ul>
 
 <h3>v0.6.2</h3>
 
@@ -159,7 +170,7 @@ with option <code>eventstore.createStore({logger: 'console'});</code>.</p>
 </section>
 
 <footer>
-        <p>Copyright 2012 Kaba AG, MIC AWM</p>
+        <p>Copyright 2013</p>
 </footer>
 
 
