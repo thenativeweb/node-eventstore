@@ -6,7 +6,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher
-- supported Dbs (MongoDb, Redis)
+- supported Dbs (MongoDb, Redis, TingoDb)
 - snapshot support
 
 # Installation
