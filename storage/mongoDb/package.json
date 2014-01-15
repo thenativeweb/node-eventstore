@@ -1,6 +1,6 @@
 {
   "author": "Jan Muehlemann, Adriano Raiano",
-  "name": "eventstore.mongoDb",
+  "name": "eventstore.mongodb",
   "version": "0.7.1",
   "contributors": [
     {
