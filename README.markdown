@@ -16,7 +16,7 @@ The project goal is to provide an eventstore implementation for node.js:
 choose one of the existing storage implementation or provide your own:
 
 	// for mongoDb
-	npm install eventstore.mongoDb
+	npm install eventstore.mongodb
 
 	// for redis
 	npm install eventstore.redis
@@ -192,7 +192,7 @@ If you want to replay all events of a particular aggregate or stream you can do 
 
 # License
 
-Copyright (c) 2013 Jan Muehlemann, Adriano Raiano
+Copyright (c) 2014 Jan Muehlemann, Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
