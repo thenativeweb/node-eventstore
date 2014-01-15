@@ -290,6 +290,54 @@ var expect = require('expect.js')
 
             });
 
+            describe('calling getAllEvents without a from and a amount argument', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(function(err, evts) {
+                        expect(evts).to.have.length(7);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents with a from but without an amount argument', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(2, function(err, evts) {
+                        expect(evts).to.have.length(5);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents with a from and an amount argument that does not exceed the limit', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(2, 2, function(err, evts) {
+                        expect(evts).to.have.length(2);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents with a from and an amount argument that does exceed the limit', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(2, 10, function(err, evts) {
+                        expect(evts).to.have.length(5);
+
+                        done();
+                    });
+                });
+
+            });
+
         });
 
     });

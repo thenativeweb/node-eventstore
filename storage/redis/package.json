@@ -1,7 +1,7 @@
 {
   "author": "Jan Muehlemann, Adriano Raiano",
   "name": "eventstore.redis",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "contributors": [
     {
       "name": "Jan Muehlemann",

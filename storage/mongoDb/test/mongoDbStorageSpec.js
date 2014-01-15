@@ -178,7 +178,7 @@ var expect = require('expect.js')
                     storage.addEvents([
                         {streamId: '3', streamRevision: 0, commitId: 4, commitSequence: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
                         {streamId: '3', streamRevision: 1, commitId: 5, commitSequence: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
-                        ], 
+                        ],
                         function (err) {
                             storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
                                 storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
@@ -286,6 +286,54 @@ var expect = require('expect.js')
                         expect(snap.snapshotId).to.eql('1');
                         expect(snap.streamId).to.eql('3');
                         expect(snap.revision).to.eql('1');
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents without a from and a amount argument', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(function(err, evts) {
+                        expect(evts).to.have.length(7);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents with a from but without an amount argument', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(2, function(err, evts) {
+                        expect(evts).to.have.length(5);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents with a from and an amount argument that does not exceed the limit', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(2, 2, function(err, evts) {
+                        expect(evts).to.have.length(2);
+
+                        done();
+                    });
+                });
+
+            });
+
+            describe('calling getAllEvents with a from and an amount argument that does exceed the limit', function() {
+
+                it('it should callback with the correct values', function(done) {
+                    storage.getAllEvents(2, 10, function(err, evts) {
+                        expect(evts).to.have.length(5);
 
                         done();
                     });

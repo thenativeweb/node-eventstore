@@ -71,7 +71,7 @@ Storage.prototype = {
             var ansered = false;
 
             self.client.on('error', function(msg) {
-                if (msg.indexOf('connect') >= 0) {
+                if (msg.indexOf && msg.indexOf('connect') >= 0) {
                     if (!ansered && callback) callback(msg);
                 }
             });
@@ -122,7 +122,13 @@ Storage.prototype = {
                 if (err) {
                     callback(err);
                 } else {
-                    self.client.rpush('undispatched:' + self.options.eventsCollectionName, JSON.stringify(event), callback);
+                    self.client.rpush('all:' + self.options.eventsCollectionName, JSON.stringify(event), function(err, res) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            self.client.rpush('undispatched:' + self.options.eventsCollectionName, JSON.stringify(event), callback);
+                        }
+                    });
                 }
             });
         }, callback);
@@ -235,6 +241,34 @@ Storage.prototype = {
                     });
                 }
             }
+        });
+    },
+
+    // __getEvents:__ loads the events from _minRev_ to _maxRev_.
+    // 
+    // `storage.getAllEvents(from, amount, callback)`
+    //
+    // - __from:__ from entry index [optional, default 0]
+    // - __amount:__ amount of results (hint: -1 = to end) [optional]
+    // - __callback:__ `function(err, events){}`
+    getAllEvents: function(from, amount, callback) {
+        
+        if (typeof amount === 'function') {
+            callback = amount;
+            amount = -1;
+        }
+
+        if (typeof from === 'function') {
+            callback = from;
+            from = 0;
+            amount = -1;
+        }
+
+        var minRev = from,
+            maxRev = amount === -1 ? -1 : from + amount - 1;
+
+        this.client.lrange('all:' + this.options.eventsCollectionName, minRev, maxRev, function (err, res) {
+            handleResultSet(err, res, callback);
         });
     },
 

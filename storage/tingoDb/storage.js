@@ -156,6 +156,33 @@ Storage.prototype = {
         });
     },
 
+    // __getEvents:__ loads the events from _minRev_ to _maxRev_.
+    // 
+    // `storage.getAllEvents(from, amount, callback)`
+    //
+    // - __from:__ from entry index [optional, default 0]
+    // - __amount:__ amount of results (hint: -1 = to end) [optional]
+    // - __callback:__ `function(err, events){}`
+    getAllEvents: function(from, amount, callback) {
+        
+        if (typeof amount === 'function') {
+            callback = amount;
+            amount = -1;
+        }
+
+        if (typeof from === 'function') {
+            callback = from;
+            from = 0;
+            amount = -1;
+        }
+
+        if (amount === -1) {
+            return this.events.find({}, {sort:[['commitStamp','asc']]}).skip(from).toArray(callback);
+        }
+        
+        this.events.find({}, {sort:[['commitStamp','asc']]}).skip(from).limit(amount).toArray(callback);
+    },
+
     // __getSnapshot:__ loads the next snapshot back from given max revision or the latest if you 
     // don't pass in a _maxRev_.
     // 

@@ -4,3 +4,4 @@ bench/
 storage/
 build/
 npmlink.js
+test

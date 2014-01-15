@@ -128,7 +128,20 @@ create a snapshot point
 
 ### Replaying events
 
-If you want to replay all events from the store you can do it with the function getEventRange:
+If you want to replay all events from the store you can do it with the function getAllEvents:
+
+	var handle = function(err, events) {
+	  // events is the eventstream
+	  if (events.length === amount) {
+	    events.next(handle);
+	  } else {
+	    // finished to replay
+	  }
+	};
+
+	es.getAllEvents(0, 100, handle);
+
+or with the function getEventRange:
 
 	var match = {} // match query in inner event (payload), for example: { id: eventId }
                    // if {} all events will return
@@ -145,7 +158,6 @@ If you want to replay all events from the store you can do it with the function 
 
 	es.getEventRange(match, amount, handle);
 
-
 If you want to replay all events of a particular aggregate or stream you can do it with the function getEvents:
 
 	var streamId = '1234'
@@ -155,6 +167,7 @@ If you want to replay all events of a particular aggregate or stream you can do 
 	es.getEvents(streamId, revMin, revMax, function(err, events) {
 	  // events is the eventstream
 	});
+
 
 ### own event dispatching
 
