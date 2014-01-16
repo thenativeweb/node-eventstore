@@ -306,7 +306,7 @@ var expect = require('expect.js'),
 
                     it('it should callback without an error', function(done) {
 
-                        eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', function(err) {
+                        eventstore.createSnapshot(stream.streamId, stream.currentRevision(), 'data', 2, function(err) {
                             expect(err).not.to.be.ok();
                             done();
                         });
@@ -324,6 +324,7 @@ var expect = require('expect.js'),
                                 expect(es.currentRevision()).to.be(0);
                                 expect(snapshot.revision).to.be(es.lastRevision);
                                 expect(snapshot.revision).to.be(es.currentRevision());
+                                expect(snapshot.version).to.be(2);
                                 done();
                             });
 

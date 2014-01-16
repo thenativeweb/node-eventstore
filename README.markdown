@@ -119,7 +119,7 @@ create a snapshot point
 
 		// create a new snapshot depending on your rules
 		if (history.length > myRange) {
-			es.createSnapshot(aggregateId, stream.currentRevision(), myAggregate.getSnap());
+			es.createSnapshot(aggregateId, stream.currentRevision(), myAggregate.getSnap()[, snapshotVersion]);
 		}
 
 		// go on: store new event and commit it
