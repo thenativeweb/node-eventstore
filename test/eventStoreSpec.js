@@ -265,9 +265,9 @@ var expect = require('expect.js'),
                     eventstore.getEventStream('e1', 0, -1, function(err, es) {
                         expect(es.events).to.have.length(2);
                         expect(es.events[0].commitSequence).to.eql(0);
-                        expect(es.events[0].restInStream).to.eql(1);
+                        expect(es.events[0].restInCommitStream).to.eql(1);
                         expect(es.events[1].commitSequence).to.eql(1);
-                        expect(es.events[1].restInStream).to.eql(0);
+                        expect(es.events[1].restInCommitStream).to.eql(0);
                         expect(es.uncommittedEvents).to.have.length(0);
                         done();
                     });

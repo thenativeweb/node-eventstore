@@ -175,7 +175,7 @@ Storage.prototype = {
 
             var lastEvt = res[res.length - 1];
 
-            if (lastEvt.restInStream === 0 || !lastEvt.restInStream) {
+            if (lastEvt.restInCommitStream === 0 || !lastEvt.restInCommitStream) {
                 callback(err, res);
                 self.transactions.remove({ _id: lastEvt.commitId }, function(err) {});
                 return;
@@ -186,7 +186,7 @@ Storage.prototype = {
                     return callback(err, res);
                 }
 
-                var missingEvts = tx.events.slice(tx.events.length - lastEvt.restInStream);
+                var missingEvts = tx.events.slice(tx.events.length - lastEvt.restInCommitStream);
 
                 self.events.insert(missingEvts, {keepGoing: true}, function(err) {
                     self.transactions.remove({ _id: tx._id }, function(err) {});

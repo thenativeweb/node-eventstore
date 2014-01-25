@@ -12,7 +12,7 @@ var expect = require('expect.js')
             describe('without a callback', function() {
 
                 before(function() {
-                    storage = storageModule.createStorage({ dbPath: __dirname });
+                    storage = storageModule.createStorage({ dbName: 'testeventstore' });
                 });
 
                 describe('calling connect', function() {
@@ -34,7 +34,7 @@ var expect = require('expect.js')
 
                 it('it should connect successfully', function(done) {
 
-                    storageModule.createStorage({ dbPath: __dirname }, function(err, str) {
+                    storageModule.createStorage({ dbName: 'testeventstore' }, function(err, str) {
                         storage = str;
                         expect(err).not.to.be.ok();
                         expect(str).to.not.eql(null);
@@ -53,7 +53,9 @@ var expect = require('expect.js')
 
         before(function(done) {
             storage.events.remove({}, function() {
-                storage.snapshots.remove({}, done);
+                storage.snapshots.remove({}, function() {
+                    storage.transactions.remove({}, done);
+                });
             });
         });
 
@@ -169,16 +171,16 @@ var expect = require('expect.js')
 
             before(function(done) {
                 storage.addEvents([
-                    {streamId: '2', streamRevision: 0, commitId: 0, commitSequence: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 1, commitId: 1, commitSequence: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 2, commitId: 2, commitSequence: 2, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 3, commitId: 3, commitSequence: 3, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
+                    {streamId: '2', streamRevision: 0, commitId: '0', commitSequence: 0, restInCommitStream: 3, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}},
+                    {streamId: '2', streamRevision: 1, commitId: '0', commitSequence: 1, restInCommitStream: 2, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}},
+                    {streamId: '2', streamRevision: 2, commitId: '0', commitSequence: 2, restInCommitStream: 1, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}},
+                    {streamId: '2', streamRevision: 3, commitId: '0', commitSequence: 3, restInCommitStream: 0, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}}
                 ],
                 function (err) {
                     storage.addEvents([
-                        {streamId: '3', streamRevision: 0, commitId: 4, commitSequence: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
-                        {streamId: '3', streamRevision: 1, commitId: 5, commitSequence: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
-                        ], 
+                        {streamId: '3', streamRevision: 0, commitId: '1', commitSequence: 0, restInCommitStream: 1, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}},
+                        {streamId: '3', streamRevision: 1, commitId: '1', commitSequence: 1, restInCommitStream: 0, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}}
+                        ],
                         function (err) {
                             storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
                                 storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
@@ -195,8 +197,8 @@ var expect = require('expect.js')
                         expect(err).not.to.be.ok();
                         expect(events).to.have.length(4);
                         expect(events[0].commitId).to.eql('0');
-                        expect(events[1].commitId).to.eql('1');
-                        expect(events[3].commitId).to.eql('3');
+                        expect(events[1].commitId).to.eql('0');
+                        expect(events[3].commitId).to.eql('0');
 
                         done();
                     });
@@ -237,8 +239,8 @@ var expect = require('expect.js')
                         expect(err).not.to.be.ok();
                         expect(events).to.have.length(6);
                         expect(events[0].commitId).to.eql('0');
-                        expect(events[2].commitId).to.eql('2');
-                        expect(events[5].commitId).to.eql('5');
+                        expect(events[2].commitId).to.eql('0');
+                        expect(events[5].commitId).to.eql('1');
 
                         done();
                     });
@@ -252,8 +254,8 @@ var expect = require('expect.js')
                     storage.getEventRange({id: '2'}, 2, function(err, events) {
                         expect(err).not.to.be.ok();
                         expect(events).to.have.length(2);
-                        expect(events[0].commitId).to.eql('2');
-                        expect(events[1].commitId).to.eql('3');
+                        expect(events[0].commitId).to.eql('1');
+                        expect(events[1].commitId).to.eql('1');
 
                         done();
                     });
@@ -337,6 +339,51 @@ var expect = require('expect.js')
 
                         done();
                     });
+                });
+
+            });
+
+        });
+
+        describe('having a pending transaction', function() {
+
+            before(function(done) {
+                var evts = [
+                    {streamId: '1818', streamRevision: 0, commitId: '18180', commitSequence: 0, restInCommitStream: 3, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}},
+                    {streamId: '1818', streamRevision: 1, commitId: '18180', commitSequence: 1, restInCommitStream: 2, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}},
+                    {streamId: '1818', streamRevision: 2, commitId: '18180', commitSequence: 2, restInCommitStream: 1, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}}
+                ];
+                storage.addEvents(evts,
+                function (err) {
+                    evts.push({_id: '181803', streamId: '1818', streamRevision: 3, commitId: '18180', commitSequence: 3, restInCommitStream: 0, commitStamp: new Date(2012, 3, 14, 11, 0, 0), payload: {id: '4', event:'missed'}});
+                    var tx = {
+                        _id: '18180',
+                        events: evts
+                    };
+                    setTimeout(function() {
+                        storage.transactions.save(tx, done);
+                    }, 100);
+                });
+            });
+
+            describe('calling getEvents without maxRev', function() {
+
+                it('it should try to fix the pending transaction', function(done) {
+
+                    storage.getEvents('1818', 0, function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(4);
+                        expect(events[0].commitId).to.eql('18180');
+                        expect(events[1].commitId).to.eql('18180');
+                        expect(events[3].commitId).to.eql('18180');
+                        expect(events[3].payload.event).to.eql('missed');
+
+                        storage.transactions.findOne({ id: '18180'}, function(err, res) {
+                            expect(res).not.to.be.ok();
+                            done();
+                        });
+                    });
+
                 });
 
             });
