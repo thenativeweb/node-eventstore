@@ -171,15 +171,15 @@ var expect = require('expect.js')
 
             before(function(done) {
                 storage.addEvents([
-                    {streamId: '2', streamRevision: 0, commitId: '0', commitSequence: 0, restInStream: 3, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 1, commitId: '0', commitSequence: 1, restInStream: 2, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 2, commitId: '0', commitSequence: 2, restInStream: 1, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 3, commitId: '0', commitSequence: 3, restInStream: 0, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
+                    {streamId: '2', streamRevision: 0, commitId: '0', commitSequence: 0, restInStream: 3, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}},
+                    {streamId: '2', streamRevision: 1, commitId: '0', commitSequence: 1, restInStream: 2, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}},
+                    {streamId: '2', streamRevision: 2, commitId: '0', commitSequence: 2, restInStream: 1, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}},
+                    {streamId: '2', streamRevision: 3, commitId: '0', commitSequence: 3, restInStream: 0, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}}
                 ],
                 function (err) {
                     storage.addEvents([
-                        {streamId: '3', streamRevision: 0, commitId: '1', commitSequence: 0, restInStream: 1, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
-                        {streamId: '3', streamRevision: 1, commitId: '1', commitSequence: 1, restInStream: 0, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
+                        {streamId: '3', streamRevision: 0, commitId: '1', commitSequence: 0, restInStream: 1, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}},
+                        {streamId: '3', streamRevision: 1, commitId: '1', commitSequence: 1, restInStream: 0, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}}
                         ],
                         function (err) {
                             storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
@@ -349,13 +349,13 @@ var expect = require('expect.js')
 
             before(function(done) {
                 var evts = [
-                    {streamId: '1818', streamRevision: 0, commitId: '18180', commitSequence: 0, restInStream: 3, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '1818', streamRevision: 1, commitId: '18180', commitSequence: 1, restInStream: 2, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '1818', streamRevision: 2, commitId: '18180', commitSequence: 2, restInStream: 1, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false}
+                    {streamId: '1818', streamRevision: 0, commitId: '18180', commitSequence: 0, restInStream: 3, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}},
+                    {streamId: '1818', streamRevision: 1, commitId: '18180', commitSequence: 1, restInStream: 2, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}},
+                    {streamId: '1818', streamRevision: 2, commitId: '18180', commitSequence: 2, restInStream: 1, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}}
                 ];
                 storage.addEvents(evts,
                 function (err) {
-                    evts.push({_id: '181803', streamId: '1818', streamRevision: 3, commitId: '18180', commitSequence: 3, restInStream: 0, commitStamp: new Date(2012, 3, 14, 11, 0, 0), payload: {id: '4', event:'missed'}, dispatched: false});
+                    evts.push({_id: '181803', streamId: '1818', streamRevision: 3, commitId: '18180', commitSequence: 3, restInStream: 0, commitStamp: new Date(2012, 3, 14, 11, 0, 0), payload: {id: '4', event:'missed'}});
                     var tx = {
                         _id: '18180',
                         events: evts

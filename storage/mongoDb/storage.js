@@ -111,6 +111,7 @@ Storage.prototype = {
     addEvents: function(events, callback) {
         for (var i in events) {
             events[i]._id = events[i].commitId + events[i].commitSequence;
+            events[i].dispatched = false;
         }
 
         var self = this;
