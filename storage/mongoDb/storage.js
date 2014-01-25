@@ -45,7 +45,8 @@ Storage = function(options, callback) {
         port: 27017,
         dbName: 'eventstore',
         eventsCollectionName: 'events',
-        snapshotsCollectionName: 'snapshots'
+        snapshotsCollectionName: 'snapshots',
+        transactionsCollectionName: 'transactions'
     };
     
     this.options = mergeOptions(options, defaults);
@@ -87,6 +88,7 @@ Storage.prototype = {
                     
                     self.events = new mongo.Collection(client, self.options.eventsCollectionName);
                     self.snapshots = new mongo.Collection(client, self.options.snapshotsCollectionName);
+                    self.transactions = new mongo.Collection(client, self.options.transactionsCollectionName);
 
                     if (callback) callback(null, self);
                 };
@@ -107,10 +109,26 @@ Storage.prototype = {
     // - __events:__ the events array
     // - __callback:__ `function(err){}`
     addEvents: function(events, callback) {
-        for(var i in events) {
+        for (var i in events) {
             events[i]._id = events[i].commitId + events[i].commitSequence;
         }
-        this.events.insert(events, {keepGoing: true}, callback);
+
+        var self = this;
+
+        if (events.length > 1) {
+            var tx = {
+                _id: events[0].commitId,
+                events: events
+            };
+            this.transactions.insert(tx, {keepGoing: true}, function(err) {
+                self.events.insert(events, {keepGoing: true}, function(err) {
+                    self.transactions.remove({ _id: tx._id }, function(err) {});
+                    if (callback) { callback(err); }
+                });
+            });
+        } else {
+            this.events.insert(events, {keepGoing: true}, callback);
+        }
     },
 
     // __addSnapshot:__ stores the snapshot
@@ -146,8 +164,35 @@ Storage.prototype = {
             'streamId' : streamId,
             'streamRevision': options
         };
+
+        var self = this;
         
-        this.events.find(findStatement, {sort:[['streamRevision','asc']]}).toArray(callback);
+        this.events.find(findStatement, {sort:[['streamRevision','asc']]}).toArray(function(err, res) {
+            if (maxRev != -1 || !res || res.length === 0) {
+                return callback(err, res);
+            }
+
+            var lastEvt = res[res.length - 1];
+
+            if (lastEvt.restInStream === 0 || !lastEvt.restInStream) {
+                callback(err, res);
+                self.transactions.remove({ _id: lastEvt.commitId }, function(err) {});
+                return;
+            }
+
+            self.transactions.findOne({ _id: lastEvt.commitId }, function(err, tx) {
+                if (!tx) {
+                    return callback(err, res);
+                }
+
+                var missingEvts = tx.events.slice(tx.events.length - lastEvt.restInStream);
+
+                self.events.insert(missingEvts, {keepGoing: true}, function(err) {
+                    self.transactions.remove({ _id: tx._id }, function(err) {});
+                    self.getEvents(streamId, minRev, maxRev, callback);
+                });
+            });
+        });
     },
 
     // __getEventRange:__ loads the range of events from given storage.
