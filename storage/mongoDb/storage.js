@@ -82,7 +82,7 @@ Storage.prototype = {
             if (err) {
                 if (callback) callback(err);
             } else {
-                var finish = function() {
+                var finish = function(err) {
                     self.client = client;
                     self.isConnected = true;
                     
@@ -90,7 +90,7 @@ Storage.prototype = {
                     self.snapshots = new mongo.Collection(client, self.options.snapshotsCollectionName);
                     self.transactions = new mongo.Collection(client, self.options.transactionsCollectionName);
 
-                    if (callback) callback(null, self);
+                    if (callback) callback(err, self);
                 };
 
                 if (self.options.username) {
