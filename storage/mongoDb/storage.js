@@ -87,7 +87,9 @@ Storage.prototype = {
                     self.isConnected = true;
                     
                     self.events = new mongo.Collection(client, self.options.eventsCollectionName);
+                    self.ensureIndex(self.options.eventsCollectionName, {streamId: 1}, {})
                     self.snapshots = new mongo.Collection(client, self.options.snapshotsCollectionName);
+                    self.ensureIndex(self.options.snapshotsCollectionName, {streamId: 1}, {})
                     self.transactions = new mongo.Collection(client, self.options.transactionsCollectionName);
 
                     if (callback) callback(err, self);
@@ -101,6 +103,14 @@ Storage.prototype = {
             }
         });
     },
+
+    ensureIndex: function(collectionName, index, options, callback) {
+        if (!this.isConnected) return;
+        
+        this.client.ensureIndex(self.collectionName, index, options, function(err, indexName) {
+            if (callback) callback(err, indexName);
+        });
+    }
 
     // __addEvents:__ saves all events.
     //
