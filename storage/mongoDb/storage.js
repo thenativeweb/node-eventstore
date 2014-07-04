@@ -107,7 +107,7 @@ Storage.prototype = {
     ensureIndex: function(collectionName, index, options, callback) {
         if (!this.isConnected) return;
         
-        this.client.ensureIndex(self.collectionName, index, options, function(err, indexName) {
+        this.client.ensureIndex(collectionName, index, options, function(err, indexName) {
             if (callback) callback(err, indexName);
         });
     },
