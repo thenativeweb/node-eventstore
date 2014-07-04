@@ -110,7 +110,7 @@ Storage.prototype = {
         this.client.ensureIndex(self.collectionName, index, options, function(err, indexName) {
             if (callback) callback(err, indexName);
         });
-    }
+    },
 
     // __addEvents:__ saves all events.
     //
