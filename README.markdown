@@ -78,18 +78,18 @@ Example will use redis storage, but same will work for mongoDb.
 
 get the eventhistory of an aggregate
 
-  es.getEventStream(aggregateId, 0, function(err, stream) {                    
+    es.getEventStream(aggregateId, 0, function(err, stream) {                    
       var history = stream.events; // the original event will be in events[i].payload
 
       // myAggregate.loadFromHistory(history);
-  });
+    });
 
 store a new event and commit it to store
 
-	es.getEventStream(aggregateId, 0, function(err, stream) {                    
-  	  stream.addEvent(new event);
+    es.getEventStream(aggregateId, 0, function(err, stream) {                    
+      stream.addEvent(new event);
       stream.commit();
-  });
+    });
 
 the committed event will be dispatched to the provided publisher
 
