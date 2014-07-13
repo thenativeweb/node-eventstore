@@ -153,6 +153,26 @@ var expect = require('expect.js'),
 
         });
 
+        describe('requesting a new eventstream', function() {
+
+            it('it should callback return one correctly', function() {
+
+                var str = eventstore.getNewEventStream('reallyNew');
+                expect(str.currentRevision).to.be.a(Function);
+                expect(str.addEvent).to.be.a(Function);
+                expect(str.commit).to.be.a(Function);
+                expect(str).to.have.property('store', eventstore);
+                expect(str).to.have.property('streamId', 'reallyNew');
+                expect(str).to.have.property('events');
+                expect(str.events).to.be.empty();
+                expect(str).to.have.property('uncommittedEvents');
+                expect(str.uncommittedEvents).to.be.empty();
+                expect(str).to.have.property('lastRevision', -1);
+
+            });
+
+        });
+
         describe('requesting an eventstream', function() {
 
             it('it should callback without an error', function(done) {
