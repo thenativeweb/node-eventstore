@@ -1,31 +1,44 @@
 {
-    "author": "Jan Muehlemann, Adriano Raiano"
-  , "name": "eventstore"
-  , "version": "0.7.7"
-  , "contributors": [ 
-    { "name": "Jan Muehlemann", "email": "jan.muehlemann@gmail.com" }, 
-    { "name": "Adriano Raiano", "email": "adriano@raiano.ch" }
-  ]
-  , "private": false
-  , "repository": {
-      "type": "git"
-    , "url": "git@github.com:jamuhl/nodeEventStore.git"
-  }
-  , "keywords": ["cqrs", "eventstore", "ddd", "eventsourcing"]
-  , "main": "./index.js"
-  , "directories": {
-    "lib": "./lib"
-  }
-  , "engines": {
-        "node": ">= v0.6.15"
+  "author": "Adriano Raiano",
+  "name": "eventstore",
+  "version": "1.0.0",
+  "contributors": [
+    {
+      "name": "Adriano Raiano",
+      "email": "adriano@raiano.ch"
     }
-  , "dependencies": {
-      "async": ">= 0.0.1"
+    {
+      "name": "Jan Muehlemann",
+      "email": "jan.muehlemann@gmail.com"
+    }
+  ],
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:adrai/node-eventstore.git"
+  },
+  "keywords": [
+    "cqrs",
+    "eventstore",
+    "ddd",
+    "(d)ddd",
+    "eventsourcing"
+  ],
+  "main": "./index.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "async": "0.9.0"
+  },
+  "devDependencies": {
+    "expect.js": ">= 0.0.1",
+    "mocha": ">= 0.0.1"
+  },
+  "scripts": {
+    "test": "mocha"
   }
-  , "devDependencies": {
-      "mocha": ">= 0.0.1"
-    , "expect.js": ">= 0.0.1"
-  }
-  , "scripts" : { 
-      "test" : "mocha" } 
 }
