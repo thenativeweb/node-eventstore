@@ -212,50 +212,6 @@ var expect = require('expect.js'),
 
         });
 
-        describe('requesting an event range', function() {
-
-            before(function(done) {
-                eventstore.getEventStream('e5', 0, -1, function(err, stream) {
-                    stream.addEvent({ id: '11'});
-                    stream.addEvent({ id: '22'});
-                    stream.addEvent({ id: '33'});
-                    stream.addEvent({ id: '44'});
-                    stream.addEvent({ id: '55'});
-                    stream.commit(done);
-                });
-            });
-
-            var events;
-
-            it('it should callback with the correct values', function(done) {
-
-                eventstore.getEventRange({id: '22'}, 2, function(err, evts) {
-                    events = evts;
-                    expect(err).not.to.be.ok();
-                    expect(events[0].payload.id).to.eql('33');
-                    expect(events).to.have.length(2);
-                    done();
-                });
-
-            });
-
-            describe('requesting the next range', function() {
-
-                it('it should callback with the correct values', function(done) {
-
-                    events.next(function(err, evts) {
-                        expect(err).not.to.be.ok();
-                        expect(evts[0].payload.id).to.eql('55');
-                        expect(evts).to.have.length(1);
-                        done();
-                    });
-
-                });
-
-            });
-
-        });
-
         describe('committing', function() {
 
             it('it should callback without an error', function(done) {

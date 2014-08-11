@@ -239,21 +239,6 @@ var expect = require('expect.js'),
 
             });
 
-            describe('calling getEventRange searching by event id', function() {
-
-                it('it should callback with the correct values', function(done) {
-                    storage.getEventRange({id: '2'}, 2, function(err, events) {
-                        expect(err).not.to.be.ok();
-                        expect(events).to.have.length(2);
-                        expect(events[0].commitId).to.eql('2');
-                        expect(events[1].commitId).to.eql('3');
-
-                        done();
-                    });
-                });
-
-            });
-
             describe('calling getSnapshot for id 3', function() {
 
                 it('it should callback with the correct values', function(done) {
