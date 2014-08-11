@@ -13,6 +13,7 @@
 var redis = require('redis')
   , tolerate = require('tolerance')
   , async = require('async')
+  , jsonSerializer = require('json-serialize')
   , root = this
   , redisStorage
   , Storage;
@@ -194,7 +195,7 @@ Storage.prototype = {
                                 callback(err);
                             } else {
                                 res.forEach(function(item) {
-                                    arr.push(JSON.parse(item));
+                                    arr.push(jsonSerializer.deserialize(item));
                                 });
                             }
                             
@@ -290,7 +291,7 @@ Storage.prototype = {
         if (maxRev === -1) {
             this.client.lrange(this.options.snapshotsCollectionName + ':' + streamId, 0, 0, function (err, res) {
                 if (res && res.length === 1) {
-                    callback(err, JSON.parse(res[0]));
+                    callback(err, jsonSerializer.deserialize(res[0]));
                 } else {
                     callback(err, null);
                 }
@@ -302,7 +303,7 @@ Storage.prototype = {
                     callback(err);
                 } else if (res && res.length > 0) {
                     for (var i = res.length - 1; i >= 0; i--) {
-                        var snap = JSON.parse(res[i]);
+                        var snap = jsonSerializer.deserialize(res[i]);
                         if (snap.revision <= maxRev) {
                             callback(null, snap);
                             break;
@@ -366,7 +367,7 @@ var handleResultSet = function(err, res, callback) {
         var arr = [];
 
         res.forEach(function(item) {
-            arr.push(JSON.parse(item));
+            arr.push(jsonSerializer.deserialize(item));
         });
         
         callback(null, arr);
