@@ -68,7 +68,7 @@ var expect = require('expect.js'),
         describe('calling addEvents', function() {
 
             var event = {
-                streamId: 'id1',
+                aggregateId: 'id1',
                 streamRevision: 0,
                 commitId: '10',
                 dispatched: false,
@@ -135,7 +135,7 @@ var expect = require('expect.js'),
 
                 var snapshot = {
                     snapshotId: '1',
-                    streamId: '3',
+                    aggregateId: '3',
                     revision: 1,
                     data: 'data'
                 };
@@ -162,19 +162,19 @@ var expect = require('expect.js'),
 
             before(function(done) {
                 storage.addEvents([
-                    {streamId: '2', streamRevision: 0, commitId: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 1, commitId: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 2, commitId: 2, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
-                    {streamId: '2', streamRevision: 3, commitId: 3, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
+                    {aggregateId: '2', streamRevision: 0, commitId: 0, commitStamp: new Date(2012, 3, 14, 8, 0, 0), payload: {id: '1', event:'blaaaaaaaaaaa'}, dispatched: false},
+                    {aggregateId: '2', streamRevision: 1, commitId: 1, commitStamp: new Date(2012, 3, 14, 9, 0, 0), payload: {id: '2', event:'blaaaaaaaaaaa'}, dispatched: false},
+                    {aggregateId: '2', streamRevision: 2, commitId: 2, commitStamp: new Date(2012, 3, 14, 10, 0, 0), payload: {id: '3', event:'blaaaaaaaaaaa'}, dispatched: false},
+                    {aggregateId: '2', streamRevision: 3, commitId: 3, commitStamp: new Date(2012, 3, 15, 8, 0, 0), payload: {id: '4', event:'blaaaaaaaaaaa'}, dispatched: false}
                 ],
                 function (err) {
                     storage.addEvents([
-                        {streamId: '3', streamRevision: 0, commitId: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
-                        {streamId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
-                        ], 
+                        {aggregateId: '3', streamRevision: 0, commitId: 4, commitStamp: new Date(2012, 3, 16, 8, 0, 0), payload: {id: '5', event:'blaaaaaaaaaaa'}, dispatched: false},
+                        {aggregateId: '3', streamRevision: 1, commitId: 5, commitStamp: new Date(2012, 3, 17, 8, 0, 0), payload: {id: '6', event:'blaaaaaaaaaaa'}, dispatched: false}
+                        ],
                         function (err) {
-                            storage.addSnapshot({snapshotId: '1', streamId: '3', revision: 1, data: 'data'}, function() {
-                                storage.addSnapshot({snapshotId: '2', streamId: '3', revision: 2, data: 'dataPlus'}, done);
+                            storage.addSnapshot({snapshotId: '1', aggregateId: '3', revision: 1, data: 'data'}, function() {
+                                storage.addSnapshot({snapshotId: '2', aggregateId: '3', revision: 2, data: 'dataPlus'}, done);
                             });
                         }
                     );
@@ -246,7 +246,7 @@ var expect = require('expect.js'),
                         expect(err).not.to.be.ok();
                         expect(snap.data).to.eql('dataPlus');
                         expect(snap.snapshotId).to.eql('2');
-                        expect(snap.streamId).to.eql('3');
+                        expect(snap.aggregateId).to.eql('3');
                         expect(snap.revision).to.eql('2');
 
                         done();
@@ -262,7 +262,7 @@ var expect = require('expect.js'),
                         expect(err).not.to.be.ok();
                         expect(snap.data).to.eql('data');
                         expect(snap.snapshotId).to.eql('1');
-                        expect(snap.streamId).to.eql('3');
+                        expect(snap.aggregateId).to.eql('3');
                         expect(snap.revision).to.eql('1');
 
                         done();

@@ -212,6 +212,166 @@ var expect = require('expect.js'),
 
         });
 
+        describe('requesting all events of a stream with additional metas', function() {
+
+            describe('when calling only with streamId', function() {
+
+                before(function(done) {
+                    eventstore.getEventStream({
+                        aggregateId: 'e4+'
+                    }, 0, -1, function(err, stream) {
+                        stream.addEvent({ id: '1'});
+                        stream.addEvent({ id: '2'});
+                        stream.addEvent({ id: '3'});
+                        stream.addEvent({ id: '4'});
+                        stream.addEvent({ id: '5'});
+                        stream.commit(done);
+                    });
+                });
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEvents('e4+', function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(5);
+                        expect(events[0].payload.id).to.eql('1');
+                        done();
+                    });
+
+                });
+
+            });
+
+            describe('when calling with all metas', function() {
+
+                before(function(done) {
+                    eventstore.getEventStream({
+                        aggregateId: 'e4++',
+                        aggregate: 'myAggr',
+                        context: 'myContext'
+                    }, 0, -1, function(err, stream) {
+                        stream.addEvent({ id: '1'});
+                        stream.addEvent({ id: '2'});
+                        stream.addEvent({ id: '3'});
+                        stream.addEvent({ id: '4'});
+                        stream.addEvent({ id: '5'});
+                        stream.commit(done);
+                    });
+                });
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEvents({
+                        aggregateId: 'e4++',
+                        aggregate: 'myAggr',
+                        context: 'myContext'
+                    }, function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(5);
+                        expect(events[0].payload.id).to.eql('1');
+                        done();
+                    });
+
+                });
+
+            });
+
+            describe('when calling with aggregateId', function() {
+
+                before(function(done) {
+                    eventstore.getEventStream({
+                        aggregateId: 'e4+++'
+                    }, 0, -1, function(err, stream) {
+                        stream.addEvent({ id: '1'});
+                        stream.addEvent({ id: '2'});
+                        stream.addEvent({ id: '3'});
+                        stream.addEvent({ id: '4'});
+                        stream.addEvent({ id: '5'});
+                        stream.commit(done);
+                    });
+                });
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEvents({
+                        aggregateId: 'e4+++'
+                    }, function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(5);
+                        expect(events[0].payload.id).to.eql('1');
+                        done();
+                    });
+
+                });
+
+            });
+
+            describe('when calling with aggregate', function() {
+
+                before(function(done) {
+                    eventstore.getEventStream({
+                        aggregateId: 'e4++++',
+                        aggregate: 'myAggr'
+                    }, 0, -1, function(err, stream) {
+                        stream.addEvent({ id: '1'});
+                        stream.addEvent({ id: '2'});
+                        stream.addEvent({ id: '3'});
+                        stream.addEvent({ id: '4'});
+                        stream.addEvent({ id: '5'});
+                        stream.commit(done);
+                    });
+                });
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEvents({
+                        aggregateId: 'e4++++',
+                        aggregate: 'myAggr'
+                    }, function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(5);
+                        expect(events[0].payload.id).to.eql('1');
+                        done();
+                    });
+
+                });
+
+            });
+
+            describe('when calling with context', function() {
+
+                before(function(done) {
+                    eventstore.getEventStream({
+                        aggregateId: 'e4+++++',
+                        context: 'myContext'
+                    }, 0, -1, function(err, stream) {
+                        stream.addEvent({ id: '1'});
+                        stream.addEvent({ id: '2'});
+                        stream.addEvent({ id: '3'});
+                        stream.addEvent({ id: '4'});
+                        stream.addEvent({ id: '5'});
+                        stream.commit(done);
+                    });
+                });
+
+                it('it should callback with the correct values', function(done) {
+
+                    eventstore.getEvents({
+                        aggregateId: 'e4+++++',
+                        context: 'myContext'
+                    }, function(err, events) {
+                        expect(err).not.to.be.ok();
+                        expect(events).to.have.length(5);
+                        expect(events[0].payload.id).to.eql('1');
+                        done();
+                    });
+
+                });
+
+            });
+
+        });
+
         describe('committing', function() {
 
             it('it should callback without an error', function(done) {
@@ -222,8 +382,8 @@ var expect = require('expect.js'),
                     },
                     events: [],
                     uncommittedEvents: [
-                        {streamId: 'e1', payload: { event:'bla' } },
-                        {streamId: 'e1', payload: { event:'blabli' } }
+                        {aggregateId: 'e1', payload: { event:'bla' } },
+                        {aggregateId: 'e1', payload: { event:'blabli' } }
                     ]
                 };
 
