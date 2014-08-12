@@ -49,8 +49,11 @@ module.exports = require('./lib/eventstore');
 //  
 //  // create a new snapshot depending on your rules
 //  if (history.length > myRange) {
-//    // es.createSnapshot('streamId', stream.currentRevision(), myAggregate.getSnap()/*[, snapshotVersion]*/, function(err) { });
-//    // es.createSnapshot({ context: 'hr', aggregate: 'person', aggregateId: 'uuid' }, stream.currentRevision(), myAggregate.getSnap()/*[, snapshotVersion]*/, function(err) { });
+//    // es.createSnapshot({
+//    //   streamId: 'streamId',
+//    //   revision: stream.currentRevision()//,
+//    //   // version: snapshotVersion
+//    // }, function(err) { });
 //    es.createSnapshot({
 //      context: 'hr',
 //      aggregate: 'person',
