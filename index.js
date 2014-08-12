@@ -1,6 +1,61 @@
 'use strict';
 
-module.exports = require('./lib/eventstore');
+var Eventstore = require('./lib/eventstore'),
+  Base = require('./base');
+
+function getSpecificStore(options) {
+  options = options || {};
+
+  if (options.prototype instanceof Base) {
+    return options;
+  }
+
+  options.type = options.type || 'inmemory';
+
+  options.type = options.type.toLowerCase();
+
+  var dbPath = __dirname + "/databases/" + options.type + ".js";
+
+  var exists = require('fs').existsSync || require('path').existsSync;
+  if (!exists(dbPath)) {
+    var errMsg = 'Implementation for db "' + options.type + '" does not exist!';
+    console.log(errMsg);
+    throw new Error(errMsg);
+  }
+
+  try {
+    var db = require(dbPath);
+    return db;
+  } catch (err) {
+
+    if (err.message.indexOf('Cannot find module') >= 0 &&
+      err.message.indexOf("'") > 0 &&
+      err.message.lastIndexOf("'") !== err.message.indexOf("'")) {
+
+      var moduleName = err.message.substring(err.message.indexOf("'") + 1, err.message.lastIndexOf("'"));
+      console.log('Please install module "' + moduleName +
+        '" to work with db implementation "' + options.type + '"!');
+    }
+
+    throw err;
+  }
+}
+
+module.exports = function(options) {
+  options = options || {};
+
+  var Store;
+
+  try {
+    Store = getSpecificStore(options);
+  } catch (err) {
+    if (callback) callback(err);
+    throw err;
+  }
+
+  return new Eventstore(options, new Store(options));
+};
+
 
 
 //// to enable logging use https://github.com/visionmedia/debug
@@ -14,6 +69,10 @@ module.exports = require('./lib/eventstore');
 //es.useEventPublisher(function(evt) {
 //  // bus.emit('event', evt');
 //});
+////es.useEventPublisher(function(evt, callback) {
+////  // bus.emit('event', evt');
+////  callback();
+////});
 //
 //
 //// init eventstore
