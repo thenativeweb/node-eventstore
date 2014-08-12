@@ -51,6 +51,7 @@ module.exports = require('./lib/eventstore');
 //  if (history.length > myRange) {
 //    // es.createSnapshot({
 //    //   streamId: 'streamId',
+//    //   data: {},
 //    //   revision: stream.currentRevision()//,
 //    //   // version: snapshotVersion
 //    // }, function(err) { });
@@ -58,6 +59,7 @@ module.exports = require('./lib/eventstore');
 //      context: 'hr',
 //      aggregate: 'person',
 //      aggregateId: 'uuid',
+//      data: {},
 //      revision: stream.currentRevision()//,
 //      // version: snapshotVersion
 //    }, function(err) { });
