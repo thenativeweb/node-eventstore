@@ -2,3 +2,4 @@ storage/
 test
 *.tingo
 *.rdb
+.idea
