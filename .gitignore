@@ -3,6 +3,8 @@ $ cat .gitignore
 # Can ignore specific files
 .settings.xml
 
+.idea
+
 # Use wildcards as well
 *~
 #*.swp
