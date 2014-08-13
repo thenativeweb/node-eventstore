@@ -123,10 +123,13 @@ types.forEach(function (type) {
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ aggregateId: 'id1' }, 0, -1, function(err, evts) {
+                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
+                    expect(evts[0].aggregateId).to.eql(event.aggregateId);
+                    expect(evts[0].commitId).to.eql(event.commitId);
+                    expect(evts[0].payload.event).to.eql(event.payload.event);
 
                     done();
                   });
@@ -163,10 +166,16 @@ types.forEach(function (type) {
                 store.addEvents([event1, event2], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ aggregateId: 'id2' }, 0, -1, function(err, evts) {
+                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(2);
+                    expect(evts[0].aggregateId).to.eql(event1.aggregateId);
+                    expect(evts[0].commitId).to.eql(event1.commitId);
+                    expect(evts[0].payload.event).to.eql(event1.payload.event);
+                    expect(evts[1].aggregateId).to.eql(event2.aggregateId);
+                    expect(evts[1].commitId).to.eql(event2.commitId);
+                    expect(evts[1].payload.event).to.eql(event2.payload.event);
 
                     done();
                   });
@@ -197,9 +206,149 @@ types.forEach(function (type) {
                 
               });
               
-            })
+            });
 
-          })
+            describe('only with aggregateId', function () {
+
+              it('it should save the event', function (done) {
+
+                var event = {
+                  aggregateId: 'idhaha',
+                  streamRevision: 0,
+                  commitId: '10',
+                  dispatched: false,
+                  payload: {
+                    event:'blaffff'
+                  }
+                };
+
+                store.addEvents([event], function(err) {
+                  expect(err).not.to.be.ok();
+                  
+                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts).to.be.an('array');
+                    expect(evts).to.have.length(1);
+                    expect(evts[0].aggregateId).to.eql(event.aggregateId);
+                    expect(evts[0].commitId).to.eql(event.commitId);
+                    expect(evts[0].payload.event).to.eql(event.payload.event);
+
+                    done();
+                  });
+                });
+
+              });
+
+            });
+
+            describe('with aggregateId and aggregate', function () {
+
+              it('it should save the event correctly', function (done) {
+
+                var event = {
+                  aggregateId: 'aggId',
+                  aggregate: 'myAgg',
+                  streamRevision: 0,
+                  commitId: '10',
+                  dispatched: false,
+                  payload: {
+                    event:'blaffff'
+                  }
+                };
+
+                store.addEvents([event], function(err) {
+                  expect(err).not.to.be.ok();
+
+                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts).to.be.an('array');
+                    expect(evts).to.have.length(1);
+                    expect(evts[0].aggregateId).to.eql(event.aggregateId);
+                    expect(evts[0].aggregate).to.eql(event.aggregate);
+                    expect(evts[0].commitId).to.eql(event.commitId);
+                    expect(evts[0].payload.event).to.eql(event.payload.event);
+
+                    done();
+                  });
+                });
+
+              });
+
+            });
+
+            describe('with aggregateId and aggregate and context', function () {
+
+              it('it should save the event correctly', function (done) {
+
+                var event = {
+                  aggregateId: 'aggId',
+                  aggregate: 'myAgg',
+                  context: 'myContext',
+                  streamRevision: 0,
+                  commitId: '10',
+                  dispatched: false,
+                  payload: {
+                    event:'blaffff'
+                  }
+                };
+
+                store.addEvents([event], function(err) {
+                  expect(err).not.to.be.ok();
+
+                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts).to.be.an('array');
+                    expect(evts).to.have.length(1);
+                    expect(evts[0].aggregateId).to.eql(event.aggregateId);
+                    expect(evts[0].aggregate).to.eql(event.aggregate);
+                    expect(evts[0].context).to.eql(event.context);
+                    expect(evts[0].commitId).to.eql(event.commitId);
+                    expect(evts[0].payload.event).to.eql(event.payload.event);
+
+                    done();
+                  });
+                });
+
+              });
+
+            });
+
+            describe('with aggregateId and context', function () {
+
+              it('it should save the event correctly', function (done) {
+
+                var event = {
+                  aggregateId: 'aggId',
+                  context: 'myContext',
+                  streamRevision: 0,
+                  commitId: '10',
+                  dispatched: false,
+                  payload: {
+                    event:'blaffff'
+                  }
+                };
+
+                store.addEvents([event], function(err) {
+                  expect(err).not.to.be.ok();
+
+                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts).to.be.an('array');
+                    expect(evts).to.have.length(1);
+                    expect(evts[0].aggregateId).to.eql(event.aggregateId);
+                    expect(evts[0].context).to.eql(event.context);
+                    expect(evts[0].commitId).to.eql(event.commitId);
+                    expect(evts[0].payload.event).to.eql(event.payload.event);
+
+                    done();
+                  });
+                });
+
+              });
+
+            });
+            
+          });
           
         });
         
