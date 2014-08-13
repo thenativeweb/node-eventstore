@@ -114,6 +114,7 @@ types.forEach(function (type) {
                   aggregateId: 'id1',
                   streamRevision: 0,
                   commitId: '10',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'bla'
@@ -127,6 +128,7 @@ types.forEach(function (type) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
+                    expect(evts[0].commitStamp.getTime()).to.eql(event.commitStamp.getTime());
                     expect(evts[0].aggregateId).to.eql(event.aggregateId);
                     expect(evts[0].commitId).to.eql(event.commitId);
                     expect(evts[0].payload.event).to.eql(event.payload.event);
@@ -147,6 +149,7 @@ types.forEach(function (type) {
                   aggregateId: 'id2',
                   streamRevision: 0,
                   commitId: '10',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'bla'
@@ -157,6 +160,7 @@ types.forEach(function (type) {
                   aggregateId: 'id2',
                   streamRevision: 0,
                   commitId: '20',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'bla2'
@@ -170,9 +174,11 @@ types.forEach(function (type) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(2);
+                    expect(evts[0].commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
                     expect(evts[0].aggregateId).to.eql(event1.aggregateId);
                     expect(evts[0].commitId).to.eql(event1.commitId);
                     expect(evts[0].payload.event).to.eql(event1.payload.event);
+                    expect(evts[1].commitStamp.getTime()).to.eql(event2.commitStamp.getTime());
                     expect(evts[1].aggregateId).to.eql(event2.aggregateId);
                     expect(evts[1].commitId).to.eql(event2.commitId);
                     expect(evts[1].payload.event).to.eql(event2.payload.event);
@@ -193,6 +199,7 @@ types.forEach(function (type) {
                   //aggregateId: 'id1',
                   streamRevision: 0,
                   commitId: '10',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'bla'
@@ -216,6 +223,7 @@ types.forEach(function (type) {
                   aggregateId: 'idhaha',
                   streamRevision: 0,
                   commitId: '10',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'blaffff'
@@ -229,6 +237,7 @@ types.forEach(function (type) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
+                    expect(evts[0].commitStamp.getTime()).to.eql(event.commitStamp.getTime());
                     expect(evts[0].aggregateId).to.eql(event.aggregateId);
                     expect(evts[0].commitId).to.eql(event.commitId);
                     expect(evts[0].payload.event).to.eql(event.payload.event);
@@ -250,6 +259,7 @@ types.forEach(function (type) {
                   aggregate: 'myAgg',
                   streamRevision: 0,
                   commitId: '10',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'blaffff'
@@ -263,6 +273,7 @@ types.forEach(function (type) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
+                    expect(evts[0].commitStamp.getTime()).to.eql(event.commitStamp.getTime());
                     expect(evts[0].aggregateId).to.eql(event.aggregateId);
                     expect(evts[0].aggregate).to.eql(event.aggregate);
                     expect(evts[0].commitId).to.eql(event.commitId);
@@ -286,6 +297,7 @@ types.forEach(function (type) {
                   context: 'myContext',
                   streamRevision: 0,
                   commitId: '10',
+                  commitStamp: new Date(),
                   dispatched: false,
                   payload: {
                     event:'blaffff'
@@ -299,6 +311,7 @@ types.forEach(function (type) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
+                    expect(evts[0].commitStamp.getTime()).to.eql(event.commitStamp.getTime());
                     expect(evts[0].aggregateId).to.eql(event.aggregateId);
                     expect(evts[0].aggregate).to.eql(event.aggregate);
                     expect(evts[0].context).to.eql(event.context);
@@ -321,6 +334,7 @@ types.forEach(function (type) {
                   aggregateId: 'aggId',
                   context: 'myContext',
                   streamRevision: 0,
+                  commitStamp: new Date(),
                   commitId: '10',
                   dispatched: false,
                   payload: {
@@ -335,6 +349,7 @@ types.forEach(function (type) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
+                    expect(evts[0].commitStamp.getTime()).to.eql(event.commitStamp.getTime());
                     expect(evts[0].aggregateId).to.eql(event.aggregateId);
                     expect(evts[0].context).to.eql(event.context);
                     expect(evts[0].commitId).to.eql(event.commitId);
