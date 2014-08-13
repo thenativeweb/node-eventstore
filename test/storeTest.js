@@ -114,9 +114,8 @@ types.forEach(function (type) {
                 var event = {
                   aggregateId: 'id1',
                   streamRevision: 0,
-                  commitId: '10',
+                  commitId: '111',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'bla'
                   }
@@ -149,9 +148,8 @@ types.forEach(function (type) {
                 var event1 = {
                   aggregateId: 'id2',
                   streamRevision: 0,
-                  commitId: '10',
+                  commitId: '112',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'bla'
                   }
@@ -160,9 +158,8 @@ types.forEach(function (type) {
                 var event2 = {
                   aggregateId: 'id2',
                   streamRevision: 0,
-                  commitId: '20',
+                  commitId: '113',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'bla2'
                   }
@@ -199,9 +196,8 @@ types.forEach(function (type) {
                 var event = {
                   //aggregateId: 'id1',
                   streamRevision: 0,
-                  commitId: '10',
+                  commitId: '114',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'bla'
                   }
@@ -223,9 +219,8 @@ types.forEach(function (type) {
                 var event = {
                   aggregateId: 'idhaha',
                   streamRevision: 0,
-                  commitId: '10',
+                  commitId: '115',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'blaffff'
                   }
@@ -259,9 +254,8 @@ types.forEach(function (type) {
                   aggregateId: 'aggId',
                   aggregate: 'myAgg',
                   streamRevision: 0,
-                  commitId: '10',
+                  commitId: '116',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'blaffff'
                   }
@@ -297,9 +291,8 @@ types.forEach(function (type) {
                   aggregate: 'myAgg',
                   context: 'myContext',
                   streamRevision: 0,
-                  commitId: '10',
+                  commitId: '117',
                   commitStamp: new Date(),
-                  dispatched: false,
                   payload: {
                     event:'blaffff'
                   }
@@ -336,8 +329,7 @@ types.forEach(function (type) {
                   context: 'myContext',
                   streamRevision: 0,
                   commitStamp: new Date(),
-                  commitId: '10',
-                  dispatched: false,
+                  commitId: '118',
                   payload: {
                     event:'blaffff'
                   }
@@ -371,18 +363,16 @@ types.forEach(function (type) {
             var stream1 = [{
               aggregateId: 'id',
               streamRevision: 0,
-              commitId: '10',
+              commitId: '119',
               commitStamp: new Date(Date.now() + 1),
-              dispatched: false,
               payload: {
                 event:'bla'
               }
             }, {
               aggregateId: 'id',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '120',
               commitStamp: new Date(Date.now() + 2),
-              dispatched: false,
               payload: {
                 event:'bla2'
               }
@@ -392,9 +382,8 @@ types.forEach(function (type) {
               aggregateId: 'idWithAgg',
               aggregate: 'myAgg',
               streamRevision: 0,
-              commitId: '10',
+              commitId: '121',
               commitStamp: new Date(Date.now() + 3),
-              dispatched: false,
               payload: {
                 event:'bla'
               }
@@ -402,9 +391,8 @@ types.forEach(function (type) {
               aggregateId: 'idWithAgg',
               aggregate: 'myAgg',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '122',
               commitStamp: new Date(Date.now() + 4),
-              dispatched: false,
               payload: {
                 event: 'bla2'
               }
@@ -414,9 +402,8 @@ types.forEach(function (type) {
               aggregateId: 'id', // id already existing...
               aggregate: 'myAgg',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '123',
               commitStamp: new Date(Date.now() + 5),
-              dispatched: false,
               payload: {
                 event:'bla2'
               }
@@ -426,9 +413,8 @@ types.forEach(function (type) {
               aggregateId: 'idWithCont',
               context: 'myCont',
               streamRevision: 0,
-              commitId: '10',
+              commitId: '124',
               commitStamp: new Date(Date.now() + 6),
-              dispatched: false,
               payload: {
                 event:'bla'
               }
@@ -436,9 +422,8 @@ types.forEach(function (type) {
               aggregateId: 'idWithCont',
               context: 'myCont',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '125',
               commitStamp: new Date(Date.now() + 7),
-              dispatched: false,
               payload: {
                 event: 'bla2'
               }
@@ -448,9 +433,8 @@ types.forEach(function (type) {
               aggregateId: 'id', // id already existing...
               context: 'myCont',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '126',
               commitStamp: new Date(Date.now() + 8),
-              dispatched: false,
               payload: {
                 event:'bla2'
               }
@@ -461,9 +445,8 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '10',
+              commitId: '127',
               commitStamp: new Date(Date.now() + 9),
-              dispatched: false,
               payload: {
                 event:'bla'
               }
@@ -472,9 +455,8 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr',
               context: 'myConttttt',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '128',
               commitStamp: new Date(Date.now() + 10),
-              dispatched: false,
               payload: {
                 event: 'bla2'
               }
@@ -485,9 +467,8 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr2',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '10',
+              commitId: '129',
               commitStamp: new Date(Date.now() + 11),
-              dispatched: false,
               payload: {
                 event:'bla'
               }
@@ -496,9 +477,8 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr2',
               context: 'myConttttt',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '130',
               commitStamp: new Date(Date.now() + 12),
-              dispatched: false,
               payload: {
                 event: 'bla2'
               }
@@ -509,9 +489,8 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '10',
+              commitId: '131',
               commitStamp: new Date(Date.now() + 3),
-              dispatched: false,
               payload: {
                 event:'bla'
               }
@@ -520,9 +499,8 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr2',
               context: 'myConttttt',
               streamRevision: 1,
-              commitId: '11',
+              commitId: '132',
               commitStamp: new Date(Date.now() + 4),
-              dispatched: false,
               payload: {
                 event: 'bla2'
               }
