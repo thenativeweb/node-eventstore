@@ -1,7 +1,8 @@
 'use strict';
 
 var Eventstore = require('./lib/eventstore'),
-  Base = require('./base');
+  Base = require('./base'),
+  debug = require('debug')('eventstore');
 
 function getSpecificStore(options) {
   options = options || {};
@@ -20,6 +21,7 @@ function getSpecificStore(options) {
   if (!exists(dbPath)) {
     var errMsg = 'Implementation for db "' + options.type + '" does not exist!';
     console.log(errMsg);
+    debug(errMsg);
     throw new Error(errMsg);
   }
 
@@ -33,8 +35,10 @@ function getSpecificStore(options) {
       err.message.lastIndexOf("'") !== err.message.indexOf("'")) {
 
       var moduleName = err.message.substring(err.message.indexOf("'") + 1, err.message.lastIndexOf("'"));
-      console.log('Please install module "' + moduleName +
-        '" to work with db implementation "' + options.type + '"!');
+      var msg = 'Please install module "' + moduleName +
+        '" to work with db implementation "' + options.type + '"!';
+      console.log(msg);
+      debug(msg);
     }
 
     throw err;
@@ -49,7 +53,6 @@ module.exports = function(options) {
   try {
     Store = getSpecificStore(options);
   } catch (err) {
-    if (callback) callback(err);
     throw err;
   }
 
