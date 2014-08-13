@@ -1,6 +1,7 @@
 var expect = require('expect.js'),
   Base = require('../lib/base'),
-  async = require('async');
+  async = require('async'),
+  _ = require('lodash');
 
 var types = ['inmemory'/*, 'mongodb', 'tingodb', 'redis', 'couchdb'*/];
 
@@ -124,7 +125,7 @@ types.forEach(function (type) {
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                  store.getEvents(0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
@@ -170,7 +171,7 @@ types.forEach(function (type) {
                 store.addEvents([event1, event2], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                  store.getEvents(0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(2);
@@ -233,7 +234,7 @@ types.forEach(function (type) {
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
                   
-                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                  store.getEvents(0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
@@ -269,7 +270,7 @@ types.forEach(function (type) {
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                  store.getEvents(0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
@@ -307,7 +308,7 @@ types.forEach(function (type) {
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                  store.getEvents(0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
@@ -345,7 +346,7 @@ types.forEach(function (type) {
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
 
-                  store.getEvents({ /* get all events */ }, 0, -1, function(err, evts) {
+                  store.getEvents(0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
                     expect(evts).to.have.length(1);
@@ -361,6 +362,389 @@ types.forEach(function (type) {
 
               });
 
+            });
+            
+          });
+          
+          describe('having some events in the eventstore', function () {
+            
+            var stream1 = [{
+              aggregateId: 'id',
+              streamRevision: 0,
+              commitId: '10',
+              commitStamp: new Date(Date.now() + 1),
+              dispatched: false,
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'id',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 2),
+              dispatched: false,
+              payload: {
+                event:'bla2'
+              }
+            }];
+
+            var stream2 = [{
+              aggregateId: 'idWithAgg',
+              aggregate: 'myAgg',
+              streamRevision: 0,
+              commitId: '10',
+              commitStamp: new Date(Date.now() + 3),
+              dispatched: false,
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'idWithAgg',
+              aggregate: 'myAgg',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 4),
+              dispatched: false,
+              payload: {
+                event: 'bla2'
+              }
+            }];
+            
+            var stream3 = [{
+              aggregateId: 'id', // id already existing...
+              aggregate: 'myAgg',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 5),
+              dispatched: false,
+              payload: {
+                event:'bla2'
+              }
+            }];
+
+            var stream4 = [{
+              aggregateId: 'idWithCont',
+              context: 'myCont',
+              streamRevision: 0,
+              commitId: '10',
+              commitStamp: new Date(Date.now() + 6),
+              dispatched: false,
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'idWithCont',
+              context: 'myCont',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 7),
+              dispatched: false,
+              payload: {
+                event: 'bla2'
+              }
+            }];
+
+            var stream5 = [{
+              aggregateId: 'id', // id already existing...
+              context: 'myCont',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 8),
+              dispatched: false,
+              payload: {
+                event:'bla2'
+              }
+            }];
+
+            var stream6 = [{
+              aggregateId: 'idWithAggrAndCont',
+              aggregate: 'myAggrrr',
+              context: 'myConttttt',
+              streamRevision: 0,
+              commitId: '10',
+              commitStamp: new Date(Date.now() + 9),
+              dispatched: false,
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'idWithAggrAndCont',
+              aggregate: 'myAggrrr',
+              context: 'myConttttt',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 10),
+              dispatched: false,
+              payload: {
+                event: 'bla2'
+              }
+            }];
+
+            var stream7 = [{
+              aggregateId: 'idWithAggrAndCont2',
+              aggregate: 'myAggrrr2',
+              context: 'myConttttt',
+              streamRevision: 0,
+              commitId: '10',
+              commitStamp: new Date(Date.now() + 11),
+              dispatched: false,
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'idWithAggrAndCont2',
+              aggregate: 'myAggrrr2',
+              context: 'myConttttt',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 12),
+              dispatched: false,
+              payload: {
+                event: 'bla2'
+              }
+            }];
+
+            var stream8 = [{
+              aggregateId: 'idWithAggrAndCont2',
+              aggregate: 'myAggrrr',
+              context: 'myConttttt',
+              streamRevision: 0,
+              commitId: '10',
+              commitStamp: new Date(Date.now() + 3),
+              dispatched: false,
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'idWithAggrAndCont',
+              aggregate: 'myAggrrr2',
+              context: 'myConttttt',
+              streamRevision: 1,
+              commitId: '11',
+              commitStamp: new Date(Date.now() + 4),
+              dispatched: false,
+              payload: {
+                event: 'bla2'
+              }
+            }];
+            
+            var allEvents = [].concat(stream1).concat(stream2).concat(stream3)
+                              .concat(stream4).concat(stream5).concat(stream6)
+                              .concat(stream7).concat(stream8);
+            
+            beforeEach(function (done) {
+              async.series([
+                function (callback) {
+                  store.addEvents(stream1, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream2, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream3, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream4, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream5, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream6, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream7, callback);
+                },
+                function (callback) {
+                  store.addEvents(stream8, callback);
+                }
+              ], done);
+            });
+            
+            describe('calling getEvents', function () {
+              
+              describe('to get all events', function () {
+                
+                it('it should return the correct values', function (done) {
+                  
+                  store.getEvents(0, -1, function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(allEvents.length);
+                    
+                    _.each(evts, function (evt, i) {
+                      expect(evt.aggregateId).to.eql(allEvents[i].aggregateId);
+                      expect(evt.aggregate).to.eql(allEvents[i].aggregate);
+                      expect(evt.context).to.eql(allEvents[i].context);
+                      expect(evt.commitStamp.getTime()).to.eql(allEvents[i].commitStamp.getTime());
+                    });
+                    
+                    done();
+                  });
+                  
+                });
+
+                describe('with a skip value', function () {
+
+                  it('it should return the correct values', function (done) {
+
+                    var expectedEvts = allEvents.slice(3);
+                    
+                    store.getEvents(3, -1, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(expectedEvts.length);
+
+                      _.each(evts, function (evt, i) {
+                        expect(evt.aggregateId).to.eql(expectedEvts[i].aggregateId);
+                        expect(evt.aggregate).to.eql(expectedEvts[i].aggregate);
+                        expect(evt.context).to.eql(expectedEvts[i].context);
+                        expect(evt.commitStamp.getTime()).to.eql(expectedEvts[i].commitStamp.getTime());
+                      });
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('with a limit value', function () {
+
+                  it('it should return the correct values', function (done) {
+
+                    var expectedEvts = allEvents.slice(0, 5);
+
+                    store.getEvents(0, 5, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(expectedEvts.length);
+
+                      _.each(evts, function (evt, i) {
+                        expect(evt.aggregateId).to.eql(expectedEvts[i].aggregateId);
+                        expect(evt.aggregate).to.eql(expectedEvts[i].aggregate);
+                        expect(evt.context).to.eql(expectedEvts[i].context);
+                        expect(evt.commitStamp.getTime()).to.eql(expectedEvts[i].commitStamp.getTime());
+                      });
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('with a skip and a limit value', function () {
+
+                  it('it should return the correct values', function (done) {
+
+                    var expectedEvts = allEvents.slice(3, 5);
+
+                    store.getEvents(3, 2, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(expectedEvts.length);
+
+                      _.each(evts, function (evt, i) {
+                        expect(evt.aggregateId).to.eql(expectedEvts[i].aggregateId);
+                        expect(evt.aggregate).to.eql(expectedEvts[i].aggregate);
+                        expect(evt.context).to.eql(expectedEvts[i].context);
+                        expect(evt.commitStamp.getTime()).to.eql(expectedEvts[i].commitStamp.getTime());
+                      });
+
+                      done();
+                    });
+
+                  });
+
+                });
+                
+              });
+              
+            });
+            
+            describe('calling getEventsByRevision', function () {
+              
+              describe('with an aggregateId being used only in one context and aggregate', function () {
+                
+                it('it should return the correct events', function (done) {
+                  
+                  store.getEventsByRevision({ aggregateId: 'idWithAgg' }, 0, -1, function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(2);
+                    expect(evts[0].aggregateId).to.eql(stream2[0].aggregateId);
+                    expect(evts[0].commitStamp.getTime()).to.eql(stream2[0].commitStamp.getTime());
+                    expect(evts[0].streamRevision).to.eql(stream2[0].streamRevision);
+                    expect(evts[1].aggregateId).to.eql(stream2[1].aggregateId);
+                    expect(evts[1].commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
+                    expect(evts[1].streamRevision).to.eql(stream2[1].streamRevision);
+                    
+                    done();
+                  });
+                  
+                });
+
+                describe('and limit it with revMin and revMax', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    store.getEventsByRevision({ aggregateId: 'idWithAgg' }, 1, 2, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(1);
+                      expect(evts[0].aggregateId).to.eql(stream2[1].aggregateId);
+                      expect(evts[0].commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
+                      expect(evts[0].streamRevision).to.eql(stream2[1].streamRevision);
+
+                      done();
+                    });
+
+                  });
+
+                });
+                
+              });
+
+              describe('with an aggregateId being used in an other context or aggregate', function () {
+
+                it('it should return the correct events', function (done) {
+
+                  store.getEventsByRevision({ aggregateId: 'id' }, 0, -1, function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(4);
+                    expect(evts[0].aggregateId).to.eql(stream1[0].aggregateId);
+                    expect(evts[0].commitStamp.getTime()).to.eql(stream1[0].commitStamp.getTime());
+                    expect(evts[0].streamRevision).to.eql(stream1[0].streamRevision);
+                    expect(evts[1].aggregateId).to.eql(stream1[1].aggregateId);
+                    expect(evts[1].commitStamp.getTime()).to.eql(stream1[1].commitStamp.getTime());
+                    expect(evts[1].streamRevision).to.eql(stream1[1].streamRevision);
+                    expect(evts[2].aggregateId).to.eql(stream3[0].aggregateId);
+                    expect(evts[2].commitStamp.getTime()).to.eql(stream3[0].commitStamp.getTime());
+                    expect(evts[2].streamRevision).to.eql(stream3[0].streamRevision);
+                    expect(evts[3].aggregateId).to.eql(stream5[0].aggregateId);
+                    expect(evts[3].commitStamp.getTime()).to.eql(stream5[0].commitStamp.getTime());
+                    expect(evts[3].streamRevision).to.eql(stream5[0].streamRevision);
+
+                    done();
+                  });
+
+                });
+
+                describe('and limit it with revMin and revMax', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    store.getEventsByRevision({ aggregateId: 'id' }, 1, 2, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(1);
+                      expect(evts[0].aggregateId).to.eql(stream1[1].aggregateId);
+                      expect(evts[0].commitStamp.getTime()).to.eql(stream1[1].commitStamp.getTime());
+                      expect(evts[0].streamRevision).to.eql(stream1[1].streamRevision);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+              
             });
             
           });

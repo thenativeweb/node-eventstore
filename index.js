@@ -135,27 +135,9 @@ module.exports = function(options) {
 //
 //
 //
-//// skip, limit always optional
+//// skip, limit optional
 //
 //es.getEvents(0, 100, function(err, evts) {
-//  // if (events.length === amount) {
-//  //   events.next(handle);
-//  // } else {
-//  // }
-//});
-//
-//es.getEvents('streamId', 0, 100, function(err, evts) {
-//  // if (events.length === amount) {
-//  //   events.next(handle);
-//  // } else {
-//  // }
-//});
-//
-//es.getEvents({ // free choice [all, only context, only aggregate, only id..]
-//  context: 'hr',
-//  aggregate: 'person',
-//  aggregateId: 'uuid'
-//}, 0, 100, function(err, evts) {
 //  // if (events.length === amount) {
 //  //   events.next(handle);
 //  // } else {
