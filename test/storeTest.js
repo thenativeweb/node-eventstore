@@ -1219,9 +1219,72 @@ types.forEach(function (type) {
 
           describe('adding some events', function () {
 
+            var stream = [{
+              aggregateId: 'id',
+              streamRevision: 0,
+              commitId: '119',
+              commitStamp: new Date(Date.now() + 10),
+              payload: {
+                event:'bla'
+              }
+            }, {
+              aggregateId: 'id',
+              streamRevision: 1,
+              commitId: '120',
+              commitStamp: new Date(Date.now() + 20),
+              payload: {
+                event:'bla2'
+              }
+            }];
+            
+            beforeEach(function (done) {
+              store.addEvents(stream, done);
+            });
+
             describe('and requesting all undispatched events', function () {
               
-              it('it should return the correct events');
+              it('it should return the correct events', function (done) {
+                
+                store.getUndispatchedEvents(function (err, evts) {
+                  expect(err).not.to.be.ok();
+                  expect(evts.length).to.eql(2);
+                  expect(evts[0].commitId).to.eql(stream[0].commitId);
+                  expect(evts[0].commitStamp.getTime()).to.eql(stream[0].commitStamp.getTime());
+                  expect(evts[1].commitId).to.eql(stream[1].commitId);
+                  expect(evts[1].commitStamp.getTime()).to.eql(stream[1].commitStamp.getTime());
+                  
+                  done();
+                });
+                
+              });
+              
+            });
+            
+            describe('calling setEventToDispatched', function () {
+              
+              beforeEach(function (done) {
+                store.getUndispatchedEvents(function (err, evts) {
+                  expect(evts.length).to.eql(2);
+                  done();
+                });
+              });
+              
+              it('it should work correctly', function (done) {
+
+                store.setEventToDispatched('119', function (err) {
+                  expect(err).not.to.be.ok();
+
+                  store.getUndispatchedEvents(function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(1);
+                    expect(evts[0].commitId).to.eql(stream[1].commitId);
+                    expect(evts[0].commitStamp.getTime()).to.eql(stream[1].commitStamp.getTime());
+                    
+                    done();
+                  });
+                });
+                
+              });
               
             });
 
