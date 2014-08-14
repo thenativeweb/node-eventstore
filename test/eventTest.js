@@ -57,19 +57,44 @@ describe('Event', function () {
       
       it('it should return a valid object', function () {
 
-        expect(function() {
-          var uncommitedEvents = [];
-          var evt = new Event({ aggregateId: 'myAggId', uncommittedEvents: uncommitedEvents }, { data: 'event'});
-          expect(evt.aggregateId).to.eql('myAggId');
-          expect(evt.streamId).to.eql('myAggId');
-          expect(evt.payload.data).to.eql('event');
-          expect(uncommitedEvents.length).to.eql(1);
-          expect(uncommitedEvents[0]).to.eql(evt);
-        }).not.to.throwError();
+        var uncommitedEvents = [];
+        var evt = null;
         
+        expect(function() {
+          evt = new Event({ aggregateId: 'myAggId', uncommittedEvents: uncommitedEvents }, { data: 'event'});
+        }).not.to.throwError();
+
+        expect(evt.aggregateId).to.eql('myAggId');
+        expect(evt.streamId).to.eql('myAggId');
+        expect(evt.payload.data).to.eql('event');
+        expect(uncommitedEvents.length).to.eql(1);
+        expect(uncommitedEvents[0]).to.eql(evt);
         
       });
       
+    });
+
+    describe('passing all values', function () {
+
+      it('it should return a valid object', function () {
+
+        var uncommitedEvents = [];
+        var evt = null;
+        
+        expect(function() {
+          evt = new Event({ aggregateId: 'myAggId', uncommittedEvents: uncommitedEvents, aggregate: 'myAgg', context: 'myCont' }, { data: 'event'});
+        }).not.to.throwError();
+
+        expect(evt.aggregateId).to.eql('myAggId');
+        expect(evt.streamId).to.eql('myAggId');
+        expect(evt.payload.data).to.eql('event');
+        expect(evt.aggregate).to.eql('myAgg');
+        expect(evt.context).to.eql('myCont');
+        expect(uncommitedEvents.length).to.eql(1);
+        expect(uncommitedEvents[0]).to.eql(evt);
+
+      });
+
     });
     
   });
