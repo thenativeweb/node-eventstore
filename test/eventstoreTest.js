@@ -888,11 +888,101 @@ describe('eventstore', function () {
 
               });
               
+              describe('requesting a new eventstream', function () {
+                
+                describe('and committing some new events', function () {
+                  
+                  it('it should work as expected', function (done) {
+                    
+                    es.getEventStream({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                      expect(err).not.to.be.ok();
+                      
+                      expect(stream.lastRevision).to.eql(-1);
+                      
+                      stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
+                      
+                      expect(stream.uncommittedEvents.length).to.eql(3);
+                      expect(stream.events.length).to.eql(0);
+                      expect(stream.lastRevision).to.eql(-1);
+                      
+                      stream.commit(function(err, str) {
+                        expect(err).not.to.be.ok();
+                        expect(str).to.eql(stream);
+
+                        expect(str.uncommittedEvents.length).to.eql(0);
+                        expect(str.events.length).to.eql(3);
+                        expect(str.lastRevision).to.eql(2);
+                        
+                        expect(str.eventsToDispatch.length).to.eql(3);
+                        
+                        done();
+                      });
+                      
+                    });
+                    
+                  });
+                  
+                });
+                
+              });
+
+              describe('requesting an existing eventstream', function () {
+
+                describe('and committing some new events', function () {
+                  
+                  before(function(done) {
+                    es.getEventStream({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                      stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
+                      stream.commit(done);
+                    });
+                  });
+
+                  it('it should work as expected', function (done) {
+
+                    es.getEventStream({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                      expect(err).not.to.be.ok();
+
+                      expect(stream.lastRevision).to.eql(2);
+
+                      stream.addEvents([{ for: 'event4' }, { five: 'event5' }]);
+
+                      expect(stream.uncommittedEvents.length).to.eql(2);
+                      expect(stream.events.length).to.eql(3);
+                      expect(stream.lastRevision).to.eql(2);
+
+                      stream.commit(function(err, str) {
+                        expect(err).not.to.be.ok();
+                        expect(str).to.eql(stream);
+
+                        expect(str.uncommittedEvents.length).to.eql(0);
+                        expect(str.events.length).to.eql(5);
+                        expect(str.lastRevision).to.eql(4);
+
+                        expect(str.eventsToDispatch.length).to.eql(2);
+
+                        done();
+                      });
+
+                    });
+
+                  });
+
+                  it('it be able to retrieve them', function (done) {
+
+                    es.getEvents({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(5);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+
               // continue here!!!!!!!!!!!!!!!!!
-              
-              
-              
-              
               
               
               
