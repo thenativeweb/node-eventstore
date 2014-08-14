@@ -72,6 +72,91 @@ describe('eventstore', function () {
 
     });
 
+    describe('and checking the api function by calling', function () {
+      
+      describe('getEvents', function () {
+
+        var es = eventstore(),
+          orgFunc = es.store.getEvents;
+        
+        before(function (done) {
+          es.init(done);
+        });
+        
+        after(function () {
+          es.store.getEvents = orgFunc;
+        });
+        
+        describe('with nice arguments', function () {
+
+          it('it pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId' },
+              skip: 0,
+              limit: -1,
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.eql(given.query);
+              expect(skip).to.eql(given.skip);
+              expect(limit).to.eql(given.limit);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.query, given.skip, given.limit, given.callback);
+
+          });
+          
+        });
+
+        describe('with only the callback', function () {
+
+          it('it pass them correctly', function (done) {
+
+            var given = {
+//              query: { aggregateId: 'myAggId' },
+//              skip: 0,
+//              limit: -1,
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.be.an('object');
+              expect(query).to.empty();
+              expect(skip).to.eql(0);
+              expect(limit).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.callback);
+
+          });
+
+        });
+        
+        // and continue here to!!!!!!!!!
+        
+        
+        
+        
+        
+      });
+      
+      
+      
+      
+      
+      
+      
+
+    });
+
     describe('with options containing a type property with the value of', function () {
 
       var types = ['inmemory'/*, 'mongodb', 'tingodb', 'redis', 'couchdb'*/];
