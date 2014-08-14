@@ -92,9 +92,9 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId' },
-              skip: 0,
-              limit: -1,
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              skip: 2,
+              limit: 32,
               callback: function () {}
             };
 
@@ -136,22 +136,658 @@ describe('eventstore', function () {
           });
 
         });
+
+        describe('with query and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.eql(given.query);
+              expect(skip).to.eql(0);
+              expect(limit).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.query, given.callback);
+
+          });
+
+        });
+
+        describe('with skip and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              skip: 3,
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.be.an('object');
+              expect(query).to.empty();
+              expect(skip).to.eql(given.skip);
+              expect(limit).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.skip, given.callback);
+
+          });
+
+        });
+
+        describe('with query, skip and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              skip: 3,
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.eql(given.query);
+              expect(skip).to.eql(given.skip);
+              expect(limit).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.query, given.skip, given.callback);
+
+          });
+
+        });
+
+        describe('with skip, limit and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              skip: 3,
+              limit: 50,
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.be.an('object');
+              expect(query).to.empty();
+              expect(skip).to.eql(given.skip);
+              expect(limit).to.eql(given.limit);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.skip, given.limit, given.callback);
+
+          });
+
+        });
+
+        describe('with query as string,  skip, limit and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: 'myAggId',
+              skip: 3,
+              limit: 50,
+              callback: function () {}
+            };
+
+            es.store.getEvents = function (query, skip, limit, callback) {
+              expect(query).to.be.an('object');
+              expect(query.aggregateId).to.eql('myAggId');
+              expect(skip).to.eql(given.skip);
+              expect(limit).to.eql(given.limit);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEvents(given.query, given.skip, given.limit, given.callback);
+
+          });
+
+        });
+                
+      });
+
+      describe('getEventsByRevision', function () {
+
+        var es = eventstore(),
+          orgFunc = es.store.getEventsByRevision;
+
+        before(function (done) {
+          es.init(done);
+        });
+
+        after(function () {
+          es.store.getEventsByRevision = orgFunc;
+        });
+
+        describe('with nice arguments', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              revMin: 2,
+              revMax: 32,
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMin).to.eql(given.revMin);
+              expect(revMax).to.eql(given.revMax);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventsByRevision(given.query, given.revMin, given.revMax, given.callback);
+
+          });
+
+        });
+
+        describe('with query and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMin).to.eql(0);
+              expect(revMax).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventsByRevision(given.query, given.callback);
+
+          });
+
+        });
+
+        describe('with query, revMin and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              revMin: 2,
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMin).to.eql(given.revMin);
+              expect(revMax).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventsByRevision(given.query, given.revMin, given.callback);
+
+          });
+
+        });
         
-        // and continue here to!!!!!!!!!
-        
-        
-        
-        
+        describe('with query as string, revMin, revMax and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: 'myAggId',
+              revMin: 2,
+              revMax: 4,
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.be.an('object');
+              expect(query.aggregateId).to.eql('myAggId');
+              expect(revMin).to.eql(given.revMin);
+              expect(revMax).to.eql(given.revMax);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventsByRevision(given.query, given.revMin, given.revMax, given.callback);
+
+          });
+
+        });
+
+        describe('with wrong query', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            es.getEventsByRevision(123, 3, 100, function (err) {
+              expect(err.message).to.match(/aggregateId/);
+              done();
+            });
+
+          });
+
+        });
+
+      });
+
+      describe('getEventStream', function () {
+
+        var es = eventstore(),
+          orgFunc = es.store.getEventsByRevision;
+
+        before(function (done) {
+          es.init(done);
+        });
+
+        after(function () {
+          es.store.getEventsByRevision = orgFunc;
+        });
+
+        describe('with nice arguments', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              revMin: 2,
+              revMax: 32,
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMin).to.eql(given.revMin);
+              expect(revMax).to.eql(given.revMax);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventStream(given.query, given.revMin, given.revMax, given.callback);
+
+          });
+
+        });
+
+        describe('with query and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMin).to.eql(0);
+              expect(revMax).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventStream(given.query, given.callback);
+
+          });
+
+        });
+
+        describe('with query, revMin and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              revMin: 2,
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMin).to.eql(given.revMin);
+              expect(revMax).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventStream(given.query, given.revMin, given.callback);
+
+          });
+
+        });
+
+        describe('with query as string, revMin, revMax and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: 'myAggId',
+              revMin: 2,
+              revMax: 4,
+              callback: function () {}
+            };
+
+            es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
+              expect(query).to.be.an('object');
+              expect(query.aggregateId).to.eql('myAggId');
+              expect(revMin).to.eql(given.revMin);
+              expect(revMax).to.eql(given.revMax);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getEventStream(given.query, given.revMin, given.revMax, given.callback);
+
+          });
+
+        });
+
+        describe('with wrong query', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            es.getEventStream(123, 3, 100, function (err) {
+              expect(err.message).to.match(/aggregateId/);
+              done();
+            });
+
+          });
+
+        });
+
+      });
+
+      describe('getFromSnapshot', function () {
+
+        var es = eventstore(),
+          orgFunc = es.store.getSnapshot;
+
+        before(function (done) {
+          es.init(done);
+        });
+
+        after(function () {
+          es.store.getSnapshot = orgFunc;
+        });
+
+        describe('with nice arguments', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              revMax: 32,
+              callback: function () {
+              }
+            };
+
+            es.store.getSnapshot = function (query, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMax).to.eql(given.revMax);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getFromSnapshot(given.query, given.revMax, given.callback);
+
+          });
+
+        });
+
+        describe('with query and callback', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var given = {
+              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              callback: function () {
+              }
+            };
+
+            es.store.getSnapshot = function (query, revMax, callback) {
+              expect(query).to.eql(given.query);
+              expect(revMax).to.eql(-1);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.getFromSnapshot(given.query, given.callback);
+
+          });
+
+          describe('with query as string, revMax and callback', function () {
+
+            it('it should pass them correctly', function (done) {
+
+              var given = {
+                query: 'myAggId',
+                revMax: 31,
+                callback: function () {
+                }
+              };
+
+              es.store.getSnapshot = function (query, revMax, callback) {
+                expect(query).to.be.an('object');
+                expect(query.aggregateId).to.eql('myAggId');
+                expect(revMax).to.eql(31);
+                expect(callback).to.be.a('function');
+
+                done();
+              };
+
+              es.getFromSnapshot(given.query, given.revMax, given.callback);
+
+            });
+
+          });
+
+          describe('with wrong query', function () {
+
+            it('it should pass them correctly', function (done) {
+
+              es.getFromSnapshot(123, 100, function (err) {
+                expect(err.message).to.match(/aggregateId/);
+                done();
+              });
+
+            });
+
+          });
+
+        });
         
       });
-      
-      
-      
-      
-      
-      
-      
 
+      describe('createSnapshot', function () {
+
+        var es = eventstore(),
+          orgFunc = es.store.addSnapshot;
+
+        before(function (done) {
+          es.init(done);
+        });
+
+        after(function () {
+          es.store.addSnapshot = orgFunc;
+        });
+
+        describe('with nice arguments', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var obj = {
+              aggregateId: 'myAggId',
+              aggregate: 'myAgg',
+              context: 'myCont',
+              data: { snap: 'data' }
+            };
+
+            es.store.addSnapshot = function (snap, callback) {
+              expect(snap.aggregateId).to.eql(obj.aggregateId);
+              expect(snap.aggregate).to.eql(obj.aggregate);
+              expect(snap.context).to.eql(obj.context);
+              expect(snap.data).to.eql(obj.data);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.createSnapshot(obj, function () {});
+
+          });
+
+        });
+
+        describe('with streamId', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var obj = {
+              streamId: 'myAggId',
+              data: { snap: 'data' }
+            };
+
+            es.store.addSnapshot = function (snap, callback) {
+              expect(snap.aggregateId).to.eql(obj.streamId);
+              expect(snap.data).to.eql(obj.data);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.createSnapshot(obj, function () {});
+
+          });
+
+        });
+
+        describe('with wrong aggregateId', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var obj = {
+              data: { snap: 'data' }
+            };
+
+            es.createSnapshot(obj, function (err) {
+              expect(err.message).to.match(/aggregateId/);
+              done();
+            });
+
+          });
+
+        });
+
+        describe('with wrong data', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var obj = {
+              aggregateId: 'myAggId',
+              aggregate: 'myAgg',
+              context: 'myCont'
+            };
+
+            es.createSnapshot(obj, function (err) {
+              expect(err.message).to.match(/data/);
+              done();
+            });
+
+          });
+
+        });
+
+      });
+
+      describe('setEventToDispatched', function () {
+
+        var es = eventstore(),
+          orgFunc = es.store.setEventToDispatched;
+
+        before(function (done) {
+          es.init(done);
+        });
+
+        after(function () {
+          es.store.setEventToDispatched = orgFunc;
+        });
+
+        describe('with an event', function () {
+
+          it('it should pass it correctly', function (done) {
+
+            var evt = {
+              commitId: '1234'
+            };
+
+            es.store.setEventToDispatched = function (id, callback) {
+              expect(id).to.eql(evt.commitId);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.setEventToDispatched(evt, function () {
+            });
+
+          });
+
+        });
+
+        describe('with a commitId', function () {
+
+          it('it should pass it correctly', function (done) {
+
+            var evt = {
+              commitId: '1234'
+            };
+
+            es.store.setEventToDispatched = function (id, callback) {
+              expect(id).to.eql(evt.commitId);
+              expect(callback).to.be.a('function');
+
+              done();
+            };
+
+            es.setEventToDispatched(evt.commitId, function () {});
+
+          });
+
+        });
+
+      });
+      
     });
 
     describe('with options containing a type property with the value of', function () {
@@ -253,6 +889,10 @@ describe('eventstore', function () {
               });
               
               // continue here!!!!!!!!!!!!!!!!!
+              
+              
+              
+              
               
               
               
