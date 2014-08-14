@@ -1290,6 +1290,440 @@ types.forEach(function (type) {
 
           });
           
+          describe('calling addSnapshot', function () {
+            
+            var snap = {
+              id: '12345',
+              aggregateId: '920193847',
+              aggregate: 'myCoolAggregate',
+              context: 'myEvenCoolerContext',
+              commitStamp: new Date(Date.now() + 400),
+              revision: 3,
+              version: 1,
+              data: {
+                mySnappi: 'data'
+              }
+            };
+            
+            it('it should save the snapshot', function (done) {
+              
+              store.addSnapshot(snap, function (err) {
+                expect(err).not.to.be.ok();
+                
+                store.getSnapshot({ aggregateId: snap.aggregateId }, -1 , function (err, shot) {
+                  expect(err).not.to.be.ok();
+                  expect(shot.id).to.eql(snap.id);
+                  expect(shot.aggregateId).to.eql(snap.aggregateId);
+                  expect(shot.aggregate).to.eql(snap.aggregate);
+                  expect(shot.context).to.eql(snap.context);
+                  expect(shot.commitStamp.getTime()).to.eql(snap.commitStamp.getTime());
+                  expect(shot.revision).to.eql(snap.revision);
+                  expect(shot.version).to.eql(snap.version);
+                  expect(shot.data.mySnappi).to.eql(snap.data.mySnappi);
+                  
+                  done();
+                });
+              });
+              
+            });
+
+            describe('having some snapshots in the eventstore calling getSnapshot', function () {
+              
+              var snap1 = {
+                id: '12345',
+                aggregateId: '920193847',
+                commitStamp: new Date(Date.now() + 405),
+                revision: 3,
+                version: 1,
+                data: {
+                  mySnappi: 'data'
+                }
+              };
+
+              var snap2 = {
+                id: '123456',
+                aggregateId: '920193847',
+                commitStamp: new Date(Date.now() + 410),
+                revision: 8,
+                version: 1,
+                data: {
+                  mySnappi: 'data2'
+                }
+              };
+
+              var snap3 = {
+                id: '1234567',
+                aggregateId: '142351',
+                aggregate: 'myCoolAggregate',
+                context: 'conntttt',
+                commitStamp: new Date(Date.now() + 420),
+                revision: 5,
+                version: 1,
+                data: {
+                  mySnappi: 'data2'
+                }
+              };
+
+              var snap4 = {
+                id: '12345678',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                commitStamp: new Date(Date.now() + 430),
+                revision: 9,
+                version: 1,
+                data: {
+                  mySnappi: 'data6'
+                }
+              };
+
+              var snap5 = {
+                id: '123456789',
+                aggregateId: '938179341',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 440),
+                revision: 2,
+                version: 1,
+                data: {
+                  mySnappi: 'dataXY'
+                }
+              };
+
+              var snap6 = {
+                id: '12345678910',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate2',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 450),
+                revision: 12,
+                version: 1,
+                data: {
+                  mySnappi: 'dataaaaa'
+                }
+              };
+              
+              beforeEach(function (done) {
+                async.series([
+                  function (callback) {
+                    store.addSnapshot(snap1, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap2, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap3, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap4, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap5, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap6, callback);
+                  }
+                ], done);
+              });
+
+              describe('with an aggregateId being used only in one context and aggregate', function () {
+                
+                it('it should return the correct snapshot', function (done) {
+                  
+                  store.getSnapshot({ aggregateId: '142351' }, -1, function (err, shot) {
+                    expect(err).not.to.be.ok();
+                    expect(shot.id).to.eql(snap3.id);
+                    expect(shot.aggregateId).to.eql(snap3.aggregateId);
+                    expect(shot.aggregate).to.eql(snap3.aggregate);
+                    expect(shot.context).to.eql(snap3.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap3.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap3.revision);
+                    expect(shot.version).to.eql(snap3.version);
+                    expect(shot.data.mySnappi).to.eql(snap3.data.mySnappi);
+                    
+                    done();
+                  });
+                  
+                });
+
+                describe('and limit it with revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '142351' }, 1, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot).not.to.be.ok();
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('and an other revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '142351' }, 5, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot.id).to.eql(snap3.id);
+                      expect(shot.aggregateId).to.eql(snap3.aggregateId);
+                      expect(shot.aggregate).to.eql(snap3.aggregate);
+                      expect(shot.context).to.eql(snap3.context);
+                      expect(shot.commitStamp.getTime()).to.eql(snap3.commitStamp.getTime());
+                      expect(shot.revision).to.eql(snap3.revision);
+                      expect(shot.version).to.eql(snap3.version);
+                      expect(shot.data.mySnappi).to.eql(snap3.data.mySnappi);
+
+                      done();
+                    });
+
+                  });
+
+                });
+                
+              });
+
+              describe('with an aggregateId being used in an other context or aggregate', function () {
+
+                it('it should return the correct snapshot', function (done) {
+
+                  store.getSnapshot({ aggregateId: '920193847' }, -1, function (err, shot) {
+                    expect(err).not.to.be.ok();
+                    expect(shot.id).to.eql(snap1.id);
+                    expect(shot.aggregateId).to.eql(snap1.aggregateId);
+                    expect(shot.aggregate).to.eql(snap1.aggregate);
+                    expect(shot.context).to.eql(snap1.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap1.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap1.revision);
+                    expect(shot.version).to.eql(snap1.version);
+                    expect(shot.data.mySnappi).to.eql(snap1.data.mySnappi);
+
+                    done();
+                  });
+
+                });
+
+                describe('and limit it with revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '920193847' }, 1, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot).not.to.be.ok();
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('and an other revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '920193847' }, 5, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot.id).to.eql(snap1.id);
+                      expect(shot.aggregateId).to.eql(snap1.aggregateId);
+                      expect(shot.aggregate).to.eql(snap1.aggregate);
+                      expect(shot.context).to.eql(snap1.context);
+                      expect(shot.commitStamp.getTime()).to.eql(snap1.commitStamp.getTime());
+                      expect(shot.revision).to.eql(snap1.revision);
+                      expect(shot.version).to.eql(snap1.version);
+                      expect(shot.data.mySnappi).to.eql(snap1.data.mySnappi);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+
+              describe('with an aggregateId and with an aggregate', function () {
+
+                it('it should return the correct snapshot', function (done) {
+
+                  store.getSnapshot({ aggregateId: '920193847', aggregate: 'myCoolAggregate' }, -1, function (err, shot) {
+                    expect(err).not.to.be.ok();
+                    expect(shot.id).to.eql(snap4.id);
+                    expect(shot.aggregateId).to.eql(snap4.aggregateId);
+                    expect(shot.aggregate).to.eql(snap4.aggregate);
+                    expect(shot.context).to.eql(snap4.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap4.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap4.revision);
+                    expect(shot.version).to.eql(snap4.version);
+                    expect(shot.data.mySnappi).to.eql(snap4.data.mySnappi);
+
+                    done();
+                  });
+
+                });
+
+                describe('and limit it with revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '920193847', aggregate: 'myCoolAggregate' }, 1, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot).not.to.be.ok();
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('and an other revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '920193847', aggregate: 'myCoolAggregate' }, 9, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot.id).to.eql(snap4.id);
+                      expect(shot.aggregateId).to.eql(snap4.aggregateId);
+                      expect(shot.aggregate).to.eql(snap4.aggregate);
+                      expect(shot.context).to.eql(snap4.context);
+                      expect(shot.commitStamp.getTime()).to.eql(snap4.commitStamp.getTime());
+                      expect(shot.revision).to.eql(snap4.revision);
+                      expect(shot.version).to.eql(snap4.version);
+                      expect(shot.data.mySnappi).to.eql(snap4.data.mySnappi);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+
+              describe('with an aggregateId and with an aggregate and with a context', function () {
+
+                it('it should return the correct snapshot', function (done) {
+
+                  store.getSnapshot({ aggregateId: '938179341', aggregate: 'myCoolAggregate', context: 'myCoolContext' }, -1, function (err, shot) {
+                    expect(err).not.to.be.ok();
+                    expect(shot.id).to.eql(snap5.id);
+                    expect(shot.aggregateId).to.eql(snap5.aggregateId);
+                    expect(shot.aggregate).to.eql(snap5.aggregate);
+                    expect(shot.context).to.eql(snap5.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap5.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap5.revision);
+                    expect(shot.version).to.eql(snap5.version);
+                    expect(shot.data.mySnappi).to.eql(snap5.data.mySnappi);
+
+                    done();
+                  });
+
+                });
+
+                describe('and limit it with revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '938179341', aggregate: 'myCoolAggregate', context: 'myCoolContext' }, 1, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot).not.to.be.ok();
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('and an other revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '938179341', aggregate: 'myCoolAggregate', context: 'myCoolContext' }, 2, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot.id).to.eql(snap5.id);
+                      expect(shot.aggregateId).to.eql(snap5.aggregateId);
+                      expect(shot.aggregate).to.eql(snap5.aggregate);
+                      expect(shot.context).to.eql(snap5.context);
+                      expect(shot.commitStamp.getTime()).to.eql(snap5.commitStamp.getTime());
+                      expect(shot.revision).to.eql(snap5.revision);
+                      expect(shot.version).to.eql(snap5.version);
+                      expect(shot.data.mySnappi).to.eql(snap5.data.mySnappi);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+
+              describe('with an aggregateId and without an aggregate but with a context', function () {
+
+                it('it should return the correct snapshot', function (done) {
+
+                  store.getSnapshot({ aggregateId: '142351', context: 'conntttt' }, -1, function (err, shot) {
+                    expect(err).not.to.be.ok();
+                    expect(shot.id).to.eql(snap3.id);
+                    expect(shot.aggregateId).to.eql(snap3.aggregateId);
+                    expect(shot.aggregate).to.eql(snap3.aggregate);
+                    expect(shot.context).to.eql(snap3.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap3.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap3.revision);
+                    expect(shot.version).to.eql(snap3.version);
+                    expect(shot.data.mySnappi).to.eql(snap3.data.mySnappi);
+
+                    done();
+                  });
+
+                });
+
+                describe('and limit it with revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '142351', context: 'conntttt' }, 1, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot).not.to.be.ok();
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('and an other revMax', function () {
+
+                  it('it should return the correct snapshot', function (done) {
+
+                    store.getSnapshot({ aggregateId: '142351', context: 'conntttt' }, 5, function (err, shot) {
+                      expect(err).not.to.be.ok();
+                      expect(shot.id).to.eql(snap3.id);
+                      expect(shot.aggregateId).to.eql(snap3.aggregateId);
+                      expect(shot.aggregate).to.eql(snap3.aggregate);
+                      expect(shot.context).to.eql(snap3.context);
+                      expect(shot.commitStamp.getTime()).to.eql(snap3.commitStamp.getTime());
+                      expect(shot.revision).to.eql(snap3.revision);
+                      expect(shot.version).to.eql(snap3.version);
+                      expect(shot.data.mySnappi).to.eql(snap3.data.mySnappi);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+              
+            });
+            
+          });
+          
         });
         
       });
