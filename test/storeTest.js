@@ -9,7 +9,7 @@ types.forEach(function (type) {
 
   describe('"' + type + '" store implementation', function () {
 
-    var Store = require('../lib/database/' + type);
+    var Store = require('../lib/databases/' + type);
     var store;
 
     describe('creating an instance', function () {

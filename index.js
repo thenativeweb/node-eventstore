@@ -1,7 +1,7 @@
 'use strict';
 
 var Eventstore = require('./lib/eventstore'),
-  Base = require('./base'),
+  Base = require('./lib/base'),
   debug = require('debug')('eventstore');
 
 function getSpecificStore(options) {
@@ -15,7 +15,7 @@ function getSpecificStore(options) {
 
   options.type = options.type.toLowerCase();
 
-  var dbPath = __dirname + "/databases/" + options.type + ".js";
+  var dbPath = __dirname + "/lib/databases/" + options.type + ".js";
 
   var exists = require('fs').existsSync || require('path').existsSync;
   if (!exists(dbPath)) {
