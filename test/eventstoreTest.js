@@ -89,7 +89,7 @@ describe('eventstore', function () {
         
         describe('with nice arguments', function () {
 
-          it('it pass them correctly', function (done) {
+          it('it should pass them correctly', function (done) {
 
             var given = {
               query: { aggregateId: 'myAggId' },
@@ -115,12 +115,9 @@ describe('eventstore', function () {
 
         describe('with only the callback', function () {
 
-          it('it pass them correctly', function (done) {
+          it('it should pass them correctly', function (done) {
 
             var given = {
-//              query: { aggregateId: 'myAggId' },
-//              skip: 0,
-//              limit: -1,
               callback: function () {}
             };
 
