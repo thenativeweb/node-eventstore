@@ -3,7 +3,7 @@ var expect = require('expect.js'),
   async = require('async'),
   _ = require('lodash');
 
-var types = ['inmemory', 'mongodb'/*, 'tingodb', 'redis', 'couchdb'*/];
+var types = ['inmemory', 'mongodb', 'tingodb', 'redis'/*, 'couchdb'*/];
 
 types.forEach(function (type) {
 
@@ -155,7 +155,7 @@ types.forEach(function (type) {
                   aggregateId: 'id2',
                   streamRevision: 0,
                   commitId: '112',
-                  commitStamp: new Date(),
+                  commitStamp: new Date(Date.now() + 1),
                   payload: {
                     event:'bla'
                   }
@@ -165,7 +165,7 @@ types.forEach(function (type) {
                   aggregateId: 'id2',
                   streamRevision: 0,
                   commitId: '113',
-                  commitStamp: new Date(),
+                  commitStamp: new Date(Date.now() + 30),
                   payload: {
                     event:'bla2'
                   }
