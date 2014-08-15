@@ -752,7 +752,7 @@ describe('eventstore', function () {
             };
 
             es.store.setEventToDispatched = function (id, callback) {
-              expect(id).to.eql(evt.commitId);
+              expect(id).to.eql(evt.id);
               expect(callback).to.be.a('function');
 
               done();
@@ -792,7 +792,7 @@ describe('eventstore', function () {
 
     describe('with options containing a type property with the value of', function () {
 
-      var types = ['inmemory', 'mongodb', 'tingodb'/*, 'redis', 'couchdb'*/];
+      var types = ['inmemory', 'mongodb', 'tingodb', 'redis'/*, 'couchdb'*/];
 
       types.forEach(function (type) {
 
@@ -871,7 +871,9 @@ describe('eventstore', function () {
 
               before(function (done) {
                 es = eventstore({ type: type });
-                es.init(done);
+                es.init(function(err) {
+                  es.store.clear(done);
+                });
               });
               
               after(function (done) {
@@ -917,6 +919,10 @@ describe('eventstore', function () {
                         expect(str.uncommittedEvents.length).to.eql(0);
                         expect(str.events.length).to.eql(3);
                         expect(str.lastRevision).to.eql(2);
+
+                        expect(str.events[0].commitSequence).to.eql(0);
+                        expect(str.events[1].commitSequence).to.eql(1);
+                        expect(str.events[2].commitSequence).to.eql(2);
                         
                         expect(str.events[0].restInCommitStream).to.eql(2);
                         expect(str.events[1].restInCommitStream).to.eql(1);
@@ -967,6 +973,9 @@ describe('eventstore', function () {
                         expect(str.uncommittedEvents.length).to.eql(0);
                         expect(str.events.length).to.eql(5);
                         expect(str.lastRevision).to.eql(4);
+
+                        expect(str.events[3].commitSequence).to.eql(0);
+                        expect(str.events[4].commitSequence).to.eql(1);
 
                         expect(str.events[3].restInCommitStream).to.eql(1);
                         expect(str.events[4].restInCommitStream).to.eql(0);
@@ -1108,6 +1117,10 @@ describe('eventstore', function () {
                       expect(str.uncommittedEvents.length).to.eql(0);
                       expect(str.events.length).to.eql(3);
                       expect(str.lastRevision).to.eql(2);
+
+                      expect(str.events[0].commitSequence).to.eql(0);
+                      expect(str.events[1].commitSequence).to.eql(1);
+                      expect(str.events[2].commitSequence).to.eql(2);
 
                       expect(str.events[0].restInCommitStream).to.eql(2);
                       expect(str.events[1].restInCommitStream).to.eql(1);

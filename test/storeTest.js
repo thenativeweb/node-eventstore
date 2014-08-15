@@ -122,6 +122,7 @@ types.forEach(function (type) {
                   streamRevision: 0,
                   commitId: '111',
                   commitStamp: new Date(),
+                  commitSequence: 0,
                   payload: {
                     event:'bla'
                   }
@@ -156,6 +157,7 @@ types.forEach(function (type) {
                   streamRevision: 0,
                   commitId: '112',
                   commitStamp: new Date(Date.now() + 1),
+                  commitSequence: 0,
                   payload: {
                     event:'bla'
                   }
@@ -165,7 +167,8 @@ types.forEach(function (type) {
                   aggregateId: 'id2',
                   streamRevision: 0,
                   commitId: '113',
-                  commitStamp: new Date(Date.now() + 30),
+                  commitStamp: new Date(Date.now() + 1),
+                  commitSequence: 1,
                   payload: {
                     event:'bla2'
                   }
@@ -204,6 +207,7 @@ types.forEach(function (type) {
                   streamRevision: 0,
                   commitId: '114',
                   commitStamp: new Date(),
+                  commitSequence: 0,
                   payload: {
                     event:'bla'
                   }
@@ -227,6 +231,7 @@ types.forEach(function (type) {
                   streamRevision: 0,
                   commitId: '115',
                   commitStamp: new Date(),
+                  commitSequence: 0,
                   payload: {
                     event:'blaffff'
                   }
@@ -262,6 +267,7 @@ types.forEach(function (type) {
                   streamRevision: 0,
                   commitId: '116',
                   commitStamp: new Date(),
+                  commitSequence: 0,
                   payload: {
                     event:'blaffff'
                   }
@@ -299,6 +305,7 @@ types.forEach(function (type) {
                   streamRevision: 0,
                   commitId: '117',
                   commitStamp: new Date(),
+                  commitSequence: 0,
                   payload: {
                     event:'blaffff'
                   }
@@ -335,6 +342,7 @@ types.forEach(function (type) {
                   context: 'myContext',
                   streamRevision: 0,
                   commitStamp: new Date(),
+                  commitSequence: 0,
                   commitId: '118',
                   payload: {
                     event:'blaffff'
@@ -369,16 +377,20 @@ types.forEach(function (type) {
             var stream1 = [{
               aggregateId: 'id',
               streamRevision: 0,
-              commitId: '119',
+              id: '119',
+              commitId: '1119',
               commitStamp: new Date(Date.now() + 10),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
             }, {
               aggregateId: 'id',
               streamRevision: 1,
-              commitId: '120',
-              commitStamp: new Date(Date.now() + 20),
+              id: '120',
+              commitId: '1119',
+              commitStamp: new Date(Date.now() + 10),
+              commitSequence: 1,
               payload: {
                 event:'bla2'
               }
@@ -388,8 +400,10 @@ types.forEach(function (type) {
               aggregateId: 'idWithAgg',
               aggregate: 'myAgg',
               streamRevision: 0,
-              commitId: '121',
+              id: '121',
+              commitId: '1121',
               commitStamp: new Date(Date.now() + 30),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
@@ -397,8 +411,10 @@ types.forEach(function (type) {
               aggregateId: 'idWithAgg',
               aggregate: 'myAgg',
               streamRevision: 1,
-              commitId: '122',
-              commitStamp: new Date(Date.now() + 40),
+              id: '122',
+              commitId: '1121',
+              commitStamp: new Date(Date.now() + 30),
+              commitSequence: 1,
               payload: {
                 event: 'bla2'
               }
@@ -408,8 +424,10 @@ types.forEach(function (type) {
               aggregateId: 'id', // id already existing...
               aggregate: 'myAgg',
               streamRevision: 0,
-              commitId: '123',
+              id: '123',
+              commitId: '1123',
               commitStamp: new Date(Date.now() + 50),
+              commitSequence: 0,
               payload: {
                 event:'bla2'
               }
@@ -419,8 +437,10 @@ types.forEach(function (type) {
               aggregateId: 'idWithCont',
               context: 'myCont',
               streamRevision: 0,
-              commitId: '124',
+              id: '124',
+              commitId: '1124',
               commitStamp: new Date(Date.now() + 60),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
@@ -428,8 +448,10 @@ types.forEach(function (type) {
               aggregateId: 'idWithCont',
               context: 'myCont',
               streamRevision: 1,
-              commitId: '125',
-              commitStamp: new Date(Date.now() + 70),
+              id: '125',
+              commitId: '1124',
+              commitStamp: new Date(Date.now() + 60),
+              commitSequence: 1,
               payload: {
                 event: 'bla2'
               }
@@ -439,8 +461,10 @@ types.forEach(function (type) {
               aggregateId: 'id', // id already existing...
               context: 'myCont',
               streamRevision: 0,
-              commitId: '126',
+              id: '126',
+              commitId: '1126',
               commitStamp: new Date(Date.now() + 80),
+              commitSequence: 0,
               payload: {
                 event:'bla2'
               }
@@ -451,8 +475,10 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '127',
+              id: '127',
+              commitId: '1127',
               commitStamp: new Date(Date.now() + 90),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
@@ -461,8 +487,10 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr',
               context: 'myConttttt',
               streamRevision: 1,
-              commitId: '128',
-              commitStamp: new Date(Date.now() + 100),
+              id: '128',
+              commitId: '1127',
+              commitStamp: new Date(Date.now() + 90),
+              commitSequence: 1,
               payload: {
                 event: 'bla2'
               }
@@ -473,8 +501,10 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr2',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '129',
+              id: '129',
+              commitId: '1129',
               commitStamp: new Date(Date.now() + 110),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
@@ -483,8 +513,10 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr2',
               context: 'myConttttt',
               streamRevision: 1,
-              commitId: '130',
-              commitStamp: new Date(Date.now() + 120),
+              id: '130',
+              commitId: '1129',
+              commitStamp: new Date(Date.now() + 110),
+              commitSequence: 1,
               payload: {
                 event: 'bla2'
               }
@@ -495,8 +527,10 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '131',
+              id: '131',
+              commitId: '1131',
               commitStamp: new Date(Date.now() + 130),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
@@ -507,8 +541,10 @@ types.forEach(function (type) {
               aggregate: 'myAggrrr2',
               context: 'myConttttt',
               streamRevision: 0,
-              commitId: '132',
+              id: '132',
+              commitId: '1132',
               commitStamp: new Date(Date.now() + 140),
+              commitSequence: 0,
               payload: {
                 event: 'bla2'
               }
@@ -519,8 +555,10 @@ types.forEach(function (type) {
               aggregate: 'wowAgg',
               context: 'wowCont',
               streamRevision: 0,
-              commitId: '133',
+              id: '133',
+              commitId: '1133',
               commitStamp: new Date(Date.now() + 150),
+              commitSequence: 0,
               payload: {
                 event:'bla2'
               }
@@ -576,8 +614,14 @@ types.forEach(function (type) {
                     expect(evts.length).to.eql(allEvents.length);
                     
                     var lastCommitStamp = 0;
+                    var lastCommitId = 0;
+                    var lastId = 0;
                     _.each(evts, function (evt) {
-                      expect(evt.commitStamp.getTime()).to.be.greaterThan(lastCommitStamp);
+                      expect(evt.id).to.be.greaterThan(lastId);
+                      expect(evt.commitId >= lastCommitId).to.eql(true);
+                      expect(evt.commitStamp.getTime() >= lastCommitStamp).to.eql(true);
+                      lastId = evt.id;
+                      lastCommitId = evt.commitId;
                       lastCommitStamp = evt.commitStamp.getTime();
                     });
                     
@@ -597,8 +641,14 @@ types.forEach(function (type) {
                       expect(evts.length).to.eql(expectedEvts.length);
 
                       var lastCommitStamp = 0;
+                      var lastCommitId = 0;
+                      var lastId = 0;
                       _.each(evts, function (evt) {
-                        expect(evt.commitStamp.getTime()).to.be.greaterThan(lastCommitStamp);
+                        expect(evt.id).to.be.greaterThan(lastId);
+                        expect(evt.commitId >= lastCommitId).to.eql(true);
+                        expect(evt.commitStamp.getTime() >= lastCommitStamp).to.eql(true);
+                        lastId = evt.id;
+                        lastCommitId = evt.commitId;
                         lastCommitStamp = evt.commitStamp.getTime();
                       });
 
@@ -620,8 +670,14 @@ types.forEach(function (type) {
                       expect(evts.length).to.eql(expectedEvts.length);
 
                       var lastCommitStamp = 0;
+                      var lastCommitId = 0;
+                      var lastId = 0;
                       _.each(evts, function (evt) {
-                        expect(evt.commitStamp.getTime()).to.be.greaterThan(lastCommitStamp);
+                        expect(evt.id).to.be.greaterThan(lastId);
+                        expect(evt.commitId >= lastCommitId).to.eql(true);
+                        expect(evt.commitStamp.getTime() >= lastCommitStamp).to.eql(true);
+                        lastId = evt.id;
+                        lastCommitId = evt.commitId;
                         lastCommitStamp = evt.commitStamp.getTime();
                       });
 
@@ -643,8 +699,14 @@ types.forEach(function (type) {
                       expect(evts.length).to.eql(expectedEvts.length);
 
                       var lastCommitStamp = 0;
+                      var lastCommitId = 0;
+                      var lastId = 0;
                       _.each(evts, function (evt) {
-                        expect(evt.commitStamp.getTime()).to.be.greaterThan(lastCommitStamp);
+                        expect(evt.id).to.be.greaterThan(lastId);
+                        expect(evt.commitId >= lastCommitId).to.eql(true);
+                        expect(evt.commitStamp.getTime() >= lastCommitStamp).to.eql(true);
+                        lastId = evt.id;
+                        lastCommitId = evt.commitId;
                         lastCommitStamp = evt.commitStamp.getTime();
                       });
 
@@ -664,11 +726,15 @@ types.forEach(function (type) {
                   store.getEvents({ aggregateId: 'idWithAgg' }, 0, -1, function (err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts.length).to.eql(2);
+                    expect(evts[0].id).to.eql(stream2[0].id);
                     expect(evts[0].aggregateId).to.eql(stream2[0].aggregateId);
                     expect(evts[0].commitStamp.getTime()).to.eql(stream2[0].commitStamp.getTime());
+                    expect(evts[0].commitSequence).to.eql(stream2[0].commitSequence);
                     expect(evts[0].streamRevision).to.eql(stream2[0].streamRevision);
+                    expect(evts[1].id).to.eql(stream2[1].id);
                     expect(evts[1].aggregateId).to.eql(stream2[1].aggregateId);
                     expect(evts[1].commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
+                    expect(evts[1].commitSequence).to.eql(stream2[1].commitSequence);
                     expect(evts[1].streamRevision).to.eql(stream2[1].streamRevision);
 
                     done();
@@ -1228,16 +1294,20 @@ types.forEach(function (type) {
             var stream = [{
               aggregateId: 'id',
               streamRevision: 0,
-              commitId: '119',
+              id: '119',
+              commitId: '11119',
               commitStamp: new Date(Date.now() + 10),
+              commitSequence: 0,
               payload: {
                 event:'bla'
               }
             }, {
               aggregateId: 'id',
               streamRevision: 1,
-              commitId: '120',
-              commitStamp: new Date(Date.now() + 20),
+              id: '120',
+              commitId: '11119',
+              commitStamp: new Date(Date.now() + 10),
+              commitSequence: 1,
               payload: {
                 event:'bla2'
               }
@@ -1254,8 +1324,10 @@ types.forEach(function (type) {
                 store.getUndispatchedEvents(function (err, evts) {
                   expect(err).not.to.be.ok();
                   expect(evts.length).to.eql(2);
+                  expect(evts[0].id).to.eql(stream[0].id);
                   expect(evts[0].commitId).to.eql(stream[0].commitId);
                   expect(evts[0].commitStamp.getTime()).to.eql(stream[0].commitStamp.getTime());
+                  expect(evts[1].id).to.eql(stream[1].id);
                   expect(evts[1].commitId).to.eql(stream[1].commitId);
                   expect(evts[1].commitStamp.getTime()).to.eql(stream[1].commitStamp.getTime());
                   
