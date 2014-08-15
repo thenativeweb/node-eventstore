@@ -1,9 +1,9 @@
 # before_script: "npm install"
 
-# services:
-#   - mongodb
-#   - couchdb
-#   - redis-server
+services:
+   - mongodb
+   - couchdb
+   - redis-server
 
 language: node_js
 node_js:

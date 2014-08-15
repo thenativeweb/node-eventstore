@@ -3,7 +3,7 @@ var expect = require('expect.js'),
   async = require('async'),
   _ = require('lodash');
 
-var types = ['inmemory'/*, 'mongodb', 'tingodb', 'redis', 'couchdb'*/];
+var types = ['inmemory', 'mongodb'/*, 'tingodb', 'redis', 'couchdb'*/];
 
 types.forEach(function (type) {
 
@@ -14,9 +14,11 @@ types.forEach(function (type) {
 
     describe('creating an instance', function () {
       
-      it('it should return correct object', function () {
-
+      before(function () {
         store = new Store();
+      });
+      
+      it('it should return correct object', function () {
         expect(store).to.be.a(Base);
         expect(store.connect).to.be.a('function');
         expect(store.disconnect).to.be.a('function');
@@ -88,6 +90,10 @@ types.forEach(function (type) {
           });
           
           beforeEach(function (done) {
+            store.clear(done);
+          });
+
+          after(function (done) {
             store.clear(done);
           });
   
@@ -513,7 +519,7 @@ types.forEach(function (type) {
               aggregate: 'wowAgg',
               context: 'wowCont',
               streamRevision: 0,
-              commitId: '126',
+              commitId: '133',
               commitStamp: new Date(Date.now() + 150),
               payload: {
                 event:'bla2'

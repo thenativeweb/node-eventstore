@@ -792,7 +792,7 @@ describe('eventstore', function () {
 
     describe('with options containing a type property with the value of', function () {
 
-      var types = ['inmemory'/*, 'mongodb', 'tingodb', 'redis', 'couchdb'*/];
+      var types = ['inmemory', 'mongodb'/*, 'tingodb', 'redis', 'couchdb'*/];
 
       types.forEach(function (type) {
 
@@ -873,6 +873,10 @@ describe('eventstore', function () {
                 es = eventstore({ type: type });
                 es.init(done);
               });
+              
+              after(function (done) {
+                es.store.clear(done);
+              });
 
               describe('calling getNewId', function () {
 
@@ -900,7 +904,8 @@ describe('eventstore', function () {
                       expect(stream.lastRevision).to.eql(-1);
                       
                       stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
-                      
+
+                      expect(stream.streamId).to.eql('myAggId');
                       expect(stream.uncommittedEvents.length).to.eql(3);
                       expect(stream.events.length).to.eql(0);
                       expect(stream.lastRevision).to.eql(-1);
@@ -912,6 +917,10 @@ describe('eventstore', function () {
                         expect(str.uncommittedEvents.length).to.eql(0);
                         expect(str.events.length).to.eql(3);
                         expect(str.lastRevision).to.eql(2);
+                        
+                        expect(str.events[0].restInCommitStream).to.eql(2);
+                        expect(str.events[1].restInCommitStream).to.eql(1);
+                        expect(str.events[2].restInCommitStream).to.eql(0);
                         
                         expect(str.eventsToDispatch.length).to.eql(3);
                         
@@ -946,6 +955,7 @@ describe('eventstore', function () {
 
                       stream.addEvents([{ for: 'event4' }, { five: 'event5' }]);
 
+                      expect(stream.streamId).to.eql('myAggId2');
                       expect(stream.uncommittedEvents.length).to.eql(2);
                       expect(stream.events.length).to.eql(3);
                       expect(stream.lastRevision).to.eql(2);
@@ -958,6 +968,9 @@ describe('eventstore', function () {
                         expect(str.events.length).to.eql(5);
                         expect(str.lastRevision).to.eql(4);
 
+                        expect(str.events[3].restInCommitStream).to.eql(1);
+                        expect(str.events[4].restInCommitStream).to.eql(0);
+
                         expect(str.eventsToDispatch.length).to.eql(2);
 
                         done();
@@ -967,7 +980,7 @@ describe('eventstore', function () {
 
                   });
 
-                  it('it be able to retrieve them', function (done) {
+                  it('it should be able to retrieve them', function (done) {
 
                     es.getEvents({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, evts) {
                       expect(err).not.to.be.ok();
@@ -978,17 +991,146 @@ describe('eventstore', function () {
 
                   });
 
+                  it('it should be able to retrieve by context', function (done) {
+
+                    es.getEvents({context: 'myCont' }, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(8);
+
+                      done();
+                    });
+
+                  });
+
                 });
 
               });
 
-              // continue here!!!!!!!!!!!!!!!!!
+              describe('requesting all undispatched events', function () {
+
+                it('it should return the correct events', function (done) {
+
+                  es.getUndispatchedEvents(function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(8);
+
+                    done();
+                  });
+
+                });
+
+              });
+
+              describe('setting an event to dispatched', function () {
+
+                it('it should work correctly', function (done) {
+
+                  es.getUndispatchedEvents(function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(8);
+                    
+                    es.setEventToDispatched(evts[0], function (err) {
+                      expect(err).not.to.be.ok();
+
+                      es.getUndispatchedEvents(function (err, evts) {
+                        expect(err).not.to.be.ok();
+                        expect(evts.length).to.eql(7);
+                        
+                        done();
+                      });
+                    });
+
+                  });
+
+                });
+
+              });
               
-              
-              
-              
-              
-              
+              describe('creating a snapshot', function () {
+                
+                it('it should callback without error', function (done) {
+
+                  es.getEventStream({ aggregateId: 'myAggIdOfSnap', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                    expect(err).not.to.be.ok();
+
+                    expect(stream.lastRevision).to.eql(-1);
+
+                    stream.addEvents([{ oneSnap: 'event1' }, { twoSnap: 'event2' }, { threeSnap: 'event3' }]);
+
+                    expect(stream.streamId).to.eql('myAggIdOfSnap');
+                    expect(stream.uncommittedEvents.length).to.eql(3);
+                    expect(stream.events.length).to.eql(0);
+                    expect(stream.lastRevision).to.eql(-1);
+
+                    stream.commit(function(err, str) {
+                      expect(err).not.to.be.ok();
+                      expect(str).to.eql(stream);
+
+                      expect(str.uncommittedEvents.length).to.eql(0);
+                      expect(str.events.length).to.eql(3);
+                      expect(str.lastRevision).to.eql(2);
+
+                      expect(str.events[0].restInCommitStream).to.eql(2);
+                      expect(str.events[1].restInCommitStream).to.eql(1);
+                      expect(str.events[2].restInCommitStream).to.eql(0);
+
+                      expect(str.eventsToDispatch.length).to.eql(3);
+                      
+                      es.createSnapshot({
+                        aggregateId: stream.aggregateId,
+                        aggregate: stream.aggregate,
+                        context: stream.context,
+                        revision: stream.lastRevision,
+                        version: 1,
+                        data: { my: 'snap' }
+                      }, function (err) {
+                        expect(err).not.to.be.ok();
+
+                        stream.addEvent({ fourSnap: 'event4' })
+
+                        stream.commit(function(err, str) {
+                          expect(err).not.to.be.ok();
+                          expect(str).to.eql(stream);
+
+                          expect(str.uncommittedEvents.length).to.eql(0);
+                          expect(str.events.length).to.eql(4);
+                          expect(str.lastRevision).to.eql(3);
+
+                          expect(str.eventsToDispatch.length).to.eql(1);
+
+                          done();
+                        });
+                        
+                      });
+
+                    });
+
+                  });
+                  
+                });
+                
+                describe('and call getFromSnapshot', function () {
+                  
+                  it('it should retrieve it and the missing events', function (done) {
+                    
+                    es.getFromSnapshot({ aggregateId: 'myAggIdOfSnap' }, -1, function (err, snap, stream) {
+                      expect(err).not.to.be.ok();
+                      
+                      expect(snap.aggregateId).to.eql('myAggIdOfSnap');
+                      expect(snap.revision).to.eql(2);
+                      expect(snap.version).to.eql(1);
+                      expect(snap.data.my).to.eql('snap');
+                      
+                      expect(stream.lastRevision).to.eql(3);
+
+                      done();
+                    });
+                    
+                  });
+                  
+                });
+                
+              });
 
             });
 
