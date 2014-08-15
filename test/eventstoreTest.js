@@ -1006,6 +1006,45 @@ describe('eventstore', function () {
 
               });
 
+              describe('requesting existing events and using next function', function () {
+
+                describe('and committing some new events', function () {
+
+                  it('it should work as expected', function (done) {
+
+                    es.getEvents({ aggregate: 'myAgg', context: 'myCont' }, 0, 3, function (err, evts) {
+                      expect(err).not.to.be.ok();
+
+                      expect(evts.length).to.eql(3);
+                      
+                      expect(evts.next).to.be.a('function');
+                      
+                      evts.next(function (err, nextEvts) {
+                        expect(err).not.to.be.ok();
+
+                        expect(nextEvts.length).to.eql(3);
+
+                        expect(nextEvts.next).to.be.a('function');
+
+                        nextEvts.next(function (err, nextNextEvts) {
+                          expect(err).not.to.be.ok();
+
+                          expect(nextNextEvts.length).to.eql(2);
+
+                          expect(nextNextEvts.next).to.be.a('function');
+
+                          done();
+                        });
+                      });
+                      
+                    });
+
+                  });
+
+                });
+
+              });
+
               describe('requesting all undispatched events', function () {
 
                 it('it should return the correct events', function (done) {
