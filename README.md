@@ -338,12 +338,12 @@ You can use your own db implementation by extending this...
     util.inherits(MyDB, Store);
     
     _.extend(MyDB.prototype, {
-    
+      
       // ...
-    
+      
     });
-  
-  module.exports = MyDB;
+    
+    module.exports = MyDB;
 
 ### and you can use it in this way
 
