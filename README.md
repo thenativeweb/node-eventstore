@@ -16,59 +16,132 @@ The project goal is to provide an eventstore implementation for node.js:
 
 # Usage
 
-### Require the module and init the eventstore:
+## Require the module and init the eventstore:
 
     var eventstore = require('eventstore');
     
-    var es = eventstore();             // optional pass in your options
-                                       // to disable forking of event dispatching set forkDispatching to false
-                                       // to disable complete event dispatching set enableDispatching to false
+    var es = eventstore();
 
-By default the eventstore will use an inMemory Storage, a fakePublisher and no logger.
+By default the eventstore will use an inmemory Storage.
 
-To use the provided console.logger you could create the eventstore 
-with option `eventstore.createStore({logger: 'console'});`.
+### logging
 
-### Provide implementation for storage and publishing events
+For logging and debugging you can use [debug](https://github.com/visionmedia/debug) by [TJ Holowaychuk](https://github.com/visionmedia)
 
-Example will use redis storage, but same will work for mongoDb.
+simply run your process with
 
-    var storage = require('eventstore.redis');
-    
-    storage.createStorage(function(err, store) {
-        es.configure(function() {
-            es.use(store);
-            es.use(publisher); // your publisher must provide function 'publisher.publish(event)'
-            // es.use(logger);
-        });
-    
-        // start eventstore
-        es.start();
+    DEBUG=eventstore* node app.js
+
+## Provide implementation for storage
+
+Example with mongodb:
+
+    var es = require('eventstore')({
+      type: 'mongodb',
+      host: 'localhost',                          // optional
+      port: 27017,                                // optional
+      dbName: 'eventstore',                       // optional
+      eventsCollectionName: 'events',             // optional
+      snapshotsCollectionName: 'snapshots',       // optional
+      transactionsCollectionName: 'transactions', // optional
+      timeout: 10000                              // optional
+      // username: 'technicalDbUser',                // optional
+      // password: 'secret'                          // optional
     });
     
-    // Mongodb storage
-    storage.createStorage({
-        host: 'localhost',
-        port: 27017,
-        dbName: 'eventstore',
-        eventsCollectionName: 'events',
-        snapshotsCollectionName: 'snapshots'
-    },function(err, store) {
-        es.configure(function() {
-            es.use(store);
-            es.use(publisher); // your publisher must provide function 'publisher.publish(event)'
-            // es.use(logger);
-        });
-    
-        // start eventstore
-        es.start();
+Example with redis:
+
+    var es = require('eventstore')({
+      type: 'redis',
+      host: 'localhost',                          // optional
+      port: 6379,                                 // optional
+      db: 0,                                      // optional
+      prefix: 'eventstore',                       // optional
+      eventsCollectionName: 'events',             // optional
+      snapshotsCollectionName: 'snapshots',       // optional
+      timeout: 10000                              // optional
+      // password: 'secret'                          // optional
     });
 
-### Work with the eventstore
+Example with tingodb:
 
-get the eventhistory of an aggregate
+    var es = require('eventstore')({
+      type: 'tingodb',
+      dbPath: '/path/to/my/db/file',              // optional
+      eventsCollectionName: 'events',             // optional
+      snapshotsCollectionName: 'snapshots',       // optional
+      transactionsCollectionName: 'transactions', // optional
+      timeout: 10000                              // optional
+    });
+    
 
-    es.getEventStream(aggregateId, 0, function(err, stream) {                    
+## built in event publisher (optional)
+
+if defined the eventstore will try to publish AND set event do dispatched on its own...
+
+### sync interface
+
+    es.useEventPublisher(function(evt) {
+      // bus.emit('event', evt');
+    });
+
+### async interface
+
+    es.useEventPublisher(function(evt, callback) {
+      // bus.sendAndWaitForAck('event', evt, callback);
+    });
+
+
+## Catch connect ad disconnect events
+
+    es.on('connect', function() {
+      console.log('storage connected');
+    });
+    
+    es.on('disconnect', function() {
+      console.log('connection to storage is gone');
+    });
+
+
+## initialize
+
+    es.init(function (err) {
+      // this callback is called when all is ready...
+    });
+    
+    // or
+    
+    ex.init(); // callback is optional
+ 
+
+## working with the eventstore
+
+### get the eventhistory (of an aggregate)
+
+    es.getEventStream('streamId', function(err, stream) {                    
+      var history = stream.events; // the original event will be in events[i].payload
+
+      // myAggregate.loadFromHistory(history);
+    });
+    
+or
+
+    es.getEventStream({
+      aggregateId: 'myAggregateId',
+      aggregate: 'person',          // optional
+      context: 'hr'                 // optional
+    }, function(err, stream) {                    
+      var history = stream.events; // the original event will be in events[i].payload
+
+      // myAggregate.loadFromHistory(history);
+    });
+
+you can request an eventstream even by limit the query with a 'minimum revision number' and a 'maximum revision number'
+
+    var revMin = 5,
+        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end 
+
+    es.getEventStream('streamId' || {/* query */}, revMin, revMax, function(err, stream) {                    
       var history = stream.events; // the original event will be in events[i].payload
 
       // myAggregate.loadFromHistory(history);
@@ -76,90 +149,103 @@ get the eventhistory of an aggregate
 
 store a new event and commit it to store
 
-    es.getEventStream(aggregateId, 0, function(err, stream) {                    
-      stream.addEvent(new event);
+    es.getEventStream('streamId', function(err, stream) {                    
+      stream.addEvent({ my: 'event' });
+      stream.addEvents([{ my: 'event2' }]);
+      
       stream.commit();
+      
+      // or
+      
+      stream.commit(function(err, stream) {
+        console.log(stream.eventsToDispatch); // this is an array containing all added events in this commit.
+      });
     });
 
-the committed event will be dispatched to the provided publisher
+if you defined an event publisher function the committed event will be dispatched to the provided publisher
 
-### Work with snapshotting
+
+## Work with snapshotting
 
 get snapshot and eventhistory from the snapshot point
 
-    es.getFromSnapshot(aggregateId, function(err, snapshot, stream) {
-      
+    es.getFromSnapshot('streamId', function(err, snapshot, stream) {
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
     
-      myAggregate.loadSnapshot(snap);
-      myAggregate.loadFromHistory(history);
-    
+      // myAggregate.loadSnapshot(snap);
+      // myAggregate.loadFromHistory(history);
     });
+
+or
+
+    es.getFromSnapshot({
+      aggregateId: 'myAggregateId',
+      aggregate: 'person',          // optional
+      context: 'hr'                 // optional
+    }, function(err, snapshot, stream) {
+      var snap = snapshot.data;
+      var history = stream.events; // events history from given snapshot
+    
+      // myAggregate.loadSnapshot(snap);
+      // myAggregate.loadFromHistory(history);
+    });
+
+you can request a snapshot and an eventstream even by limit the query with a 'maximum revision number'
+
+    var revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end 
+
+    es.getFromSnapshot('streamId' || {/* query */}, revMax, function(err, stream) {                    
+      var snap = snapshot.data;
+      var history = stream.events; // events history from given snapshot
+    
+      // myAggregate.loadSnapshot(snap);
+      // myAggregate.loadFromHistory(history);
+    });
+
 
 create a snapshot point
 
-    es.getFromSnapshot(aggregateId, function(err, snapshot, stream) {
+    es.getFromSnapshot('streamId', function(err, snapshot, stream) {
       
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
     
-      myAggregate.loadSnapshot(snap);
-      myAggregate.loadFromHistory(history);
+      // myAggregate.loadSnapshot(snap);
+      // myAggregate.loadFromHistory(history);
     
       // create a new snapshot depending on your rules
-      if (history.length > myRange) {
-        es.createSnapshot(aggregateId, stream.currentRevision(), myAggregate.getSnap()[, snapshotVersion]);
+      if (history.length > myLimit) {
+        es.createSnapshot({
+          streamId: 'streamId',
+          data: myAggregate.getSnap(),
+          revision: stream.lastRevision,
+          version: 1 // optional
+        }, function(err) {
+          // snapshot saved
+        });
+        
+        // or
+        
+        es.createSnapshot({
+          aggregateId: 'myAggregateId',
+          aggregate: 'person',          // optional
+          context: 'hr'                 // optional
+          data: myAggregate.getSnap(),
+          revision: stream.lastRevision,
+          version: 1 // optional
+        }, function(err) {
+          // snapshot saved
+        });
       }
     
       // go on: store new event and commit it
+      // stream.addEvents...
     
     });
 
-### Replaying events
 
-If you want to replay all events from the store you can do it with the function getAllEvents:
-
-    var handle = function(err, events) {
-      // events is the eventstream
-      if (events.length === amount) {
-        events.next(handle);
-      } else {
-        // finished to replay
-      }
-    };
-    
-    es.getAllEvents(0, 100, handle);
-
-or with the function getEventRange:
-
-    var match = {} // match query in inner event (payload), for example: { id: eventId }
-                     // if {} all events will return
-        , amount = 20; // amount of events to receive per request
-    
-    var handle = function(err, events) {
-      // events is the eventstream
-      if (events.length === amount) {
-        events.next(handle);
-      } else {
-        // finished to replay
-      }
-    };
-    
-    es.getEventRange(match, amount, handle);
-
-If you want to replay all events of a particular aggregate or stream you can do it with the function getEvents:
-
-    var streamId = '1234'
-      , revMin = null  // optional, must be a number
-      , revMax = null; // optional, must be a number
-    
-    es.getEvents(streamId, revMin, revMax, function(err, events) {
-      // events is the eventstream
-    });
-
-
-### own event dispatching
+## own event dispatching (no event publisher function defined)
     
     es.getUndispatchedEvents(function(err, evts) {
       
@@ -167,8 +253,55 @@ If you want to replay all events of a particular aggregate or stream you can do 
       console.log(evts);
     
       // dispatch it and set the event as dispatched
-      es.setEventToDispatched(evts[0], function(err) {});
+      
+      for (var e in evts) {
+        var evt = evts[r];
+        es.setEventToDispatched(evt, function(err) {});
+        // or
+        es.setEventToDispatched(evt.id, function(err) {});
+      }
     
+    });
+
+
+## query your events
+for replaying your events or for rebuilding a viewmodel or just for fun...
+
+skip, limit always optional
+
+    var skip = 0,
+        limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
+    
+    es.getEvents(skip, limit, function(err, evts) {
+      // if (events.length === amount) {
+      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+      // } else {
+      //   // finished...
+      // }
+    });
+    
+    // or
+    
+    es.getEvents('streamId', skip, limit, function(err, evts) {
+      // if (events.length === amount) {
+      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+      // } else {
+      //   // finished...
+      // }
+    });
+    
+    // or
+    
+    es.getEvents({ // free choice (all, only context, only aggregate, only aggregateId...)
+      context: 'hr',
+      aggregate: 'person',
+      aggregateId: 'uuid'
+    }, skip, limit, function(err, evts) {
+      // if (events.length === amount) {
+      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+      // } else {
+      //   // finished...
+      // }
     });
 
 
@@ -215,7 +348,7 @@ You can use your own db implementation by extending this...
 ### and you can use it in this way
 
     var es = require('eventstore)(Store);
-    // es.start...
+    // es.init...
 
 
 # License
