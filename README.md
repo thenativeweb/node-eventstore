@@ -345,7 +345,7 @@ You can use your own db implementation by extending this...
     
     module.exports = MyDB;
 
-### and you can use it in this way
+and you can use it in this way
 
     var es = require('eventstore)(Store);
     // es.init...
