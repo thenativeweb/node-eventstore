@@ -304,6 +304,23 @@ skip, limit always optional
       // }
     });
 
+by revision
+
+revMin, revMax always optional
+
+    var revMin = 5,
+        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end 
+    
+    es.getEventsByRevision('streamId', revMin, revMax, function(err, evts) {});
+    
+    // or
+    
+    es.getEventsByRevision({
+      aggregateId: 'myAggregateId',
+      aggregate: 'person',          // optional
+      context: 'hr'                 // optional
+    }, revMin, revMax, function(err, evts) {});
+
 
 # Sample Integration
 
