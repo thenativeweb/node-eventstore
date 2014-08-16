@@ -1,6 +1,0 @@
-.git*
-Jakefile.js
-bench/
-storage/
-build/
-npmlink.js

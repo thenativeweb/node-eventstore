@@ -2,7 +2,7 @@
   "author": "jamuhl"
   , "name": "EventStore_pages"
   , "version": "0.0.1"
-  , "private": false
+  , "private": true
   , "engines": {
         "node": "~v0.6.5"
     }
