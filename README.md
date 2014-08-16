@@ -319,9 +319,9 @@ skip, limit always optional
 Currently these databases are supported:
 
 1. inmemory
-2. mongodb ([node-mongodb-native] (https://github.com/mongodb/node-mongodb-native))
-3. redis ([redis] (https://github.com/mranney/node_redis))
-4. tingodb ([tingodb] (https://github.com/sergeyksv/tingodb))
+2. mongodb ([node-mongodb-native](https://github.com/mongodb/node-mongodb-native))
+3. redis ([redis](https://github.com/mranney/node_redis))
+4. tingodb ([tingodb](https://github.com/sergeyksv/tingodb))
 
 ## own db implementation
 You can use your own db implementation by extending this...
