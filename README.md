@@ -82,7 +82,7 @@ if defined the eventstore will try to publish AND set event do dispatched on its
 ### sync interface
 
     es.useEventPublisher(function(evt) {
-      // bus.emit('event', evt');
+      // bus.emit('event', evt);
     });
 
 ### async interface
