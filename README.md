@@ -24,7 +24,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 By default the eventstore will use an inmemory Storage.
 
-### logging
+### Logging
 
 For logging and debugging you can use [debug](https://github.com/visionmedia/debug) by [TJ Holowaychuk](https://github.com/visionmedia)
 
@@ -34,7 +34,7 @@ simply run your process with
 
 ## Provide implementation for storage
 
-Example with mongodb:
+example with mongodb:
 
     var es = require('eventstore')({
       type: 'mongodb',
@@ -49,7 +49,7 @@ Example with mongodb:
       // password: 'secret'                          // optional
     });
     
-Example with redis:
+example with redis:
 
     var es = require('eventstore')({
       type: 'redis',
@@ -63,7 +63,7 @@ Example with redis:
       // password: 'secret'                          // optional
     });
 
-Example with tingodb:
+example with tingodb:
 
     var es = require('eventstore')({
       type: 'tingodb',
@@ -75,7 +75,7 @@ Example with tingodb:
     });
     
 
-## built in event publisher (optional)
+## Built-in event publisher (optional)
 
 if defined the eventstore will try to publish AND set event do dispatched on its own...
 
@@ -92,7 +92,7 @@ if defined the eventstore will try to publish AND set event do dispatched on its
     });
 
 
-## Catch connect ad disconnect events
+## catch connect ad disconnect events
 
     es.on('connect', function() {
       console.log('storage connected');
@@ -165,7 +165,7 @@ store a new event and commit it to store
 if you defined an event publisher function the committed event will be dispatched to the provided publisher
 
 
-## Work with snapshotting
+## working with snapshotting
 
 get snapshot and eventhistory from the snapshot point
 
