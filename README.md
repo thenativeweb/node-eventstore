@@ -8,7 +8,7 @@ The project goal is to provide an eventstore implementation for node.js:
 - event dispatching to your publisher (optional)
 - supported Dbs (inmemory, mongodb, redis, tingodb)
 - snapshot support
-- quey your events
+- query your events
 
 # Installation
 
