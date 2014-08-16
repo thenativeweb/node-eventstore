@@ -1,6 +1,7 @@
 var expect = require('expect.js'),
   eventstore = require('../'),
-  InMemory = require('../lib/databases/inmemory');
+  InMemory = require('../lib/databases/inmemory'),
+  Base = require('../lib/base');
 
 describe('eventstore', function () {
   
@@ -8,6 +9,12 @@ describe('eventstore', function () {
     
     expect(eventstore).to.be.a('function');
     
+  });
+
+  it('it should exposed the Base for the Store implementation', function () {
+
+    expect(eventstore.Store).to.eql(Base);
+
   });
 
   describe('calling that function', function() {

@@ -59,6 +59,7 @@ module.exports = function(options) {
   return new Eventstore(options, new Store(options));
 };
 
+module.exports.Store = Base;
 
 
 //// to enable logging use https://github.com/visionmedia/debug

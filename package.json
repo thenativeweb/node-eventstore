@@ -22,7 +22,11 @@
     "eventstore",
     "ddd",
     "(d)ddd",
-    "eventsourcing"
+    "eventsourcing",
+    "mongodb",
+    "redis",
+    "tingodb",
+    "inmemory"
   ],
   "main": "./index.js",
   "directories": {
