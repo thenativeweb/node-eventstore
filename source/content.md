@@ -136,6 +136,11 @@ or
       // myAggregate.loadFromHistory(history);
     });
 
+'streamId' and 'aggregateId' are the same...
+In ddd terms aggregate and context are just to be more precise in language.
+For example you can have a 'person' aggregate in the context 'human ressources' and a 'person' aggregate in the context of 'business contracts'...
+So you can have 2 complete different aggregate instances of 2 complete different aggregates (but perhaps with same name) in 2 complete different contexts
+
 you can request an eventstream even by limit the query with a 'minimum revision number' and a 'maximum revision number'
 
     var revMin = 5,
