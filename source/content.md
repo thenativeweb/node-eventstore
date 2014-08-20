@@ -327,6 +327,18 @@ revMin, revMax always optional
     }, revMin, revMax, function(err, evts) {});
 
 
+## obtain a new id
+
+    es.getNewId(function(err, newId) {
+      if(err) {
+        console.log('ohhh :-(');
+        return;
+      }
+
+      console.log('the new id is: ' + newId);
+    });
+
+
 # Sample Integration
 
 - [nodeCQRS](https://github.com/jamuhl/nodeCQRS) A CQRS sample integrating eventstore
