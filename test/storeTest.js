@@ -1479,6 +1479,32 @@ types.forEach(function (type) {
                   mySnappi: 'dataaaaa'
                 }
               };
+
+              var snap7 = {
+                id: '123456789104',
+                aggregateId: '920193847313131313',
+                aggregate: 'myCoolAggregate2',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 555),
+                revision: 16,
+                version: 2,
+                data: {
+                  mySnappi: 'dataaaaa2'
+                }
+              };
+
+              var snap8 = {
+                id: '123456789102',
+                aggregateId: '920193847313131313',
+                aggregate: 'myCoolAggregate2',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 575),
+                revision: 16,
+                version: 3,
+                data: {
+                  mySnappi: 'dataaaaa3'
+                }
+              };
               
               beforeEach(function (done) {
                 async.series([
@@ -1499,6 +1525,12 @@ types.forEach(function (type) {
                   },
                   function (callback) {
                     store.addSnapshot(snap6, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap7, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap8, callback);
                   }
                 ], done);
               });
@@ -1568,14 +1600,14 @@ types.forEach(function (type) {
 
                   store.getSnapshot({ aggregateId: '920193847' }, -1, function (err, shot) {
                     expect(err).not.to.be.ok();
-                    expect(shot.id).to.eql(snap1.id);
-                    expect(shot.aggregateId).to.eql(snap1.aggregateId);
-                    expect(shot.aggregate).to.eql(snap1.aggregate);
-                    expect(shot.context).to.eql(snap1.context);
-                    expect(shot.commitStamp.getTime()).to.eql(snap1.commitStamp.getTime());
-                    expect(shot.revision).to.eql(snap1.revision);
-                    expect(shot.version).to.eql(snap1.version);
-                    expect(shot.data.mySnappi).to.eql(snap1.data.mySnappi);
+                    expect(shot.id).to.eql(snap6.id);
+                    expect(shot.aggregateId).to.eql(snap6.aggregateId);
+                    expect(shot.aggregate).to.eql(snap6.aggregate);
+                    expect(shot.context).to.eql(snap6.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap6.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap6.revision);
+                    expect(shot.version).to.eql(snap6.version);
+                    expect(shot.data.mySnappi).to.eql(snap6.data.mySnappi);
 
                     done();
                   });
@@ -1796,6 +1828,28 @@ types.forEach(function (type) {
 
                 });
 
+              });
+              
+              describe('with a revision that already exists but with a newer version', function () {
+
+                it('it should return the correct snapshot', function (done) {
+
+                  store.getSnapshot({ aggregateId: '920193847313131313', aggregate: 'myCoolAggregate2', context: 'myCoolContext' }, -1, function (err, shot) {
+                    expect(err).not.to.be.ok();
+                    expect(shot.id).to.eql(snap8.id);
+                    expect(shot.aggregateId).to.eql(snap8.aggregateId);
+                    expect(shot.aggregate).to.eql(snap8.aggregate);
+                    expect(shot.context).to.eql(snap8.context);
+                    expect(shot.commitStamp.getTime()).to.eql(snap8.commitStamp.getTime());
+                    expect(shot.revision).to.eql(snap8.revision);
+                    expect(shot.version).to.eql(snap8.version);
+                    expect(shot.data.mySnappi).to.eql(snap8.data.mySnappi);
+
+                    done();
+                  });
+
+                });
+                
               });
               
             });
