@@ -1,3 +1,6 @@
+#### v1.0.1
+- optimized getSnapshot when using versioning of same revision
+
 #### v1.0.0
 - refactored whole module
 - added possibility to define aggregateId, aggregate and context
