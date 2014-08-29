@@ -1,3 +1,6 @@
+#### v1.0.2
+- optimized indexes
+
 #### v1.0.1
 - optimized getSnapshot when using versioning of same revision
 
