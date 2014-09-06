@@ -1,3 +1,6 @@
+#### v1.0.3
+- little fix for redis
+
 #### v1.0.2
 - optimized indexes
 
