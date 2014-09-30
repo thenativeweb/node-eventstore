@@ -3,7 +3,7 @@ var expect = require('expect.js'),
   async = require('async'),
   _ = require('lodash');
 
-var types = ['inmemory', 'mongodb', 'tingodb', 'redis'/*, 'couchdb'*/];
+var types = ['inmemory'/*, 'mongodb', 'tingodb', 'redis'*/, 'azuretable' /*, 'couchdb'*/];
 
 types.forEach(function (type) {
 
@@ -1410,6 +1410,8 @@ types.forEach(function (type) {
               var snap1 = {
                 id: '12345',
                 aggregateId: '920193847',
+                aggregate: null,
+                context: null,
                 commitStamp: new Date(Date.now() + 405),
                 revision: 3,
                 version: 1,
@@ -1446,6 +1448,7 @@ types.forEach(function (type) {
                 id: '12345678',
                 aggregateId: '920193847',
                 aggregate: 'myCoolAggregate',
+                context: null,
                 commitStamp: new Date(Date.now() + 430),
                 revision: 9,
                 version: 1,
