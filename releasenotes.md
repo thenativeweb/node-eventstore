@@ -1,3 +1,6 @@
+#### v1.0.4
+- mongodb get all events fix [#20](https://github.com/adrai/node-eventstore/pull/20) thanks to [nikolaylukyanchuk](https://github.com/nikolaylukyanchuk)
+
 #### v1.0.3
 - little fix for redis
 
