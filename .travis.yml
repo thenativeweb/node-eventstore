@@ -17,7 +17,3 @@ branches:
 notifications:
   email:
     - adriano@raiano.ch
-
-env:
-  - TRAVIS_AZURE_TABLE_PREFIX="travis"
-  
