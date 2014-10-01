@@ -37,7 +37,7 @@
 <ul>
 <li>load and store events via EventStream object</li>
 <li>event dispatching to your publisher (optional)</li>
-<li>supported Dbs (inmemory, mongodb, redis, tingodb)</li>
+<li>supported Dbs (inmemory, mongodb, redis, tingodb, azuretable)</li>
 <li>snapshot support</li>
 <li>query your events</li>
 </ul>
@@ -75,6 +75,10 @@
 <p>example with tingodb:</p>
 
 <pre><code><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">)({</span><span class="pln"><br />&nbsp; type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'tingodb'</span><span class="pun">,</span><span class="pln"><br />&nbsp; dbPath</span><span class="pun">:</span><span class="pln"> </span><span class="str">'/path/to/my/db/file'</span><span class="pun">,</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// optional</span><span class="pln"><br />&nbsp; eventsCollectionName</span><span class="pun">:</span><span class="pln"> </span><span class="str">'events'</span><span class="pun">,</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="com">// optional</span><span class="pln"><br />&nbsp; snapshotsCollectionName</span><span class="pun">:</span><span class="pln"> </span><span class="str">'snapshots'</span><span class="pun">,</span><span class="pln"> &nbsp; &nbsp; &nbsp; </span><span class="com">// optional</span><span class="pln"><br />&nbsp; transactionsCollectionName</span><span class="pun">:</span><span class="pln"> </span><span class="str">'transactions'</span><span class="pun">,</span><span class="pln"> </span><span class="com">// optional</span><span class="pln"><br />&nbsp; timeout</span><span class="pun">:</span><span class="pln"> </span><span class="lit">10000</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// optional</span><span class="pln"><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
+
+<p>example with azuretable:</p>
+
+<pre><code><span class="kwd">var</span><span class="pln"> es </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'eventstore'</span><span class="pun">)({</span><span class="pln"><br />&nbsp; type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'azuretable'</span><span class="pun">,</span><span class="pln"><br />&nbsp; storageAccount</span><span class="pun">:</span><span class="pln"> </span><span class="str">'nodeeventstore'</span><span class="pun">,</span><span class="pln"><br />&nbsp; storageAccessKey</span><span class="pun">:</span><span class="pln"> </span><span class="str">'aXJaod96t980AbNwG9Vh6T3ewPQnvMWAn289Wft9RTv+heXQBxLsY3Z4w66CI7NN12+1HUnHM8S3sUbcI5zctg=='</span><span class="pun">,</span><span class="pln"><br />&nbsp; storageTableHost</span><span class="pun">:</span><span class="pln"> </span><span class="str">'https://nodeeventstore.table.core.windows.net/'</span><span class="pun">,</span><span class="pln"><br />&nbsp; eventsTableName</span><span class="pun">:</span><span class="pln"> </span><span class="str">'events'</span><span class="pun">,</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span><span class="com">// optional</span><span class="pln"><br />&nbsp; snapshotsTableName</span><span class="pun">:</span><span class="pln"> </span><span class="str">'snapshots'</span><span class="pun">,</span><span class="pln"> &nbsp; &nbsp; &nbsp; </span><span class="com">// optional</span><span class="pln"><br />&nbsp; timeout</span><span class="pun">:</span><span class="pln"> </span><span class="lit">10000</span><span class="pln"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span><span class="com">// optional</span><span class="pln"><br /></span><span class="pun">});</span><span class="pln"><br /></span></code></pre>
 
 <h2>Built-in event publisher (optional)</h2>
 
@@ -184,6 +188,7 @@ So you can have 2 complete different aggregate instances of 2 complete different
 <li>mongodb (<a href="https://github.com/mongodb/node-mongodb-native">node-mongodb-native</a>)</li>
 <li>redis (<a href="https://github.com/mranney/node_redis">redis</a>)</li>
 <li>tingodb (<a href="https://github.com/sergeyksv/tingodb">tingodb</a>)</li>
+<li>azuretable (<a href="https://github.com/Azure/azure-storage-node">azure-storage</a>)</li>
 </ol>
 
 <h2>own db implementation</h2>
