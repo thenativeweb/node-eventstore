@@ -3,7 +3,7 @@ var expect = require('expect.js'),
   async = require('async'),
   _ = require('lodash');
 
-var types = ['inmemory', 'mongodb', 'tingodb', 'redis'/*, 'couchdb'*/];
+var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'azuretable'/*, 'couchdb'*/];
 
 types.forEach(function (type) {
 

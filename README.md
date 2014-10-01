@@ -6,7 +6,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher (optional)
-- supported Dbs (inmemory, mongodb, redis, tingodb)
+- supported Dbs (inmemory, mongodb, redis, tingodb, azuretable)
 - snapshot support
 - query your events
 
@@ -71,6 +71,18 @@ example with tingodb:
       eventsCollectionName: 'events',             // optional
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
+      timeout: 10000                              // optional
+    });
+
+example with azuretable:
+
+    var es = require('eventstore')({
+      type: 'azuretable',
+      storageAccount: 'nodeeventstore',
+      storageAccessKey: 'aXJaod96t980AbNwG9Vh6T3ewPQnvMWAn289Wft9RTv+heXQBxLsY3Z4w66CI7NN12+1HUnHM8S3sUbcI5zctg==',
+      storageTableHost: 'https://nodeeventstore.table.core.windows.net/',
+      eventsTableName: 'events',             // optional
+      snapshotsTableName: 'snapshots',       // optional
       timeout: 10000                              // optional
     });
     
@@ -356,6 +368,7 @@ Currently these databases are supported:
 2. mongodb ([node-mongodb-native](https://github.com/mongodb/node-mongodb-native))
 3. redis ([redis](https://github.com/mranney/node_redis))
 4. tingodb ([tingodb](https://github.com/sergeyksv/tingodb))
+5. azuretable ([azure-storage](https://github.com/Azure/azure-storage-node))
 
 ## own db implementation
 You can use your own db implementation by extending this...

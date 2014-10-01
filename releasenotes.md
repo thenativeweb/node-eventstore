@@ -1,3 +1,6 @@
+#### v1.1.0
+- added azure-table support [#21](https://github.com/adrai/node-eventstore/pull/21) thanks to [sbiaudet](https://github.com/sbiaudet)
+
 #### v1.0.5
 - mongodb get all events fix [#20](https://github.com/adrai/node-eventstore/pull/20) thanks to [nikolaylukyanchuk](https://github.com/nikolaylukyanchuk)
 
