@@ -7,8 +7,8 @@ services:
 
 language: node_js
 node_js:
-  - 0.8
-  - 0.10
+  - "0.10"
+  - "0.8"
 
 branches:
   only:
@@ -17,3 +17,6 @@ branches:
 notifications:
   email:
     - adriano@raiano.ch
+
+env:
+  - TRAVIS_AZURE_TABLE_PREFIX="travis"
