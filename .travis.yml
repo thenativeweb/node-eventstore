@@ -20,3 +20,4 @@ notifications:
 
 env:
   - TRAVIS_AZURE_TABLE_PREFIX="travis"
+  
