@@ -1,4 +1,7 @@
-#### v1.1.0
+#### [v1.1.1](https://github.com/adrai/node-eventstore/compare/v1.1.0...v1.1.1)
+- azure-table storage optimization [#22](https://github.com/adrai/node-eventstore/pull/22) thanks to [sbiaudet](https://github.com/sbiaudet) and [rvin100](https://github.com/rvin100)
+
+#### [v1.1.0](https://github.com/adrai/node-eventstore/compare/v1.0.5...v1.1.0)
 - added azure-table support [#21](https://github.com/adrai/node-eventstore/pull/21) thanks to [sbiaudet](https://github.com/sbiaudet)
 
 #### v1.0.5
