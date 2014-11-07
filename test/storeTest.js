@@ -119,6 +119,7 @@ types.forEach(function (type) {
 
                 var event = {
                   aggregateId: 'id1',
+                  id: '111',
                   streamRevision: 0,
                   commitId: '111',
                   commitStamp: new Date(),
@@ -155,6 +156,7 @@ types.forEach(function (type) {
                 var event1 = {
                   aggregateId: 'id2',
                   streamRevision: 0,
+                  id: '112',
                   commitId: '112',
                   commitStamp: new Date(Date.now() + 1),
                   commitSequence: 0,
@@ -166,6 +168,7 @@ types.forEach(function (type) {
                 var event2 = {
                   aggregateId: 'id2',
                   streamRevision: 0,
+                  id:'113',
                   commitId: '113',
                   commitStamp: new Date(Date.now() + 1),
                   commitSequence: 1,
@@ -229,6 +232,7 @@ types.forEach(function (type) {
                 var event = {
                   aggregateId: 'idhaha',
                   streamRevision: 0,
+                  id: '115',
                   commitId: '115',
                   commitStamp: new Date(),
                   commitSequence: 0,
@@ -265,6 +269,7 @@ types.forEach(function (type) {
                   aggregateId: 'aggId',
                   aggregate: 'myAgg',
                   streamRevision: 0,
+                  id:'116',
                   commitId: '116',
                   commitStamp: new Date(),
                   commitSequence: 0,
@@ -303,6 +308,7 @@ types.forEach(function (type) {
                   aggregate: 'myAgg',
                   context: 'myContext',
                   streamRevision: 0,
+                  id:'117',
                   commitId: '117',
                   commitStamp: new Date(),
                   commitSequence: 0,
@@ -341,6 +347,7 @@ types.forEach(function (type) {
                   aggregateId: 'aggId',
                   context: 'myContext',
                   streamRevision: 0,
+                  id:'118',
                   commitStamp: new Date(),
                   commitSequence: 0,
                   commitId: '118',
