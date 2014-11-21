@@ -10,6 +10,11 @@ The project goal is to provide an eventstore implementation for node.js:
 - snapshot support
 - query your events
 
+# Cosumers
+
+- [cqrs-domain](https://github.com/adrai/node-cqrs-domain)
+- [cqrs](https://github.com/leogiese/cqrs)
+
 # Installation
 
     npm install eventstore
