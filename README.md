@@ -109,7 +109,7 @@ if defined the eventstore will try to publish AND set event do dispatched on its
     });
 
 
-## catch connect ad disconnect events
+## catch connect and disconnect events
 
     es.on('connect', function() {
       console.log('storage connected');
