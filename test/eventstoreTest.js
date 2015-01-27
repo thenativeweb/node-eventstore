@@ -4,11 +4,11 @@ var expect = require('expect.js'),
   Base = require('../lib/base');
 
 describe('eventstore', function () {
-  
+
   it('it should be a function', function () {
-    
+
     expect(eventstore).to.be.a('function');
-    
+
   });
 
   it('it should exposed the Base for the Store implementation', function () {
@@ -36,13 +36,13 @@ describe('eventstore', function () {
         expect(es.getUndispatchedEvents).to.be.a('function');
         expect(es.setEventToDispatched).to.be.a('function');
         expect(es.getNewId).to.be.a('function');
-        
+
         expect(es.store).to.be.a(InMemory);
 
       });
 
     });
-    
+
     describe('with options of a non existing db implementation', function () {
 
       it('it should throw an error', function () {
@@ -59,7 +59,7 @@ describe('eventstore', function () {
 
       it('it should return with the an instance of that implementation', function () {
 
-        var es = eventstore(InMemory);
+        var es = eventstore({ type: InMemory });
         expect(es).to.be.a('object');
         expect(es.useEventPublisher).to.be.a('function');
         expect(es.init).to.be.a('function');
@@ -80,20 +80,20 @@ describe('eventstore', function () {
     });
 
     describe('and checking the api function by calling', function () {
-      
+
       describe('getEvents', function () {
 
         var es = eventstore(),
           orgFunc = es.store.getEvents;
-        
+
         before(function (done) {
           es.init(done);
         });
-        
+
         after(function () {
           es.store.getEvents = orgFunc;
         });
-        
+
         describe('with nice arguments', function () {
 
           it('it should pass them correctly', function (done) {
@@ -117,7 +117,7 @@ describe('eventstore', function () {
             es.getEvents(given.query, given.skip, given.limit, given.callback);
 
           });
-          
+
         });
 
         describe('with only the callback', function () {
@@ -270,7 +270,7 @@ describe('eventstore', function () {
           });
 
         });
-                
+
       });
 
       describe('getEventsByRevision', function () {
@@ -360,7 +360,7 @@ describe('eventstore', function () {
           });
 
         });
-        
+
         describe('with query as string, revMin, revMax and callback', function () {
 
           it('it should pass them correctly', function (done) {
@@ -633,7 +633,7 @@ describe('eventstore', function () {
           });
 
         });
-        
+
       });
 
       describe('createSnapshot', function () {
@@ -794,7 +794,7 @@ describe('eventstore', function () {
         });
 
       });
-      
+
     });
 
     describe('with options containing a type property with the value of', function () {
@@ -831,7 +831,7 @@ describe('eventstore', function () {
             afterEach(function (done) {
               es.store.disconnect(done);
             });
-            
+
             beforeEach(function () {
               es = eventstore({ type: type });
             });
@@ -882,7 +882,7 @@ describe('eventstore', function () {
                   es.store.clear(done);
                 });
               });
-              
+
               after(function (done) {
                 es.store.clear(done);
               });
@@ -900,25 +900,25 @@ describe('eventstore', function () {
                 });
 
               });
-              
+
               describe('requesting a new eventstream', function () {
-                
+
                 describe('and committing some new events', function () {
-                  
+
                   it('it should work as expected', function (done) {
-                    
+
                     es.getEventStream({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
                       expect(err).not.to.be.ok();
-                      
+
                       expect(stream.lastRevision).to.eql(-1);
-                      
+
                       stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
 
                       expect(stream.streamId).to.eql('myAggId');
                       expect(stream.uncommittedEvents.length).to.eql(3);
                       expect(stream.events.length).to.eql(0);
                       expect(stream.lastRevision).to.eql(-1);
-                      
+
                       stream.commit(function(err, str) {
                         expect(err).not.to.be.ok();
                         expect(str).to.eql(stream);
@@ -930,28 +930,28 @@ describe('eventstore', function () {
                         expect(str.events[0].commitSequence).to.eql(0);
                         expect(str.events[1].commitSequence).to.eql(1);
                         expect(str.events[2].commitSequence).to.eql(2);
-                        
+
                         expect(str.events[0].restInCommitStream).to.eql(2);
                         expect(str.events[1].restInCommitStream).to.eql(1);
                         expect(str.events[2].restInCommitStream).to.eql(0);
-                        
+
                         expect(str.eventsToDispatch.length).to.eql(3);
-                        
+
                         done();
                       });
-                      
+
                     });
-                    
+
                   });
-                  
+
                 });
-                
+
               });
 
               describe('requesting an existing eventstream', function () {
 
                 describe('and committing some new events', function () {
-                  
+
                   before(function(done) {
                     es.getEventStream({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
                       stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
@@ -1032,9 +1032,9 @@ describe('eventstore', function () {
                       expect(err).not.to.be.ok();
 
                       expect(evts.length).to.eql(3);
-                      
+
                       expect(evts.next).to.be.a('function');
-                      
+
                       evts.next(function (err, nextEvts) {
                         expect(err).not.to.be.ok();
 
@@ -1052,7 +1052,7 @@ describe('eventstore', function () {
                           done();
                         });
                       });
-                      
+
                     });
 
                   });
@@ -1083,14 +1083,14 @@ describe('eventstore', function () {
                   es.getUndispatchedEvents(function (err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts.length).to.eql(8);
-                    
+
                     es.setEventToDispatched(evts[0], function (err) {
                       expect(err).not.to.be.ok();
 
                       es.getUndispatchedEvents(function (err, evts) {
                         expect(err).not.to.be.ok();
                         expect(evts.length).to.eql(7);
-                        
+
                         done();
                       });
                     });
@@ -1100,9 +1100,9 @@ describe('eventstore', function () {
                 });
 
               });
-              
+
               describe('creating a snapshot', function () {
-                
+
                 it('it should callback without error', function (done) {
 
                   es.getEventStream({ aggregateId: 'myAggIdOfSnap', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
@@ -1134,7 +1134,7 @@ describe('eventstore', function () {
                       expect(str.events[2].restInCommitStream).to.eql(0);
 
                       expect(str.eventsToDispatch.length).to.eql(3);
-                      
+
                       es.createSnapshot({
                         aggregateId: stream.aggregateId,
                         aggregate: stream.aggregate,
@@ -1159,36 +1159,36 @@ describe('eventstore', function () {
 
                           done();
                         });
-                        
+
                       });
 
                     });
 
                   });
-                  
+
                 });
-                
+
                 describe('and call getFromSnapshot', function () {
-                  
+
                   it('it should retrieve it and the missing events', function (done) {
-                    
+
                     es.getFromSnapshot({ aggregateId: 'myAggIdOfSnap' }, -1, function (err, snap, stream) {
                       expect(err).not.to.be.ok();
-                      
+
                       expect(snap.aggregateId).to.eql('myAggIdOfSnap');
                       expect(snap.revision).to.eql(2);
                       expect(snap.version).to.eql(1);
                       expect(snap.data.my).to.eql('snap');
-                      
+
                       expect(stream.lastRevision).to.eql(3);
 
                       done();
                     });
-                    
+
                   });
-                  
+
                 });
-                
+
               });
 
             });
@@ -1198,9 +1198,9 @@ describe('eventstore', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('and defining a publisher function in a synchronous way', function () {
 
       it('it should initialize an eventDispatcher', function (done) {
@@ -1215,7 +1215,7 @@ describe('eventstore', function () {
         });
 
       });
-      
+
       describe('when committing a new event', function () {
 
         it('it should publish a new event', function (done) {
@@ -1238,11 +1238,11 @@ describe('eventstore', function () {
               });
             });
           });
-          
+
         });
-        
+
       });
-      
+
     });
 
     describe('and defining a publisher function in an asynchronous way', function () {
@@ -1304,7 +1304,7 @@ describe('eventstore', function () {
       });
 
     });
-    
+
   });
 
 });

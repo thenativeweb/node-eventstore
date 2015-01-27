@@ -7,11 +7,11 @@ var Eventstore = require('./lib/eventstore'),
 function getSpecificStore(options) {
   options = options || {};
 
-  if (options.prototype instanceof Base) {
-    return options;
-  }
-
   options.type = options.type || 'inmemory';
+
+  if (options.type && options.type.prototype instanceof Base) {
+    return options.type;
+  }
 
   options.type = options.type.toLowerCase();
 

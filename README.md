@@ -24,7 +24,7 @@ The project goal is to provide an eventstore implementation for node.js:
 ## Require the module and init the eventstore:
 
     var eventstore = require('eventstore');
-    
+
     var es = eventstore();
 
 By default the eventstore will use an inmemory Storage.
@@ -53,7 +53,7 @@ example with mongodb:
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
     });
-    
+
 example with redis:
 
     var es = require('eventstore')({
@@ -90,7 +90,7 @@ example with azuretable:
       snapshotsTableName: 'snapshots',       // optional
       timeout: 10000                              // optional
     });
-    
+
 
 ## Built-in event publisher (optional)
 
@@ -114,7 +114,7 @@ if defined the eventstore will try to publish AND set event do dispatched on its
     es.on('connect', function() {
       console.log('storage connected');
     });
-    
+
     es.on('disconnect', function() {
       console.log('connection to storage is gone');
     });
@@ -125,29 +125,29 @@ if defined the eventstore will try to publish AND set event do dispatched on its
     es.init(function (err) {
       // this callback is called when all is ready...
     });
-    
+
     // or
-    
+
     ex.init(); // callback is optional
- 
+
 
 ## working with the eventstore
 
 ### get the eventhistory (of an aggregate)
 
-    es.getEventStream('streamId', function(err, stream) {                    
+    es.getEventStream('streamId', function(err, stream) {
       var history = stream.events; // the original event will be in events[i].payload
 
       // myAggregate.loadFromHistory(history);
     });
-    
+
 or
 
     es.getEventStream({
       aggregateId: 'myAggregateId',
       aggregate: 'person',          // optional
       context: 'hr'                 // optional
-    }, function(err, stream) {                    
+    }, function(err, stream) {
       var history = stream.events; // the original event will be in events[i].payload
 
       // myAggregate.loadFromHistory(history);
@@ -161,9 +161,9 @@ So you can have 2 complete different aggregate instances of 2 complete different
 you can request an eventstream even by limit the query with a 'minimum revision number' and a 'maximum revision number'
 
     var revMin = 5,
-        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end 
+        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
 
-    es.getEventStream('streamId' || {/* query */}, revMin, revMax, function(err, stream) {                    
+    es.getEventStream('streamId' || {/* query */}, revMin, revMax, function(err, stream) {
       var history = stream.events; // the original event will be in events[i].payload
 
       // myAggregate.loadFromHistory(history);
@@ -171,14 +171,14 @@ you can request an eventstream even by limit the query with a 'minimum revision 
 
 store a new event and commit it to store
 
-    es.getEventStream('streamId', function(err, stream) {                    
+    es.getEventStream('streamId', function(err, stream) {
       stream.addEvent({ my: 'event' });
       stream.addEvents([{ my: 'event2' }]);
-      
+
       stream.commit();
-      
+
       // or
-      
+
       stream.commit(function(err, stream) {
         console.log(stream.eventsToDispatch); // this is an array containing all added events in this commit.
       });
@@ -194,7 +194,7 @@ get snapshot and eventhistory from the snapshot point
     es.getFromSnapshot('streamId', function(err, snapshot, stream) {
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
-    
+
       // myAggregate.loadSnapshot(snap);
       // myAggregate.loadFromHistory(history);
     });
@@ -208,19 +208,19 @@ or
     }, function(err, snapshot, stream) {
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
-    
+
       // myAggregate.loadSnapshot(snap);
       // myAggregate.loadFromHistory(history);
     });
 
 you can request a snapshot and an eventstream even by limit the query with a 'maximum revision number'
 
-    var revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end 
+    var revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
 
-    es.getFromSnapshot('streamId' || {/* query */}, revMax, function(err, stream) {                    
+    es.getFromSnapshot('streamId' || {/* query */}, revMax, function(err, stream) {
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
-    
+
       // myAggregate.loadSnapshot(snap);
       // myAggregate.loadFromHistory(history);
     });
@@ -229,13 +229,13 @@ you can request a snapshot and an eventstream even by limit the query with a 'ma
 create a snapshot point
 
     es.getFromSnapshot('streamId', function(err, snapshot, stream) {
-      
+
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
-    
+
       // myAggregate.loadSnapshot(snap);
       // myAggregate.loadFromHistory(history);
-    
+
       // create a new snapshot depending on your rules
       if (history.length > myLimit) {
         es.createSnapshot({
@@ -246,9 +246,9 @@ create a snapshot point
         }, function(err) {
           // snapshot saved
         });
-        
+
         // or
-        
+
         es.createSnapshot({
           aggregateId: 'myAggregateId',
           aggregate: 'person',          // optional
@@ -260,29 +260,29 @@ create a snapshot point
           // snapshot saved
         });
       }
-    
+
       // go on: store new event and commit it
       // stream.addEvents...
-    
+
     });
 
 
 ## own event dispatching (no event publisher function defined)
-    
+
     es.getUndispatchedEvents(function(err, evts) {
-      
+
       // all undispatched events
       console.log(evts);
-    
+
       // dispatch it and set the event as dispatched
-      
+
       for (var e in evts) {
         var evt = evts[r];
         es.setEventToDispatched(evt, function(err) {});
         // or
         es.setEventToDispatched(evt.id, function(err) {});
       }
-    
+
     });
 
 
@@ -293,7 +293,7 @@ skip, limit always optional
 
     var skip = 0,
         limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
-    
+
     es.getEvents(skip, limit, function(err, evts) {
       // if (events.length === amount) {
       //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
@@ -301,9 +301,9 @@ skip, limit always optional
       //   // finished...
       // }
     });
-    
+
     // or
-    
+
     es.getEvents('streamId', skip, limit, function(err, evts) {
       // if (events.length === amount) {
       //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
@@ -311,9 +311,9 @@ skip, limit always optional
       //   // finished...
       // }
     });
-    
+
     // or
-    
+
     es.getEvents({ // free choice (all, only context, only aggregate, only aggregateId...)
       context: 'hr',
       aggregate: 'person',
@@ -331,12 +331,12 @@ by revision
 revMin, revMax always optional
 
     var revMin = 5,
-        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end 
-    
+        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
+
     es.getEventsByRevision('streamId', revMin, revMax, function(err, evts) {});
-    
+
     // or
-    
+
     es.getEventsByRevision({
       aggregateId: 'myAggregateId',
       aggregate: 'person',          // optional
@@ -377,29 +377,31 @@ Currently these databases are supported:
 
 ## own db implementation
 You can use your own db implementation by extending this...
-    
+
     var Store = require('eventstore').Store,
         util = require('util'),
         _ = require('lodash');
-    
+
     function MyDB(options) {
       options = options || {};
       Store.call(this, options);
     }
-    
+
     util.inherits(MyDB, Store);
-    
+
     _.extend(MyDB.prototype, {
-      
+
       // ...
-      
+
     });
-    
+
     module.exports = MyDB;
 
 and you can use it in this way
 
-    var es = require('eventstore)(Store);
+    var es = require('eventstore')({
+      type: Store
+    });
     // es.init...
 
 

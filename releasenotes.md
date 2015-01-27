@@ -1,3 +1,6 @@
+#### [v1.1.3](https://github.com/adrai/node-eventstore/compare/v1.1.2...v1.1.3)
+- fix usage with own db implementation [#27](https://github.com/adrai/node-eventstore/issues/27) thanks to [rvin100](https://github.com/rvin100)
+
 #### [v1.1.2](https://github.com/adrai/node-eventstore/compare/v1.1.1...v1.1.2)
 - azure-table: fix issue in getEvents [#23](https://github.com/adrai/node-eventstore/pull/23) thanks to [rvin100](https://github.com/rvin100)
 
