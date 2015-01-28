@@ -400,7 +400,7 @@ You can use your own db implementation by extending this...
 and you can use it in this way
 
     var es = require('eventstore')({
-      type: Store
+      type: MyDB
     });
     // es.init...
 
