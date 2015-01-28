@@ -2,6 +2,7 @@
 
 var Eventstore = require('./lib/eventstore'),
   Base = require('./lib/base'),
+  _ = require('lodash'),
   debug = require('debug')('eventstore');
 
 function getSpecificStore(options) {
@@ -9,7 +10,7 @@ function getSpecificStore(options) {
 
   options.type = options.type || 'inmemory';
 
-  if (options.type && options.type.prototype instanceof Base) {
+  if (_.isFunction(options.type)) {
     return options.type;
   }
 
