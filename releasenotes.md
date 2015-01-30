@@ -1,3 +1,6 @@
+#### [v1.1.5](https://github.com/adrai/node-eventstore/compare/v1.1.4...v1.1.5)
+- fix usage with own db implementation [#29](https://github.com/adrai/node-eventstore/pull/29)
+
 #### [v1.1.4](https://github.com/adrai/node-eventstore/compare/v1.1.2...v1.1.4)
 - fix usage with own db implementation [#27](https://github.com/adrai/node-eventstore/issues/27)
 
