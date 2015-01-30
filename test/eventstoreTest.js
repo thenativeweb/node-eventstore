@@ -1168,6 +1168,55 @@ describe('eventstore', function () {
 
                 });
 
+                it('it should callback without error with no additional events', function (done) {
+
+                  es.getEventStream({ aggregateId: 'myAggIdOfSnap2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                    expect(err).not.to.be.ok();
+
+                    expect(stream.lastRevision).to.eql(-1);
+
+                    stream.addEvents([{ oneSnap: 'event1' }, { twoSnap: 'event2' }, { threeSnap: 'event3' }]);
+
+                    expect(stream.streamId).to.eql('myAggIdOfSnap2');
+                    expect(stream.uncommittedEvents.length).to.eql(3);
+                    expect(stream.events.length).to.eql(0);
+                    expect(stream.lastRevision).to.eql(-1);
+
+                    stream.commit(function(err, str) {
+                      expect(err).not.to.be.ok();
+                      expect(str).to.eql(stream);
+
+                      expect(str.uncommittedEvents.length).to.eql(0);
+                      expect(str.events.length).to.eql(3);
+                      expect(str.lastRevision).to.eql(2);
+
+                      expect(str.events[0].commitSequence).to.eql(0);
+                      expect(str.events[1].commitSequence).to.eql(1);
+                      expect(str.events[2].commitSequence).to.eql(2);
+
+                      expect(str.events[0].restInCommitStream).to.eql(2);
+                      expect(str.events[1].restInCommitStream).to.eql(1);
+                      expect(str.events[2].restInCommitStream).to.eql(0);
+
+                      expect(str.eventsToDispatch.length).to.eql(3);
+
+                      es.createSnapshot({
+                        aggregateId: stream.aggregateId,
+                        aggregate: stream.aggregate,
+                        context: stream.context,
+                        revision: stream.lastRevision,
+                        version: 1,
+                        data: { my: 'snap' }
+                      }, function (err) {
+                        expect(err).not.to.be.ok();
+                        done();
+                      });
+                    });
+
+                  });
+
+                });
+
                 describe('and call getFromSnapshot', function () {
 
                   it('it should retrieve it and the missing events', function (done) {
@@ -1181,6 +1230,18 @@ describe('eventstore', function () {
                       expect(snap.data.my).to.eql('snap');
 
                       expect(stream.lastRevision).to.eql(3);
+
+                      done();
+                    });
+
+                  });
+
+                  it('it should set the lastRevision of an empty event stream to the snapshot revision', function(done) {
+
+                    es.getFromSnapshot({ aggregateId: 'myAggIdOfSnap2' }, -1, function (err, snap, stream) {
+                      expect(err).not.to.be.ok();
+
+                      expect(stream.lastRevision).to.eql(snap.revision);
 
                       done();
                     });
