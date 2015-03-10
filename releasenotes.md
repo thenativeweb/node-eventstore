@@ -1,3 +1,6 @@
+#### [v1.1.6](https://github.com/adrai/node-eventstore/compare/v1.1.5...v1.1.6)
+- fix inmemory store
+
 #### [v1.1.5](https://github.com/adrai/node-eventstore/compare/v1.1.4...v1.1.5)
 - fix usage with own db implementation [#29](https://github.com/adrai/node-eventstore/pull/29)
 
