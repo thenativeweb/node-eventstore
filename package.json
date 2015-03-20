@@ -48,7 +48,7 @@
     "cradle": ">=0.6.7",
     "expect.js": ">= 0.1.2",
     "mocha": ">= 1.0.1",
-    "mongodb": ">= 0.0.1",
+    "mongodb": ">= 0.0.1 < 2.0.0",
     "redis": ">= 0.10.1",
     "tingodb": ">= 0.0.1",
     "azure-storage": ">= 0.3.0"
