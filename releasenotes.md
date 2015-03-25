@@ -1,3 +1,7 @@
+#### [v1.2.0](https://github.com/adrai/node-eventstore/compare/v1.1.7...v1.2.0)
+- performance improvements in inmemory and mongodb store [#31](https://github.com/adrai/node-eventstore/pull/31) thanks to [surlemur](https://github.com/surlemur)
+- IMPORTANT for mongodb: removed data compatability for events older v1.0.0
+
 #### [v1.1.7](https://github.com/adrai/node-eventstore/compare/v1.1.6...v1.1.7)
 - performance improvements in inmemory store
 
