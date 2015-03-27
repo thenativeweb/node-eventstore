@@ -291,6 +291,112 @@ types.forEach(function (type) {
 
                   });
 
+                  describe('calling getEventsByRevision with a low maxRev value', function () {
+
+                    it('it should successfully handle the transaction', function(done) {
+
+                      var event1 = {
+                        aggregateId: 'id2_tx0',
+                        streamRevision: 3,
+                        id: '112_tx0',
+                        commitId: '987_tx0',
+                        commitStamp: new Date(Date.now() + 1),
+                        commitSequence: 0,
+                        restInCommitStream: 2,
+                        payload: {
+                          event:'bla'
+                        }
+                      };
+
+                      var event2 = {
+                        aggregateId: 'id2_tx0',
+                        streamRevision: 4,
+                        id:'113_tx0',
+                        commitId: '987_tx0',
+                        commitStamp: new Date(Date.now() + 1),
+                        commitSequence: 1,
+                        restInCommitStream: 1,
+                        payload: {
+                          event:'bla2'
+                        }
+                      };
+
+                      var event3 = {
+                        aggregateId: 'id2_tx0',
+                        streamRevision: 5,
+                        id:'114_tx0',
+                        commitId: '987_tx0',
+                        commitStamp: new Date(Date.now() + 1),
+                        commitSequence: 2,
+                        restInCommitStream: 0,
+                        payload: {
+                          event:'bla3'
+                        }
+                      };
+
+                      store.addEvents([event1, event2, event3], function(err) {
+                        expect(err).not.to.be.ok();
+
+                        store.transactions.insert({
+                          _id: event1.commitId,
+                          events: [event1, event2, event3],
+                          aggregateId: event1.aggregateId,
+                          aggregate: event1.aggregate,
+                          context: event1.context
+                        }, function (err) {
+                          expect(err).not.to.be.ok();
+
+                          store.events.remove({ '$or': [ { _id: event2.id }, { _id: event3.id } ] }, function (err) {
+                            expect(err).not.to.be.ok();
+
+                            store.getPendingTransactions(function(err, txs) {
+                              expect(err).not.to.be.ok();
+
+                              expect(txs).to.be.an('array');
+                              expect(txs).to.have.length(1);
+
+                              store.getLastEvent({ aggregateId: txs[0].aggregateId }, function (err, lastEvt) {
+                                expect(err).not.to.be.ok();
+
+                                expect(lastEvt.commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
+                                expect(lastEvt.aggregateId).to.eql(event1.aggregateId);
+                                expect(lastEvt.commitId).to.eql(event1.commitId);
+                                expect(lastEvt.payload.event).to.eql(event1.payload.event);
+
+                                store.getEventsByRevision({ aggregateId: event2.aggregateId }, 0, 5, function(err, evts) {
+                                  expect(err).not.to.be.ok();
+                                  expect(evts).to.be.an('array');
+                                  expect(evts).to.have.length(2);
+                                  expect(evts[0].commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
+                                  expect(evts[0].aggregateId).to.eql(event1.aggregateId);
+                                  expect(evts[0].commitId).to.eql(event1.commitId);
+                                  expect(evts[0].payload.event).to.eql(event1.payload.event);
+                                  expect(evts[1].commitStamp.getTime()).to.eql(event2.commitStamp.getTime());
+                                  expect(evts[1].aggregateId).to.eql(event2.aggregateId);
+                                  expect(evts[1].commitId).to.eql(event2.commitId);
+                                  expect(evts[1].payload.event).to.eql(event2.payload.event);
+
+                                  store.getLastEvent({ aggregateId: event2.aggregateId }, function (err, lastEvt) {
+                                    expect(err).not.to.be.ok();
+
+                                    expect(lastEvt.commitStamp.getTime()).to.eql(event3.commitStamp.getTime());
+                                    expect(lastEvt.aggregateId).to.eql(event3.aggregateId);
+                                    expect(lastEvt.commitId).to.eql(event3.commitId);
+                                    expect(lastEvt.payload.event).to.eql(event3.payload.event);
+
+                                    done();
+                                  });
+                                });
+                              });
+                            });
+                          });
+                        });
+                      });
+
+                    });
+
+                  });
+
                   describe('and not calling getEventsByRevision', function () {
 
                     it('the transaction can successfully be handled from outside', function(done) {

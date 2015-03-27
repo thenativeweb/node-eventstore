@@ -361,7 +361,7 @@ Inserting multiple events (documents) in mongodb, is not atomic.
 For the eventstore tries to repair itself when calling `getEventsByRevision`.
 But if you want you can trigger this from outside:
 
-    es.getPendingTransactions(function(err, txs) {
+    es.store.getPendingTransactions(function(err, txs) {
       if(err) {
         console.log('ohhh :-(');
         return;
@@ -376,7 +376,7 @@ But if you want you can trigger this from outside:
       //   context: 'context'      // optional
       // }
 
-      es.getLastEvent({
+      es.store.getLastEvent({
         aggregateId: txs[0].aggregateId,
         aggregate: txs[0].aggregate, // optional
         context: txs[0].context      // optional
@@ -386,7 +386,7 @@ But if you want you can trigger this from outside:
           return;
         }
 
-        es.repairFailedTransaction(lastEvent, function (err) {
+        es.store.repairFailedTransaction(lastEvent, function (err) {
           if(err) {
             console.log('ohhh :-(');
             return;
