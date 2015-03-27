@@ -356,6 +356,49 @@ revMin, revMax always optional
     });
 
 
+## special scaling handling with mongodb
+Inserting multiple events (documents) in mongodb, is not atomic.
+For the eventstore tries to repair itself when calling `getEventsByRevision`.
+But if you want you can trigger this from outside:
+
+    es.getPendingTransactions(function(err, txs) {
+      if(err) {
+        console.log('ohhh :-(');
+        return;
+      }
+
+      // txs is an array of objects like:
+      // {
+      //   _id: '/* the commitId of the committed event stream */',
+      //   events: [ /* all events of the committed event stream */ ],
+      //   aggregateId: 'aggregateId',
+      //   aggregate: 'aggregate', // optional
+      //   context: 'context'      // optional
+      // }
+
+      es.getLastEvent({
+        aggregateId: txs[0].aggregateId,
+        aggregate: txs[0].aggregate, // optional
+        context: txs[0].context      // optional
+      }, function (err, lastEvent) {
+        if(err) {
+          console.log('ohhh :-(');
+          return;
+        }
+
+        es.repairFailedTransaction(lastEvent, function (err) {
+          if(err) {
+            console.log('ohhh :-(');
+            return;
+          }
+
+          console.log('everything is fine');
+        });
+      });
+    });
+
+
+
 # Sample Integration
 
 - [nodeCQRS](https://github.com/jamuhl/nodeCQRS) A CQRS sample integrating eventstore

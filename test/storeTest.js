@@ -13,11 +13,11 @@ types.forEach(function (type) {
     var store;
 
     describe('creating an instance', function () {
-      
+
       before(function () {
         store = new Store();
       });
-      
+
       it('it should return correct object', function () {
         expect(store).to.be.a(Base);
         expect(store.connect).to.be.a('function');
@@ -31,14 +31,20 @@ types.forEach(function (type) {
         expect(store.getUndispatchedEvents).to.be.a('function');
         expect(store.setEventToDispatched).to.be.a('function');
         expect(store.clear).to.be.a('function');
+
+        if (type === 'mongodb' || type === 'tingodb') {
+          expect(store.getPendingTransactions).to.be.a('function');
+          expect(store.getLastEvent).to.be.a('function');
+          expect(store.repairFailedTransaction).to.be.a('function');
+        }
       });
-      
+
       describe('calling connect', function () {
-        
+
         afterEach(function (done) {
           store.disconnect(done);
         });
-        
+
         it('it should callback successfully', function (done) {
 
           store.connect(function (err) {
@@ -54,7 +60,7 @@ types.forEach(function (type) {
           store.connect();
 
         });
-        
+
       });
 
       describe('having connected', function () {
@@ -88,7 +94,7 @@ types.forEach(function (type) {
           before(function (done) {
             store.connect(done);
           });
-          
+
           beforeEach(function (done) {
             store.clear(done);
           });
@@ -96,23 +102,23 @@ types.forEach(function (type) {
           after(function (done) {
             store.clear(done);
           });
-  
+
           describe('calling getNewId', function () {
-  
+
             it('it should callback with a new Id as string', function (done) {
-  
+
               store.getNewId(function (err, id) {
                 expect(err).not.to.be.ok();
                 expect(id).to.be.a('string');
                 done();
               });
-  
+
             });
-  
+
           });
-  
+
           describe('calling addEvents', function () {
-            
+
             describe('with one event in the array', function () {
 
               it('it should save the event', function(done) {
@@ -146,7 +152,7 @@ types.forEach(function (type) {
                 });
 
               });
-              
+
             });
 
             describe('with multiple events in the array', function () {
@@ -157,9 +163,10 @@ types.forEach(function (type) {
                   aggregateId: 'id2',
                   streamRevision: 0,
                   id: '112',
-                  commitId: '112',
+                  commitId: '987',
                   commitStamp: new Date(Date.now() + 1),
                   commitSequence: 0,
+                  restInCommitStream: 1,
                   payload: {
                     event:'bla'
                   }
@@ -167,11 +174,12 @@ types.forEach(function (type) {
 
                 var event2 = {
                   aggregateId: 'id2',
-                  streamRevision: 0,
+                  streamRevision: 1,
                   id:'113',
-                  commitId: '113',
+                  commitId: '987',
                   commitStamp: new Date(Date.now() + 1),
                   commitSequence: 1,
+                  restInCommitStream: 0,
                   payload: {
                     event:'bla2'
                   }
@@ -199,10 +207,186 @@ types.forEach(function (type) {
 
               });
 
+              if (type === 'mongodb' || type === 'tingodb') {
+
+                describe('failing to save the second event', function () {
+
+                  it('it should successfully handle the transaction', function(done) {
+
+                    var event1 = {
+                      aggregateId: 'id2_tx',
+                      streamRevision: 0,
+                      id: '112_tx',
+                      commitId: '987_tx',
+                      commitStamp: new Date(Date.now() + 1),
+                      commitSequence: 0,
+                      restInCommitStream: 1,
+                      payload: {
+                        event:'bla'
+                      }
+                    };
+
+                    var event2 = {
+                      aggregateId: 'id2_tx',
+                      streamRevision: 1,
+                      id:'113_tx',
+                      commitId: '987_tx',
+                      commitStamp: new Date(Date.now() + 1),
+                      commitSequence: 1,
+                      restInCommitStream: 0,
+                      payload: {
+                        event:'bla2'
+                      }
+                    };
+
+                    store.addEvents([event1, event2], function(err) {
+                      expect(err).not.to.be.ok();
+
+                      store.transactions.insert({
+                        _id: event1.commitId,
+                        events: [event1, event2],
+                        aggregateId: event1.aggregateId,
+                        aggregate: event1.aggregate,
+                        context: event1.context
+                      }, function (err) {
+                        expect(err).not.to.be.ok();
+
+                        store.events.remove({ _id: event2.id }, function (err) {
+                          expect(err).not.to.be.ok();
+
+                          store.getPendingTransactions(function(err, txs) {
+                            expect(err).not.to.be.ok();
+
+                            expect(txs).to.be.an('array');
+                            expect(txs).to.have.length(1);
+
+                            store.getLastEvent({ aggregateId: txs[0].aggregateId }, function (err, lastEvt) {
+                              expect(err).not.to.be.ok();
+
+                              expect(lastEvt.commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
+                              expect(lastEvt.aggregateId).to.eql(event1.aggregateId);
+                              expect(lastEvt.commitId).to.eql(event1.commitId);
+                              expect(lastEvt.payload.event).to.eql(event1.payload.event);
+
+                              store.getEventsByRevision({ aggregateId: event2.aggregateId }, 0, -1, function(err, evts) {
+                                expect(err).not.to.be.ok();
+                                expect(evts).to.be.an('array');
+                                expect(evts).to.have.length(2);
+                                expect(evts[0].commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
+                                expect(evts[0].aggregateId).to.eql(event1.aggregateId);
+                                expect(evts[0].commitId).to.eql(event1.commitId);
+                                expect(evts[0].payload.event).to.eql(event1.payload.event);
+                                expect(evts[1].commitStamp.getTime()).to.eql(event2.commitStamp.getTime());
+                                expect(evts[1].aggregateId).to.eql(event2.aggregateId);
+                                expect(evts[1].commitId).to.eql(event2.commitId);
+                                expect(evts[1].payload.event).to.eql(event2.payload.event);
+
+                                done();
+                              });
+                            });
+                          });
+                        });
+                      });
+                    });
+
+                  });
+
+                  describe('and not calling getEventsByRevision', function () {
+
+                    it('the transaction can successfully be handled from outside', function(done) {
+
+                      var event1 = {
+                        aggregateId: 'id2_tx',
+                        streamRevision: 0,
+                        id: '112_tx2',
+                        commitId: '987_tx2',
+                        commitStamp: new Date(Date.now() + 1),
+                        commitSequence: 0,
+                        restInCommitStream: 1,
+                        payload: {
+                          event:'bla'
+                        }
+                      };
+
+                      var event2 = {
+                        aggregateId: 'id2_tx',
+                        streamRevision: 1,
+                        id:'113_tx2',
+                        commitId: '987_tx2',
+                        commitStamp: new Date(Date.now() + 1),
+                        commitSequence: 1,
+                        restInCommitStream: 0,
+                        payload: {
+                          event:'bla2'
+                        }
+                      };
+
+                      store.addEvents([event1, event2], function(err) {
+                        expect(err).not.to.be.ok();
+
+                        store.transactions.insert({
+                          _id: event1.commitId,
+                          events: [event1, event2],
+                          aggregateId: event1.aggregateId,
+                          aggregate: event1.aggregate,
+                          context: event1.context
+                        }, function (err) {
+                          expect(err).not.to.be.ok();
+
+                          store.events.remove({ _id: event2.id }, function (err) {
+                            expect(err).not.to.be.ok();
+
+                            store.getPendingTransactions(function(err, txs) {
+                              expect(err).not.to.be.ok();
+
+                              expect(txs).to.be.an('array');
+                              expect(txs).to.have.length(1);
+
+                              store.getLastEvent({ aggregateId: txs[0].aggregateId }, function (err, lastEvt) {
+                                expect(err).not.to.be.ok();
+
+                                expect(lastEvt.commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
+                                expect(lastEvt.aggregateId).to.eql(event1.aggregateId);
+                                expect(lastEvt.commitId).to.eql(event1.commitId);
+                                expect(lastEvt.payload.event).to.eql(event1.payload.event);
+
+                                store.repairFailedTransaction(lastEvt, function (err) {
+                                  expect(err).not.to.be.ok();
+
+                                  store.getEvents({}, 0, -1, function(err, evts) {
+                                    expect(err).not.to.be.ok();
+                                    expect(evts).to.be.an('array');
+                                    expect(evts).to.have.length(2);
+                                    expect(evts[0].commitStamp.getTime()).to.eql(event1.commitStamp.getTime());
+                                    expect(evts[0].aggregateId).to.eql(event1.aggregateId);
+                                    expect(evts[0].commitId).to.eql(event1.commitId);
+                                    expect(evts[0].payload.event).to.eql(event1.payload.event);
+                                    expect(evts[1].commitStamp.getTime()).to.eql(event2.commitStamp.getTime());
+                                    expect(evts[1].aggregateId).to.eql(event2.aggregateId);
+                                    expect(evts[1].commitId).to.eql(event2.commitId);
+                                    expect(evts[1].payload.event).to.eql(event2.payload.event);
+
+                                    done();
+                                  });
+                                });
+                              });
+                            });
+                          });
+                        });
+                      });
+
+                    });
+
+                  });
+
+                });
+
+              }
+
             });
-            
+
             describe('without aggregateId', function () {
-              
+
               it('it should callback with an error', function (done) {
 
                 var event = {
@@ -220,9 +404,9 @@ types.forEach(function (type) {
                   expect(err).to.be.ok();
                   done();
                 });
-                
+
               });
-              
+
             });
 
             describe('only with aggregateId', function () {
@@ -243,7 +427,7 @@ types.forEach(function (type) {
 
                 store.addEvents([event], function(err) {
                   expect(err).not.to.be.ok();
-                  
+
                   store.getEvents({}, 0, -1, function(err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts).to.be.an('array');
@@ -376,11 +560,11 @@ types.forEach(function (type) {
               });
 
             });
-            
+
           });
-          
+
           describe('having some events in the eventstore', function () {
-            
+
             var stream1 = [{
               aggregateId: 'id',
               streamRevision: 0,
@@ -426,7 +610,7 @@ types.forEach(function (type) {
                 event: 'bla2'
               }
             }];
-            
+
             var stream3 = [{
               aggregateId: 'id', // id already existing...
               aggregate: 'myAgg',
@@ -570,11 +754,11 @@ types.forEach(function (type) {
                 event:'bla2'
               }
             }];
-            
+
             var allEvents = [].concat(stream1).concat(stream2).concat(stream3)
                               .concat(stream4).concat(stream5).concat(stream6)
                               .concat(stream7).concat(stream8).concat(stream9).concat(stream10);
-            
+
             beforeEach(function (done) {
               async.series([
                 function (callback) {
@@ -609,17 +793,17 @@ types.forEach(function (type) {
                 }
               ], done);
             });
-            
+
             describe('calling getEvents', function () {
-              
+
               describe('to get all events', function () {
-                
+
                 it('it should return the correct values', function (done) {
-                  
+
                   store.getEvents({}, 0, -1, function (err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts.length).to.eql(allEvents.length);
-                    
+
                     var lastCommitStamp = 0;
                     var lastCommitId = 0;
                     var lastId = 0;
@@ -631,10 +815,10 @@ types.forEach(function (type) {
                       lastCommitId = evt.commitId;
                       lastCommitStamp = evt.commitStamp.getTime();
                     });
-                    
+
                     done();
                   });
-                  
+
                 });
 
                 describe('with a skip value', function () {
@@ -642,7 +826,7 @@ types.forEach(function (type) {
                   it('it should return the correct values', function (done) {
 
                     var expectedEvts = allEvents.slice(3);
-                    
+
                     store.getEvents({}, 3, -1, function (err, evts) {
                       expect(err).not.to.be.ok();
                       expect(evts.length).to.eql(expectedEvts.length);
@@ -723,7 +907,7 @@ types.forEach(function (type) {
                   });
 
                 });
-                
+
               });
 
               describe('with an aggregateId being used only in one context and aggregate', function () {
@@ -939,7 +1123,7 @@ types.forEach(function (type) {
                 });
 
               });
-              
+
               describe('with an aggregateId and with an aggregate and with a context', function () {
 
                 it('it should return the correct events', function (done) {
@@ -1064,13 +1248,13 @@ types.forEach(function (type) {
               });
 
             });
-            
+
             describe('calling getEventsByRevision', function () {
-              
+
               describe('with an aggregateId being used only in one context and aggregate', function () {
-                
+
                 it('it should return the correct events', function (done) {
-                  
+
                   store.getEventsByRevision({ aggregateId: 'idWithAgg' }, 0, -1, function (err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts.length).to.eql(2);
@@ -1080,10 +1264,10 @@ types.forEach(function (type) {
                     expect(evts[1].aggregateId).to.eql(stream2[1].aggregateId);
                     expect(evts[1].commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
                     expect(evts[1].streamRevision).to.eql(stream2[1].streamRevision);
-                    
+
                     done();
                   });
-                  
+
                 });
 
                 describe('and limit it with revMin and revMax', function () {
@@ -1103,7 +1287,7 @@ types.forEach(function (type) {
                   });
 
                 });
-                
+
               });
 
               describe('with an aggregateId being used in an other context or aggregate', function () {
@@ -1291,9 +1475,9 @@ types.forEach(function (type) {
                 });
 
               });
-              
+
             });
-            
+
           });
 
           describe('adding some events', function () {
@@ -1319,15 +1503,15 @@ types.forEach(function (type) {
                 event:'bla2'
               }
             }];
-            
+
             beforeEach(function (done) {
               store.addEvents(stream, done);
             });
 
             describe('and requesting all undispatched events', function () {
-              
+
               it('it should return the correct events', function (done) {
-                
+
                 store.getUndispatchedEvents(function (err, evts) {
                   expect(err).not.to.be.ok();
                   expect(evts.length).to.eql(2);
@@ -1337,23 +1521,23 @@ types.forEach(function (type) {
                   expect(evts[1].id).to.eql(stream[1].id);
                   expect(evts[1].commitId).to.eql(stream[1].commitId);
                   expect(evts[1].commitStamp.getTime()).to.eql(stream[1].commitStamp.getTime());
-                  
+
                   done();
                 });
-                
+
               });
-              
+
             });
-            
+
             describe('calling setEventToDispatched', function () {
-              
+
               beforeEach(function (done) {
                 store.getUndispatchedEvents(function (err, evts) {
                   expect(evts.length).to.eql(2);
                   done();
                 });
               });
-              
+
               it('it should work correctly', function (done) {
 
                 store.setEventToDispatched('119', function (err) {
@@ -1364,19 +1548,19 @@ types.forEach(function (type) {
                     expect(evts.length).to.eql(1);
                     expect(evts[0].commitId).to.eql(stream[1].commitId);
                     expect(evts[0].commitStamp.getTime()).to.eql(stream[1].commitStamp.getTime());
-                    
+
                     done();
                   });
                 });
-                
+
               });
-              
+
             });
 
           });
-          
+
           describe('calling addSnapshot', function () {
-            
+
             var snap = {
               id: '12345',
               aggregateId: '920193847',
@@ -1389,12 +1573,12 @@ types.forEach(function (type) {
                 mySnappi: 'data'
               }
             };
-            
+
             it('it should save the snapshot', function (done) {
-              
+
               store.addSnapshot(snap, function (err) {
                 expect(err).not.to.be.ok();
-                
+
                 store.getSnapshot({ aggregateId: snap.aggregateId }, -1 , function (err, shot) {
                   expect(err).not.to.be.ok();
                   expect(shot.id).to.eql(snap.id);
@@ -1405,15 +1589,15 @@ types.forEach(function (type) {
                   expect(shot.revision).to.eql(snap.revision);
                   expect(shot.version).to.eql(snap.version);
                   expect(shot.data.mySnappi).to.eql(snap.data.mySnappi);
-                  
+
                   done();
                 });
               });
-              
+
             });
 
             describe('having some snapshots in the eventstore calling getSnapshot', function () {
-              
+
               var snap1 = {
                 id: '12345',
                 aggregateId: '920193847',
@@ -1512,7 +1696,7 @@ types.forEach(function (type) {
                   mySnappi: 'dataaaaa3'
                 }
               };
-              
+
               beforeEach(function (done) {
                 async.series([
                   function (callback) {
@@ -1543,9 +1727,9 @@ types.forEach(function (type) {
               });
 
               describe('with an aggregateId being used only in one context and aggregate', function () {
-                
+
                 it('it should return the correct snapshot', function (done) {
-                  
+
                   store.getSnapshot({ aggregateId: '142351' }, -1, function (err, shot) {
                     expect(err).not.to.be.ok();
                     expect(shot.id).to.eql(snap3.id);
@@ -1556,10 +1740,10 @@ types.forEach(function (type) {
                     expect(shot.revision).to.eql(snap3.revision);
                     expect(shot.version).to.eql(snap3.version);
                     expect(shot.data.mySnappi).to.eql(snap3.data.mySnappi);
-                    
+
                     done();
                   });
-                  
+
                 });
 
                 describe('and limit it with revMax', function () {
@@ -1598,7 +1782,7 @@ types.forEach(function (type) {
                   });
 
                 });
-                
+
               });
 
               describe('with an aggregateId being used in an other context or aggregate', function () {
@@ -1836,7 +2020,7 @@ types.forEach(function (type) {
                 });
 
               });
-              
+
               describe('with a revision that already exists but with a newer version', function () {
 
                 it('it should return the correct snapshot', function (done) {
@@ -1856,20 +2040,19 @@ types.forEach(function (type) {
                   });
 
                 });
-                
+
               });
-              
+
             });
-            
+
           });
-          
+
         });
-        
+
       });
-      
+
     });
-    
+
   });
 
 });
-  
