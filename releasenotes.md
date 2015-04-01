@@ -1,4 +1,4 @@
-#### [v1.3.0](https://github.com/adrai/node-eventstore/compare/v1.2.0...v1.3.0)
+#### [v1.3.1](https://github.com/adrai/node-eventstore/compare/v1.2.0...v1.3.1)
 - mongodb: added possibility to repair failed transaction (insert of multiple events) from outside
 
 #### [v1.2.0](https://github.com/adrai/node-eventstore/compare/v1.1.7...v1.2.0)
