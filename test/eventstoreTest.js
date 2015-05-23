@@ -28,6 +28,7 @@ describe('eventstore', function () {
         expect(es.useEventPublisher).to.be.a('function');
         expect(es.init).to.be.a('function');
         expect(es.getEvents).to.be.a('function');
+        expect(es.getEventsSince).to.be.a('function');
         expect(es.getEventsByRevision).to.be.a('function');
         expect(es.getEventStream).to.be.a('function');
         expect(es.getFromSnapshot).to.be.a('function');
@@ -1061,6 +1062,45 @@ describe('eventstore', function () {
 
               });
 
+              describe('requesting existing events since a date and using next function', function () {
+
+                describe('and committing some new events', function () {
+
+                  it('it should work as expected', function (done) {
+
+                    es.getEventsSince(new Date(2000, 1, 1), 0, 3, function (err, evts) {
+                      expect(err).not.to.be.ok();
+
+                      expect(evts.length).to.eql(3);
+
+                      expect(evts.next).to.be.a('function');
+
+                      evts.next(function (err, nextEvts) {
+                        expect(err).not.to.be.ok();
+
+                        expect(nextEvts.length).to.eql(3);
+
+                        expect(nextEvts.next).to.be.a('function');
+
+                        nextEvts.next(function (err, nextNextEvts) {
+                          expect(err).not.to.be.ok();
+
+                          expect(nextNextEvts.length).to.eql(2);
+
+                          expect(nextNextEvts.next).to.be.a('function');
+
+                          done();
+                        });
+                      });
+
+                    });
+
+                  });
+
+                });
+
+              });
+
               describe('requesting all undispatched events', function () {
 
                 it('it should return the correct events', function (done) {
@@ -1256,6 +1296,60 @@ describe('eventstore', function () {
 
           });
 
+        });
+
+      });
+
+    });
+
+    describe('and defining the commitStamp option', function () {
+
+      it('it should save the commitStamp correctly', function (done) {
+
+        var es = eventstore();
+        es.defineEventMappings({ commitStamp: 'head.date' });
+        es.init(function (err) {
+          expect(err).not.to.be.ok();
+
+          es.getEventStream('streamIdWithDate', function (err, stream) {
+            stream.addEvent({ one: 'event' });
+
+            stream.commit(function (err, st) {
+              expect(err).not.to.be.ok();
+
+              expect(st.events.length).to.eql(1);
+              expect(st.events[0].payload.head.date).to.eql(st.events[0].commitStamp);
+
+              done();
+            });
+          });
+        });
+
+      });
+
+    });
+
+    describe('and not defining the commitStamp option', function () {
+
+      it('it should not save the commitStamp', function (done) {
+
+        var es = eventstore({});
+        es.init(function (err) {
+          expect(err).not.to.be.ok();
+
+          es.getEventStream('streamIdWithoutDate', function (err, stream) {
+            stream.addEvent({ one: 'event' });
+
+            stream.commit(function (err, st) {
+              expect(err).not.to.be.ok();
+
+              expect(st.events.length).to.eql(1);
+              expect(st.events[0].payload.date).not.to.be.ok();
+              expect(st.events[0].payload.head).not.to.be.ok();
+
+              done();
+            });
+          });
         });
 
       });

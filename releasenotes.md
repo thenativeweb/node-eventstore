@@ -1,3 +1,8 @@
+#### [v1.4.0](https://github.com/adrai/node-eventstore/compare/v1.3.1...v1.4.0)
+- added possibility to map/copy some values of the raw-event to the real event
+- added possibility to fetch all events since a date
+- IMPORTANT for redis: the keys have a new format
+
 #### [v1.3.1](https://github.com/adrai/node-eventstore/compare/v1.2.0...v1.3.1)
 - mongodb: added possibility to repair failed transaction (insert of multiple events) from outside
 

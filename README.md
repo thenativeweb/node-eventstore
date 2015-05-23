@@ -121,6 +121,17 @@ if defined the eventstore will try to publish AND set event do dispatched on its
     });
 
 
+## define event mappings [optional]
+Define which values should be mapped/copied to the payload event.
+
+    es.defineEventMappings({
+      id: 'id',
+      commitId: 'commitId',
+      commitSequence: 'commitSequence',
+      commitStamp: 'commitStamp',
+      streamRevision: 'streamRevision'
+    });
+
 ## initialize
 
     es.init(function (err) {
@@ -343,6 +354,41 @@ revMin, revMax always optional
       aggregate: 'person',          // optional
       context: 'hr'                 // optional
     }, revMin, revMax, function(err, evts) {});
+
+by commitStamp
+
+skip, limit always optional
+
+    var skip = 0,
+        limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
+
+    es.getEventsSince(new Date(2015, 5, 23), skip, limit, function(err, evts) {
+      // if (events.length === amount) {
+      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+      // } else {
+      //   // finished...
+      // }
+    });
+
+    // or
+
+    es.getEventsSince(new Date(2015, 5, 23), limit, function(err, evts) {
+      // if (events.length === amount) {
+      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+      // } else {
+      //   // finished...
+      // }
+    });
+
+    // or
+
+    es.getEventsSince(new Date(2015, 5, 23), function(err, evts) {
+      // if (events.length === amount) {
+      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+      // } else {
+      //   // finished...
+      // }
+    });
 
 
 ## obtain a new id
