@@ -1,3 +1,6 @@
+#### [v1.4.2](https://github.com/adrai/node-eventstore/compare/v1.4.1...v1.4.2)
+- optimization for `npm link`'ed development
+
 #### [v1.4.1](https://github.com/adrai/node-eventstore/compare/v1.4.0...v1.4.1)
 - redis: replace .keys() calls with .scan() calls => scales better
 

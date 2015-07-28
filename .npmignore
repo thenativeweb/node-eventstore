@@ -1,4 +1,11 @@
 test
 *.tingo
-*.rdb
+*.db
+*.yml
+.editorconfig
+.eslintrc
+.DS_Store
+
+dump.rdb
+
 .idea
