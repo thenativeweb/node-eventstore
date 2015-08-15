@@ -36,9 +36,6 @@ globals:
   jQuery: false
 
 rules:
-  # CUSTOM RULES
-  no-only-in-tests: 2
-
   # ERRORS
   no-unused-vars: [2, {vars: all, args: none}]
   curly: [2, "multi-line"]
@@ -79,17 +76,3 @@ rules:
   eol-last: 0
   no-trailing-spaces: 0
   indent: 0
-
- # REACT
-  react/jsx-no-undef: 2
-  react/jsx-uses-vars: 1
-  react/jsx-quotes: 1
-  react/jsx-uses-react: 1
-  react/no-did-mount-set-state: 1
-  react/no-did-update-set-state: 1
-  react/prop-types: 1
-  react/react-in-jsx-scope: 1
-  react/self-closing-comp: 1
-  react/no-multi-comp: 0
-  react/wrap-multilines: 1
-  react/display-name: 0

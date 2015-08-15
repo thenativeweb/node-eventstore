@@ -2293,7 +2293,7 @@ types.forEach(function (type) {
 
               it('it should return the correct events', function (done) {
 
-                store.getUndispatchedEvents(function (err, evts) {
+                store.getUndispatchedEvents(null, function (err, evts) {
                   expect(err).not.to.be.ok();
                   expect(evts.length).to.eql(2);
                   expect(evts[0].id).to.eql(stream[0].id);
@@ -2313,7 +2313,7 @@ types.forEach(function (type) {
             describe('calling setEventToDispatched', function () {
 
               beforeEach(function (done) {
-                store.getUndispatchedEvents(function (err, evts) {
+                store.getUndispatchedEvents(null, function (err, evts) {
                   expect(evts.length).to.eql(2);
                   done();
                 });
@@ -2324,7 +2324,7 @@ types.forEach(function (type) {
                 store.setEventToDispatched('119', function (err) {
                   expect(err).not.to.be.ok();
 
-                  store.getUndispatchedEvents(function (err, evts) {
+                  store.getUndispatchedEvents(null, function (err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts.length).to.eql(1);
                     expect(evts[0].commitId).to.eql(stream[1].commitId);

@@ -1116,6 +1116,70 @@ describe('eventstore', function () {
 
               });
 
+              describe('requesting all undispatched events by streamId', function () {
+
+                it('it should return the correct events', function (done) {
+
+                  es.getUndispatchedEvents('myAggId2', function (err, evts) {
+                    expect(err).not.to.be.ok();
+                    expect(evts.length).to.eql(5);
+
+                    done();
+                  });
+
+                });
+
+              });
+
+              describe('requesting all undispatched events by query', function () {
+
+                describe('aggregateId', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    es.getUndispatchedEvents({ aggregateId: 'myAggId' }, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(3);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('aggregate', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    es.getUndispatchedEvents({ aggregate: 'myAgg' }, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(8);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('context', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    es.getUndispatchedEvents({ context: 'myCont' }, function (err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts.length).to.eql(8);
+
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+
               describe('setting an event to dispatched', function () {
 
                 it('it should work correctly', function (done) {

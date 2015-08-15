@@ -1,3 +1,6 @@
+#### [v1.5.0](https://github.com/adrai/node-eventstore/compare/v1.4.2...v1.5.0)
+- added possibility to getUndispatchedEvents by query
+
 #### [v1.4.2](https://github.com/adrai/node-eventstore/compare/v1.4.1...v1.4.2)
 - optimization for `npm link`'ed development
 
