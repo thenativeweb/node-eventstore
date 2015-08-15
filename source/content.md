@@ -282,6 +282,12 @@ create a snapshot point
 ## own event dispatching (no event publisher function defined)
 
     es.getUndispatchedEvents(function(err, evts) {
+    // or es.getUndispatchedEvents('streamId', function(err, evts) {
+    // or es.getUndispatchedEvents({ // free choice (all, only context, only aggregate, only aggregateId...)
+    //                                context: 'hr',
+    //                                aggregate: 'person',
+    //                                aggregateId: 'uuid'
+    //                              }, function(err, evts) {
 
       // all undispatched events
       console.log(evts);
