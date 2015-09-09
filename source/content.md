@@ -50,6 +50,7 @@ example with mongodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000                              // optional
+      // authSource: 'authedicationDatabase',        // optional
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
     });
