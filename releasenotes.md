@@ -1,3 +1,6 @@
+#### [v1.5.1](https://github.com/adrai/node-eventstore/compare/v1.5.0...v1.5.1)
+- give possibility to use mongodb with authSource
+
 #### [v1.5.0](https://github.com/adrai/node-eventstore/compare/v1.4.2...v1.5.0)
 - added possibility to getUndispatchedEvents by query
 
