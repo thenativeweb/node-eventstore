@@ -1,3 +1,6 @@
+## [v1.5.2](https://github.com/adrai/node-eventstore/compare/v1.5.1...v1.5.2)
+- mongodb: added optional heartbeat
+
 #### [v1.5.1](https://github.com/adrai/node-eventstore/compare/v1.5.0...v1.5.1)
 - give possibility to use mongodb with authSource
 
