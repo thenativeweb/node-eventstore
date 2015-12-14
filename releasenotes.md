@@ -1,4 +1,4 @@
-## [v1.5.2](https://github.com/adrai/node-eventstore/compare/v1.5.1...v1.5.2)
+#### [v1.5.3](https://github.com/adrai/node-eventstore/compare/v1.5.2...v1.5.3)
 - redis: fix for new redis lib
 
 #### [v1.5.1](https://github.com/adrai/node-eventstore/compare/v1.5.0...v1.5.1)
