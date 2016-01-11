@@ -39,7 +39,7 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "async": "1.5.1",
+    "async": "^1.5.2",
     "debug": "2.2.0",
     "dotty": "0.0.2",
     "jsondate": "0.0.1",
