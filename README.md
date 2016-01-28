@@ -85,8 +85,7 @@ example with elasticsearch:
 
     var es = require('eventstore')({
       type: 'elasticsearch',
-      host: 'localhost',                          // optional
-      port: 9200,                                 // optional
+      host: 'localhost:9200',                     // optional
       indexName: 'eventstore',                    // optional
       eventsTypeName: 'events',                   // optional
       snapshotsTypeName: 'snapshots',             // optional
