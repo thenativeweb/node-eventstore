@@ -211,6 +211,8 @@ store a new event and commit it to store
 
 if you defined an event publisher function the committed event will be dispatched to the provided publisher
 
+if you just want to load the last event as stream you can call getLastEventAsStream instead of ´getEventStream´.
+
 
 ## working with snapshotting
 
@@ -407,6 +409,22 @@ skip, limit always optional
       // } else {
       //   // finished...
       // }
+    });
+
+
+## get the last event
+for example to obtain the last revision nr
+
+    es.getLastEvent('streamId', function(err, evt) {
+    });
+
+    // or
+
+    es.getLastEvent({ // free choice (all, only context, only aggregate, only aggregateId...)
+      context: 'hr',
+      aggregate: 'person',
+      aggregateId: 'uuid'
+    } function(err, evt) {
     });
 
 

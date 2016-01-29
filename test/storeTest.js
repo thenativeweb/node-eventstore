@@ -202,7 +202,15 @@ types.forEach(function (type) {
                     expect(evts[1].commitId).to.eql(event2.commitId);
                     expect(evts[1].payload.event).to.eql(event2.payload.event);
 
-                    done();
+                    store.getLastEvent({ aggregateId: event2.aggregateId }, function(err, evt) {
+                      expect(err).not.to.be.ok();
+
+                      expect(evt.commitStamp.getTime()).to.eql(event2.commitStamp.getTime());
+                      expect(evt.aggregateId).to.eql(event2.aggregateId);
+                      expect(evt.commitId).to.eql(event2.commitId);
+                      expect(evt.payload.event).to.eql(event2.payload.event);
+                      done();
+                    });
                   });
                 });
 
@@ -1270,7 +1278,14 @@ types.forEach(function (type) {
                       expect(evts[0].commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
                       expect(evts[0].streamRevision).to.eql(stream2[1].streamRevision);
 
-                      done();
+                      store.getLastEvent({ aggregateId: 'idWithAgg' }, function(err, evt) {
+                        expect(err).not.to.be.ok();
+
+                        expect(evt.aggregateId).to.eql(stream2[1].aggregateId);
+                        expect(evt.commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
+                        expect(evt.streamRevision).to.eql(stream2[1].streamRevision);
+                        done();
+                      });
                     });
 
                   });
