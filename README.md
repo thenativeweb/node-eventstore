@@ -199,6 +199,8 @@ store a new event and commit it to store
 
 if you defined an event publisher function the committed event will be dispatched to the provided publisher
 
+if you just want to load the last event as stream you can call getLastEventAsStream instead of ´getEventStream´.
+
 
 ## working with snapshotting
 
