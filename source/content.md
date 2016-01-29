@@ -398,6 +398,22 @@ skip, limit always optional
     });
 
 
+## get the last event
+for example to obtain the last revision nr
+
+    es.getLastEvent('streamId', function(err, evt) {
+    });
+
+    // or
+
+    es.getLastEvent({ // free choice (all, only context, only aggregate, only aggregateId...)
+      context: 'hr',
+      aggregate: 'person',
+      aggregateId: 'uuid'
+    } function(err, evt) {
+    });
+
+
 ## obtain a new id
 
     es.getNewId(function(err, newId) {
