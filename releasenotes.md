@@ -1,3 +1,6 @@
+#### [v1.6.0](https://github.com/adrai/node-eventstore/compare/v1.5.3...v1.6.0)
+- added getLastEvent function
+
 #### [v1.5.3](https://github.com/adrai/node-eventstore/compare/v1.5.2...v1.5.3)
 - redis: fix for new redis lib
 
