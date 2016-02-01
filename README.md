@@ -7,7 +7,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher (optional)
-- supported Dbs (inmemory, mongodb, redis, tingodb, azuretable)
+- supported Dbs (inmemory, mongodb, redis, tingodb, elasticsearch, azuretable)
 - snapshot support
 - query your events
 
@@ -79,6 +79,18 @@ example with tingodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000                              // optional
+    });
+
+example with elasticsearch:
+
+    var es = require('eventstore')({
+      type: 'elasticsearch',
+      host: 'localhost:9200',                     // optional
+      indexName: 'eventstore',                    // optional
+      eventsTypeName: 'events',                   // optional
+      snapshotsTypeName: 'snapshots',             // optional
+      log: 'warning',                             // optional
+      maxSearchResults: 10000                     // optional
     });
 
 example with azuretable:
