@@ -15,6 +15,7 @@ node_js:
 branches:
   only:
     - master
+    - elasticsearch
 
 notifications:
   email:
