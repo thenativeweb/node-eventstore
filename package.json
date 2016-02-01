@@ -29,7 +29,8 @@
     "tingodb",
     "azure",
     "azuretable",
-    "inmemory"
+    "inmemory",
+    "elasticsearch"
   ],
   "main": "./index.js",
   "directories": {
