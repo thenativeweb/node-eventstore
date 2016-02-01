@@ -1,4 +1,4 @@
-#### [v1.6.1](https://github.com/adrai/node-eventstore/compare/v1.5.3...v1.6.1)
+#### [v1.6.2](https://github.com/adrai/node-eventstore/compare/v1.5.3...v1.6.2)
 - added getLastEvent and getLastEventAsStream function
 
 #### [v1.5.3](https://github.com/adrai/node-eventstore/compare/v1.5.2...v1.5.3)
