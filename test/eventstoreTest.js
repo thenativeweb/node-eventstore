@@ -1420,6 +1420,33 @@ describe('eventstore', function () {
 
     });
 
+    describe('and defining the streamRevision option', function () {
+
+      it('it should save the streamRevision correctly', function (done) {
+
+        var es = eventstore();
+        es.defineEventMappings({ streamRevision: 'version' });
+        es.init(function (err) {
+          expect(err).not.to.be.ok();
+
+          es.getEventStream('streamIdWithDate', function (err, stream) {
+            stream.addEvent({ one: 'event' });
+
+            stream.commit(function (err, st) {
+              expect(err).not.to.be.ok();
+
+              expect(st.events.length).to.eql(1);
+              expect(st.events[0].payload.version).to.eql(st.events[0].streamRevision);
+
+              done();
+            });
+          });
+        });
+
+      });
+
+    });
+
     describe('and defining a publisher function in a synchronous way', function () {
 
       it('it should initialize an eventDispatcher', function (done) {
