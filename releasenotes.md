@@ -1,3 +1,6 @@
+#### [v1.7.1](https://github.com/adrai/node-eventstore/compare/v1.7.0...v1.7.1)
+- Fix eventmappings when value is empty or 0 [#61](https://github.com/adrai/node-eventstore/pull/61) thanks to [rehia](https://github.com/rehia)
+
 #### [v1.7.0](https://github.com/adrai/node-eventstore/compare/v1.6.2...v1.7.0)
 - added Elasticsearch support [#59](https://github.com/adrai/node-eventstore/pull/59) thanks to [gerbenmeyer](https://github.com/gerbenmeyer)
 
