@@ -1,7 +1,9 @@
 var expect = require('expect.js'),
   eventstore = require('../'),
   InMemory = require('../lib/databases/inmemory'),
-  Base = require('../lib/base');
+  Base = require('../lib/base'),
+  _ = require('lodash'),
+  crypto = require('crypto');
 
 describe('eventstore', function () {
 
@@ -17,7 +19,7 @@ describe('eventstore', function () {
 
   });
 
-  describe('calling that function', function() {
+  describe('calling that function', function () {
 
     describe('without options', function () {
 
@@ -49,7 +51,7 @@ describe('eventstore', function () {
       it('it should throw an error', function () {
 
         expect(function () {
-          eventstore({ type: 'strangeDb' });
+          eventstore({type: 'strangeDb'});
         }).to.throwError();
 
       });
@@ -60,7 +62,7 @@ describe('eventstore', function () {
 
       it('it should return with the an instance of that implementation', function () {
 
-        var es = eventstore({ type: InMemory });
+        var es = eventstore({type: InMemory});
         expect(es).to.be.a('object');
         expect(es.useEventPublisher).to.be.a('function');
         expect(es.init).to.be.a('function');
@@ -100,10 +102,11 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               skip: 2,
               limit: 32,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -126,7 +129,8 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -150,8 +154,9 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
-              callback: function () {}
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -175,7 +180,8 @@ describe('eventstore', function () {
 
             var given = {
               skip: 3,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -199,9 +205,10 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               skip: 3,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -226,7 +233,8 @@ describe('eventstore', function () {
             var given = {
               skip: 3,
               limit: 50,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -253,7 +261,8 @@ describe('eventstore', function () {
               query: 'myAggId',
               skip: 3,
               limit: 50,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEvents = function (query, skip, limit, callback) {
@@ -292,10 +301,11 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               revMin: 2,
               revMax: 32,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -318,8 +328,9 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
-              callback: function () {}
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -342,9 +353,10 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               revMin: 2,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -370,7 +382,8 @@ describe('eventstore', function () {
               query: 'myAggId',
               revMin: 2,
               revMax: 4,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -422,10 +435,11 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               revMin: 2,
               revMax: 32,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -448,8 +462,9 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
-              callback: function () {}
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -472,9 +487,10 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               revMin: 2,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -500,7 +516,8 @@ describe('eventstore', function () {
               query: 'myAggId',
               revMin: 2,
               revMax: 4,
-              callback: function () {}
+              callback: function () {
+              }
             };
 
             es.store.getEventsByRevision = function (query, revMin, revMax, callback) {
@@ -552,7 +569,7 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               revMax: 32,
               callback: function () {
               }
@@ -577,7 +594,7 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var given = {
-              query: { aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' },
+              query: {aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont'},
               callback: function () {
               }
             };
@@ -658,7 +675,7 @@ describe('eventstore', function () {
               aggregateId: 'myAggId',
               aggregate: 'myAgg',
               context: 'myCont',
-              data: { snap: 'data' }
+              data: {snap: 'data'}
             };
 
             es.store.addSnapshot = function (snap, callback) {
@@ -671,7 +688,8 @@ describe('eventstore', function () {
               done();
             };
 
-            es.createSnapshot(obj, function () {});
+            es.createSnapshot(obj, function () {
+            });
 
           });
 
@@ -683,7 +701,7 @@ describe('eventstore', function () {
 
             var obj = {
               streamId: 'myAggId',
-              data: { snap: 'data' }
+              data: {snap: 'data'}
             };
 
             es.store.addSnapshot = function (snap, callback) {
@@ -694,7 +712,8 @@ describe('eventstore', function () {
               done();
             };
 
-            es.createSnapshot(obj, function () {});
+            es.createSnapshot(obj, function () {
+            });
 
           });
 
@@ -705,7 +724,7 @@ describe('eventstore', function () {
           it('it should pass them correctly', function (done) {
 
             var obj = {
-              data: { snap: 'data' }
+              data: {snap: 'data'}
             };
 
             es.createSnapshot(obj, function (err) {
@@ -788,7 +807,8 @@ describe('eventstore', function () {
               done();
             };
 
-            es.setEventToDispatched(evt.commitId, function () {});
+            es.setEventToDispatched(evt.commitId, function () {
+            });
 
           });
 
@@ -807,6 +827,7 @@ describe('eventstore', function () {
         describe('"' + type + '"', function () {
 
           var es = null;
+          var options = {type: type};
 
           describe('calling init without callback', function () {
 
@@ -815,7 +836,16 @@ describe('eventstore', function () {
             });
 
             beforeEach(function () {
-              es = eventstore({ type: type });
+              if (type === "azuretable") {
+                var token = crypto.randomBytes(16).toString('hex');
+
+                options = _.defaults(options, {
+                  eventsTableName: 'events' + token,
+                  undispatchedEventsTableName: 'undispatchedevents' + token,
+                  snapshotsTableName: 'snapshots' + token
+                });
+              }
+              es = eventstore(options);
             });
 
             it('it should emit connect', function (done) {
@@ -834,12 +864,12 @@ describe('eventstore', function () {
             });
 
             beforeEach(function () {
-              es = eventstore({ type: type });
+              es = eventstore({type: type});
             });
 
             it('it should callback successfully', function (done) {
 
-              es.init(function(err) {
+              es.init(function (err) {
                 expect(err).not.to.be.ok();
                 done();
               });
@@ -853,7 +883,7 @@ describe('eventstore', function () {
             describe('calling disconnect on store', function () {
 
               beforeEach(function (done) {
-                es = eventstore({ type: type });
+                es = eventstore({type: type});
                 es.init(done);
               });
 
@@ -878,8 +908,8 @@ describe('eventstore', function () {
             describe('using the eventstore', function () {
 
               before(function (done) {
-                es = eventstore({ type: type });
-                es.init(function(err) {
+                es = eventstore({type: type});
+                es.init(function (err) {
                   es.store.clear(done);
                 });
               });
@@ -908,19 +938,23 @@ describe('eventstore', function () {
 
                   it('it should work as expected', function (done) {
 
-                    es.getEventStream({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                    es.getEventStream({
+                      aggregateId: 'myAggId',
+                      aggregate: 'myAgg',
+                      context: 'myCont'
+                    }, function (err, stream) {
                       expect(err).not.to.be.ok();
 
                       expect(stream.lastRevision).to.eql(-1);
 
-                      stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
+                      stream.addEvents([{one: 'event1'}, {two: 'event2'}, {three: 'event3'}]);
 
                       expect(stream.streamId).to.eql('myAggId');
                       expect(stream.uncommittedEvents.length).to.eql(3);
                       expect(stream.events.length).to.eql(0);
                       expect(stream.lastRevision).to.eql(-1);
 
-                      stream.commit(function(err, str) {
+                      stream.commit(function (err, str) {
                         expect(err).not.to.be.ok();
                         expect(str).to.eql(stream);
 
@@ -953,28 +987,36 @@ describe('eventstore', function () {
 
                 describe('and committing some new events', function () {
 
-                  before(function(done) {
-                    es.getEventStream({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
-                      stream.addEvents([{ one: 'event1' }, { two: 'event2' }, { three: 'event3' }]);
+                  before(function (done) {
+                    es.getEventStream({
+                      aggregateId: 'myAggId2',
+                      aggregate: 'myAgg',
+                      context: 'myCont'
+                    }, function (err, stream) {
+                      stream.addEvents([{one: 'event1'}, {two: 'event2'}, {three: 'event3'}]);
                       stream.commit(done);
                     });
                   });
 
                   it('it should work as expected', function (done) {
 
-                    es.getEventStream({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                    es.getEventStream({
+                      aggregateId: 'myAggId2',
+                      aggregate: 'myAgg',
+                      context: 'myCont'
+                    }, function (err, stream) {
                       expect(err).not.to.be.ok();
 
                       expect(stream.lastRevision).to.eql(2);
 
-                      stream.addEvents([{ for: 'event4' }, { five: 'event5' }]);
+                      stream.addEvents([{for: 'event4'}, {five: 'event5'}]);
 
                       expect(stream.streamId).to.eql('myAggId2');
                       expect(stream.uncommittedEvents.length).to.eql(2);
                       expect(stream.events.length).to.eql(3);
                       expect(stream.lastRevision).to.eql(2);
 
-                      stream.commit(function(err, str) {
+                      stream.commit(function (err, str) {
                         expect(err).not.to.be.ok();
                         expect(str).to.eql(stream);
 
@@ -999,7 +1041,11 @@ describe('eventstore', function () {
 
                   it('it should be able to retrieve them', function (done) {
 
-                    es.getEvents({ aggregateId: 'myAggId2', aggregate: 'myAgg', context: 'myCont' }, function (err, evts) {
+                    es.getEvents({
+                      aggregateId: 'myAggId2',
+                      aggregate: 'myAgg',
+                      context: 'myCont'
+                    }, function (err, evts) {
                       expect(err).not.to.be.ok();
                       expect(evts.length).to.eql(5);
 
@@ -1010,7 +1056,7 @@ describe('eventstore', function () {
 
                   it('it should be able to retrieve by context', function (done) {
 
-                    es.getEvents({context: 'myCont' }, function (err, evts) {
+                    es.getEvents({context: 'myCont'}, function (err, evts) {
                       expect(err).not.to.be.ok();
                       expect(evts.length).to.eql(8);
 
@@ -1029,7 +1075,7 @@ describe('eventstore', function () {
 
                   it('it should work as expected', function (done) {
 
-                    es.getEvents({ aggregate: 'myAgg', context: 'myCont' }, 0, 3, function (err, evts) {
+                    es.getEvents({aggregate: 'myAgg', context: 'myCont'}, 0, 3, function (err, evts) {
                       expect(err).not.to.be.ok();
 
                       expect(evts.length).to.eql(3);
@@ -1137,7 +1183,7 @@ describe('eventstore', function () {
 
                   it('it should return the correct events', function (done) {
 
-                    es.getUndispatchedEvents({ aggregateId: 'myAggId' }, function (err, evts) {
+                    es.getUndispatchedEvents({aggregateId: 'myAggId'}, function (err, evts) {
                       expect(err).not.to.be.ok();
                       expect(evts.length).to.eql(3);
 
@@ -1152,7 +1198,7 @@ describe('eventstore', function () {
 
                   it('it should return the correct events', function (done) {
 
-                    es.getUndispatchedEvents({ aggregate: 'myAgg' }, function (err, evts) {
+                    es.getUndispatchedEvents({aggregate: 'myAgg'}, function (err, evts) {
                       expect(err).not.to.be.ok();
                       expect(evts.length).to.eql(8);
 
@@ -1167,7 +1213,7 @@ describe('eventstore', function () {
 
                   it('it should return the correct events', function (done) {
 
-                    es.getUndispatchedEvents({ context: 'myCont' }, function (err, evts) {
+                    es.getUndispatchedEvents({context: 'myCont'}, function (err, evts) {
                       expect(err).not.to.be.ok();
                       expect(evts.length).to.eql(8);
 
@@ -1209,19 +1255,23 @@ describe('eventstore', function () {
 
                 it('it should callback without error', function (done) {
 
-                  es.getEventStream({ aggregateId: 'myAggIdOfSnap', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                  es.getEventStream({
+                    aggregateId: 'myAggIdOfSnap',
+                    aggregate: 'myAgg',
+                    context: 'myCont'
+                  }, function (err, stream) {
                     expect(err).not.to.be.ok();
 
                     expect(stream.lastRevision).to.eql(-1);
 
-                    stream.addEvents([{ oneSnap: 'event1' }, { twoSnap: 'event2' }, { threeSnap: 'event3' }]);
+                    stream.addEvents([{oneSnap: 'event1'}, {twoSnap: 'event2'}, {threeSnap: 'event3'}]);
 
                     expect(stream.streamId).to.eql('myAggIdOfSnap');
                     expect(stream.uncommittedEvents.length).to.eql(3);
                     expect(stream.events.length).to.eql(0);
                     expect(stream.lastRevision).to.eql(-1);
 
-                    stream.commit(function(err, str) {
+                    stream.commit(function (err, str) {
                       expect(err).not.to.be.ok();
                       expect(str).to.eql(stream);
 
@@ -1245,13 +1295,13 @@ describe('eventstore', function () {
                         context: stream.context,
                         revision: stream.lastRevision,
                         version: 1,
-                        data: { my: 'snap' }
+                        data: {my: 'snap'}
                       }, function (err) {
                         expect(err).not.to.be.ok();
 
-                        stream.addEvent({ fourSnap: 'event4' })
+                        stream.addEvent({fourSnap: 'event4'})
 
-                        stream.commit(function(err, str) {
+                        stream.commit(function (err, str) {
                           expect(err).not.to.be.ok();
                           expect(str).to.eql(stream);
 
@@ -1274,19 +1324,23 @@ describe('eventstore', function () {
 
                 it('it should callback without error with no additional events', function (done) {
 
-                  es.getEventStream({ aggregateId: 'myAggIdOfSnap2', aggregate: 'myAgg', context: 'myCont' }, function (err, stream) {
+                  es.getEventStream({
+                    aggregateId: 'myAggIdOfSnap2',
+                    aggregate: 'myAgg',
+                    context: 'myCont'
+                  }, function (err, stream) {
                     expect(err).not.to.be.ok();
 
                     expect(stream.lastRevision).to.eql(-1);
 
-                    stream.addEvents([{ oneSnap: 'event1' }, { twoSnap: 'event2' }, { threeSnap: 'event3' }]);
+                    stream.addEvents([{oneSnap: 'event1'}, {twoSnap: 'event2'}, {threeSnap: 'event3'}]);
 
                     expect(stream.streamId).to.eql('myAggIdOfSnap2');
                     expect(stream.uncommittedEvents.length).to.eql(3);
                     expect(stream.events.length).to.eql(0);
                     expect(stream.lastRevision).to.eql(-1);
 
-                    stream.commit(function(err, str) {
+                    stream.commit(function (err, str) {
                       expect(err).not.to.be.ok();
                       expect(str).to.eql(stream);
 
@@ -1310,7 +1364,7 @@ describe('eventstore', function () {
                         context: stream.context,
                         revision: stream.lastRevision,
                         version: 1,
-                        data: { my: 'snap' }
+                        data: {my: 'snap'}
                       }, function (err) {
                         expect(err).not.to.be.ok();
                         done();
@@ -1325,7 +1379,7 @@ describe('eventstore', function () {
 
                   it('it should retrieve it and the missing events', function (done) {
 
-                    es.getFromSnapshot({ aggregateId: 'myAggIdOfSnap' }, -1, function (err, snap, stream) {
+                    es.getFromSnapshot({aggregateId: 'myAggIdOfSnap'}, -1, function (err, snap, stream) {
                       expect(err).not.to.be.ok();
 
                       expect(snap.aggregateId).to.eql('myAggIdOfSnap');
@@ -1340,9 +1394,9 @@ describe('eventstore', function () {
 
                   });
 
-                  it('it should set the lastRevision of an empty event stream to the snapshot revision', function(done) {
+                  it('it should set the lastRevision of an empty event stream to the snapshot revision', function (done) {
 
-                    es.getFromSnapshot({ aggregateId: 'myAggIdOfSnap2' }, -1, function (err, snap, stream) {
+                    es.getFromSnapshot({aggregateId: 'myAggIdOfSnap2'}, -1, function (err, snap, stream) {
                       expect(err).not.to.be.ok();
 
                       expect(stream.lastRevision).to.eql(snap.revision);
@@ -1371,12 +1425,12 @@ describe('eventstore', function () {
       it('it should save the commitStamp correctly', function (done) {
 
         var es = eventstore();
-        es.defineEventMappings({ commitStamp: 'head.date' });
+        es.defineEventMappings({commitStamp: 'head.date'});
         es.init(function (err) {
           expect(err).not.to.be.ok();
 
           es.getEventStream('streamIdWithDate', function (err, stream) {
-            stream.addEvent({ one: 'event' });
+            stream.addEvent({one: 'event'});
 
             stream.commit(function (err, st) {
               expect(err).not.to.be.ok();
@@ -1402,7 +1456,7 @@ describe('eventstore', function () {
           expect(err).not.to.be.ok();
 
           es.getEventStream('streamIdWithoutDate', function (err, stream) {
-            stream.addEvent({ one: 'event' });
+            stream.addEvent({one: 'event'});
 
             stream.commit(function (err, st) {
               expect(err).not.to.be.ok();
@@ -1425,12 +1479,12 @@ describe('eventstore', function () {
       it('it should save the streamRevision correctly', function (done) {
 
         var es = eventstore();
-        es.defineEventMappings({ streamRevision: 'version' });
+        es.defineEventMappings({streamRevision: 'version'});
         es.init(function (err) {
           expect(err).not.to.be.ok();
 
           es.getEventStream('streamIdWithDate', function (err, stream) {
-            stream.addEvent({ one: 'event' });
+            stream.addEvent({one: 'event'});
 
             stream.commit(function (err, st) {
               expect(err).not.to.be.ok();
@@ -1451,7 +1505,9 @@ describe('eventstore', function () {
 
       it('it should initialize an eventDispatcher', function (done) {
 
-        function publish (evt) {}
+        function publish(evt) {
+        }
+
         var es = eventstore();
         es.useEventPublisher(publish);
         es.init(function (err) {
@@ -1466,7 +1522,7 @@ describe('eventstore', function () {
 
         it('it should publish a new event', function (done) {
 
-          function publish (evt) {
+          function publish(evt) {
             expect(evt.one).to.eql('event');
             done();
           }
@@ -1477,7 +1533,7 @@ describe('eventstore', function () {
             expect(err).not.to.be.ok();
 
             es.getEventStream('streamId', function (err, stream) {
-              stream.addEvent({ one: 'event' });
+              stream.addEvent({one: 'event'});
 
               stream.commit(function (err) {
                 expect(err).not.to.be.ok();
@@ -1495,7 +1551,10 @@ describe('eventstore', function () {
 
       it('it should initialize an eventDispatcher', function (done) {
 
-        function publish (evt, callback) {callback();}
+        function publish(evt, callback) {
+          callback();
+        }
+
         var es = eventstore();
         es.useEventPublisher(publish);
         es.init(function (err) {
@@ -1510,7 +1569,7 @@ describe('eventstore', function () {
 
         it('it should publish a new event', function (done) {
 
-          function publish (evt, callback) {
+          function publish(evt, callback) {
             expect(evt.one).to.eql('event');
             callback();
             done();
@@ -1522,7 +1581,7 @@ describe('eventstore', function () {
             expect(err).not.to.be.ok();
 
             es.getEventStream('streamId', function (err, stream) {
-              stream.addEvent({ one: 'event' });
+              stream.addEvent({one: 'event'});
 
               stream.commit(function (err) {
                 expect(err).not.to.be.ok();
