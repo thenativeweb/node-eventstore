@@ -800,7 +800,7 @@ describe('eventstore', function () {
 
     describe('with options containing a type property with the value of', function () {
 
-      var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'elasticsearch'/*, 'azuretable'*/];
+      var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'elasticsearch', 'azuretable'];
 
       types.forEach(function (type) {
 
