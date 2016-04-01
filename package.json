@@ -51,7 +51,7 @@
     "uuid": "^2.0.1"
   },
   "devDependencies": {
-    "azure-storage": ">= 0.3.0",
+    "azure-storage": ">= 0.10.0",
     "cradle": ">=0.6.7",
     "elasticsearch": ">= 10.0.0",
     "eslint": ">=1.0.0",

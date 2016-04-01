@@ -1,9 +1,14 @@
 var expect = require('expect.js'),
   Base = require('../lib/base'),
   async = require('async'),
-  _ = require('lodash');
+  _ = require('lodash'),
+  crypto = require('crypto');
 
-var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'elasticsearch'/*, 'azuretable'*/];
+var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'elasticsearch', 'azuretable'];
+
+var token = crypto.randomBytes(16).toString('hex');
+
+var options = {};
 
 types.forEach(function (type) {
 
@@ -15,7 +20,14 @@ types.forEach(function (type) {
     describe('creating an instance', function () {
 
       before(function () {
-        store = new Store();
+        if (type === "azuretable") {
+          options = {
+              eventsTableName: 'events' + token,
+              undispatchedEventsTableName: 'undispatchedevents' + token,
+              snapshotsTableName: 'snapshots' + token
+          }
+        }
+        store = new Store(options);
       });
 
       it('it should return correct object', function () {
