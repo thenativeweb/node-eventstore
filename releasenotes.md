@@ -1,3 +1,6 @@
+#### [v1.7.3](https://github.com/adrai/node-eventstore/compare/v1.7.2...v1.7.3)
+- redis: added optional heartbeat
+
 #### [v1.7.2](https://github.com/adrai/node-eventstore/compare/v1.7.1...v1.7.2)
 - update azure dependencies
 - Adding getLastEvent support in azure table provider [#64](https://github.com/adrai/node-eventstore/pull/64) thanks to [rehia](https://github.com/sbiaudet)
