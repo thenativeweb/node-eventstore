@@ -1,9 +1,12 @@
+#### [v1.7.4](https://github.com/adrai/node-eventstore/compare/v1.7.3...v1.7.4)
+- MongoDb: Add index used when querying for all events for an aggregate type [#64](https://github.com/adrai/node-eventstore/pull/65) thanks to [HCanber](https://github.com/HCanber)
+
 #### [v1.7.3](https://github.com/adrai/node-eventstore/compare/v1.7.2...v1.7.3)
 - redis: added optional heartbeat
 
 #### [v1.7.2](https://github.com/adrai/node-eventstore/compare/v1.7.1...v1.7.2)
 - update azure dependencies
-- Adding getLastEvent support in azure table provider [#64](https://github.com/adrai/node-eventstore/pull/64) thanks to [rehia](https://github.com/sbiaudet)
+- Adding getLastEvent support in azure table provider [#64](https://github.com/adrai/node-eventstore/pull/64) thanks to [sbiaudet](https://github.com/sbiaudet)
 
 #### [v1.7.1](https://github.com/adrai/node-eventstore/compare/v1.7.0...v1.7.1)
 - Fix eventmappings when value is empty or 0 [#61](https://github.com/adrai/node-eventstore/pull/61) thanks to [rehia](https://github.com/rehia)
