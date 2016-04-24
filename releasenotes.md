@@ -1,3 +1,6 @@
+#### [v1.7.5](https://github.com/adrai/node-eventstore/compare/v1.7.4...v1.7.5)
+- inmemory: keep events immutable [#67](https://github.com/adrai/node-eventstore/pull/67) thanks to [hilkeheremans](https://github.com/hilkeheremans)
+
 #### [v1.7.4](https://github.com/adrai/node-eventstore/compare/v1.7.3...v1.7.4)
 - MongoDb: Add index used when querying for all events for an aggregate type [#64](https://github.com/adrai/node-eventstore/pull/65) thanks to [HCanber](https://github.com/HCanber)
 
