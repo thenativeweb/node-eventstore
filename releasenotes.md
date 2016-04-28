@@ -1,3 +1,6 @@
+#### [v1.7.6](https://github.com/adrai/node-eventstore/compare/v1.7.5...v1.7.6)
+- redis, mongodb: call disconnect on ping error
+
 #### [v1.7.5](https://github.com/adrai/node-eventstore/compare/v1.7.4...v1.7.5)
 - inmemory: keep events immutable [#67](https://github.com/adrai/node-eventstore/pull/67) thanks to [hilkeheremans](https://github.com/hilkeheremans)
 
