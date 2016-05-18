@@ -54,6 +54,7 @@ example with mongodb:
       // authSource: 'authedicationDatabase',        // optional
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
+      // url: 'mongodb://user:pass@host:port/db?opts // optional
     });
 
 example with redis:
