@@ -53,6 +53,7 @@ example with mongodb:
       // authSource: 'authedicationDatabase',        // optional
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
+      // url: 'mongodb://user:pass@host:port/db?opts // optional
     });
 
 example with redis:
@@ -521,7 +522,7 @@ and you can use it in this way
 
 # License
 
-Copyright (c) 2015 Adriano Raiano, Jan Muehlemann
+Copyright (c) 2016 Adriano Raiano, Jan Muehlemann
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
