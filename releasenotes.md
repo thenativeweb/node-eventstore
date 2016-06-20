@@ -1,3 +1,6 @@
+#### [v1.7.8](https://github.com/adrai/node-eventstore/compare/v1.7.7...v1.7.8)
+- redis, mongodb: call disconnect on ping error
+
 #### [v1.7.7](https://github.com/adrai/node-eventstore/compare/v1.7.6...v1.7.7)
 - Support mongo connection string [#70](https://github.com/adrai/node-eventstore/pull/70) [#68](https://github.com/adrai/node-eventstore/issues/68) thanks to [danwkennedy](https://github.com/danwkennedy) and [mmmdreg](https://github.com/mmmdreg)
 
