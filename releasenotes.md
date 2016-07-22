@@ -1,4 +1,4 @@
-#### [v1.7.9](https://github.com/adrai/node-eventstore/compare/v1.7.8...v1.7.9)
+#### [v1.7.10](https://github.com/adrai/node-eventstore/compare/v1.7.8...v1.7.10)
 - This resolves an issue where the maximum call stack size could be hit when processing 1000s of undispatched events on startup [#74](https://github.com/adrai/node-eventstore/pull/74) thanks to [ben-moore](https://github.com/ben-moore)
 
 #### [v1.7.8](https://github.com/adrai/node-eventstore/compare/v1.7.7...v1.7.8)
