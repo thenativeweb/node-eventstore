@@ -801,7 +801,7 @@ describe('eventstore', function () {
 
     describe('with options containing a type property with the value of', function () {
 
-      var types = ['inmemory'/*, 'tingodb', 'mongodb', 'elasticsearch', 'redis', 'azuretable', 'dynamodb'*/];
+      var types = ['inmemory', 'tingodb', 'mongodb', 'elasticsearch', 'redis'/*, 'azuretable', 'dynamodb'*/];
 
       var token = crypto.randomBytes(16).toString('hex');
 
