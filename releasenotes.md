@@ -1,3 +1,6 @@
+#### [v1.8.0](https://github.com/adrai/node-eventstore/compare/v1.7.11...v1.8.0)
+- dynamodb store implementation [#75](https://github.com/adrai/node-eventstore/pull/75) and [#78](https://github.com/adrai/node-eventstore/pull/78) thanks to [developmentalmadness](https://github.com/developmentalmadness)
+
 #### [v1.7.11](https://github.com/adrai/node-eventstore/compare/v1.7.8...v1.7.11)
 - This resolves an issue where the maximum call stack size could be hit when processing 1000s of undispatched events on startup [#74](https://github.com/adrai/node-eventstore/pull/74) thanks to [ben-moore](https://github.com/ben-moore)
 
