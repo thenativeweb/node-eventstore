@@ -6,7 +6,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher (optional)
-- supported Dbs (inmemory, mongodb, redis, tingodb, azuretable)
+- supported Dbs (inmemory, mongodb, redis, tingodb, azuretable, dynamodb)
 - snapshot support
 - query your events
 
@@ -513,6 +513,7 @@ Currently these databases are supported:
 3. redis ([redis](https://github.com/mranney/node_redis))
 4. tingodb ([tingodb](https://github.com/sergeyksv/tingodb))
 5. azuretable ([azure-storage](https://github.com/Azure/azure-storage-node))
+6. dynamodb ([aws-sdk](https://github.com/aws/aws-sdk-js))
 
 ## own db implementation
 You can use your own db implementation by extending this...
