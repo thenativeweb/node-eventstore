@@ -93,6 +93,30 @@ example with azuretable:
       timeout: 10000                              // optional
     });
 
+example with dynamodb:
+
+    var es = require('eventstore')({
+        type: 'dynamodb',
+        eventsTableName: 'events',                  // optional
+        snapshotsTableName: 'snapshots',            // optional
+        undispatchedEventsTableName: 'undispatched' // optional
+        EventsReadCapacityUnits: 1,                 // optional
+        EventsWriteCapacityUnits: 3,                // optional
+        SnapshotReadCapacityUnits: 1,               // optional
+        SnapshotWriteCapacityUnits: 3,              // optional
+        UndispatchedEventsReadCapacityUnits: 1,     // optional
+    });
+
+DynamoDB credentials are obtained by eventstore either from environment vars or credentials file. For setup see [AWS Javascript SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
+
+DynamoDB provider supports [DynamoDB local](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html) for local development via the AWS SDK `endpoint` option. Just set the `$AWS_DYNAMODB_ENDPOINT` (or `%AWS_DYNAMODB_ENDPOINT%` in Windows) environment variable to point to your running instance of Dynamodb local like this:
+
+    $ export AWS_DYNAMODB_ENDPOINT=http://localhost:8000
+
+Or on Windows:
+
+    > set AWS_DYNAMODB_ENDPOINT=http://localhost:8000
+
 
 ## Built-in event publisher (optional)
 
