@@ -1,3 +1,6 @@
+#### [v1.8.1](https://github.com/adrai/node-eventstore/compare/v1.8.0...v1.8.1)
+- Early abort when events were fetched without limit and calling next [#81](https://github.com/adrai/node-eventstore/pull/81) thanks to [johanneslumpe](https://github.com/johanneslumpe)
+
 #### [v1.8.0](https://github.com/adrai/node-eventstore/compare/v1.7.11...v1.8.0)
 - dynamodb store implementation [#75](https://github.com/adrai/node-eventstore/pull/75) and [#78](https://github.com/adrai/node-eventstore/pull/78) thanks to [developmentalmadness](https://github.com/developmentalmadness)
 
