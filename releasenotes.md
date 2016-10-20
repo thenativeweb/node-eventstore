@@ -1,3 +1,6 @@
+#### [v1.8.2](https://github.com/adrai/node-eventstore/compare/v1.8.1...v1.8.2)
+- Prevent uncommittedEvents to be overwritten accidentally [#84](https://github.com/adrai/node-eventstore/issues/84), [#85](https://github.com/adrai/node-eventstore/pull/85) thanks to [albe](https://github.com/albe)
+
 #### [v1.8.1](https://github.com/adrai/node-eventstore/compare/v1.8.0...v1.8.1)
 - Early abort when events were fetched without limit and calling next [#81](https://github.com/adrai/node-eventstore/pull/81) thanks to [johanneslumpe](https://github.com/johanneslumpe)
 
