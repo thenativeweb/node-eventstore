@@ -50,7 +50,7 @@
     "tolerance": "1.0.0"
   },
   "devDependencies": {
-    "aws-sdk": ">=2.4.11",
+    "aws-sdk": ">=2.4.9",
     "azure-storage": ">=0.10.0",
     "cradle": ">=0.7.1",
     "elasticsearch": ">=10.0.0",

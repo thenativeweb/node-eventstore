@@ -118,6 +118,8 @@ example with dynamodb:
         SnapshotReadCapacityUnits: 1,               // optional
         SnapshotWriteCapacityUnits: 3,              // optional
         UndispatchedEventsReadCapacityUnits: 1,     // optional
+        UndispatchedEventsReadCapacityUnits: 1,     // optional
+        useUndispatchedEventsTable: true            // optional
     });
 
 DynamoDB credentials are obtained by eventstore either from environment vars or credentials file. For setup see [AWS Javascript SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
@@ -129,6 +131,8 @@ DynamoDB provider supports [DynamoDB local](http://docs.aws.amazon.com/amazondyn
 Or on Windows:
 
     > set AWS_DYNAMODB_ENDPOINT=http://localhost:8000
+
+The **useUndispatchedEventsTable** option to available for those who prefer to use DyanmoDB.Streams to pull events from the store instead of the UndispatchedEvents table. The default is true. Setting this option to false will result in the UndispatchedEvents table not being created at all, the getUndispatchedEvents method will always return an empty array, and the setEventToDispatched will effectively do nothing. 
 
 ## Built-in event publisher (optional)
 
