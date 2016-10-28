@@ -1,3 +1,6 @@
+#### [v1.8.4](https://github.com/adrai/node-eventstore/compare/v1.8.3...v1.8.4)
+- Ensuring concurrency for dynamodb  [#87](https://github.com/adrai/node-eventstore/pull/87) thanks to [developmentalmadness](https://github.com/developmentalmadness)
+
 #### [v1.8.3](https://github.com/adrai/node-eventstore/compare/v1.8.2...v1.8.3)
 - Optional dispatch table for dynamodb  [#86](https://github.com/adrai/node-eventstore/pull/86) thanks to [developmentalmadness](https://github.com/developmentalmadness)
 
