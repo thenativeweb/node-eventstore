@@ -93,7 +93,31 @@ example with elasticsearch:
       log: 'warning',                             // optional
       maxSearchResults: 10000                     // optional
     });
+	
+example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note ``` http-aws-es ``` package usage in this example):
 
+    var elasticsearch = require('elasticsearch');
+
+    var esClient = = new elasticsearch.Client({
+      hosts: 'SOMETHING.es.amazonaws.com',
+      connectionClass: require('http-aws-es'),
+      amazonES: {
+        region: 'us-east-1',
+        accessKey: 'REPLACE_AWS_accessKey',
+        secretKey: 'REPLACE_AWS_secretKey'
+      }
+    });
+	
+    var es = require('eventstore')({
+      type: 'elasticsearch',
+      client: esClient,
+      indexName: 'eventstore',
+      eventsTypeName: 'events',
+      snapshotsTypeName: 'snapshots',
+      log: 'warning',
+      maxSearchResults: 10000
+	});
+	
 example with azuretable:
 
     var es = require('eventstore')({
