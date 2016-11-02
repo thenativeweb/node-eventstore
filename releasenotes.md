@@ -1,3 +1,7 @@
+#### [v1.9.0](https://github.com/adrai/node-eventstore/compare/v1.8.4...v1.9.0)
+- ability to use custom elasticsearch client in the elasticsearch storage  [#88](https://github.com/adrai/node-eventstore/pull/88) thanks to [evereq](https://github.com/evereq)
+- redis snapshots are retrieved recursively to match 'max revision' option  [#89](https://github.com/adrai/node-eventstore/pull/89) thanks to [rehia](https://github.com/rehia)
+
 #### [v1.8.4](https://github.com/adrai/node-eventstore/compare/v1.8.3...v1.8.4)
 - Ensuring concurrency for dynamodb  [#87](https://github.com/adrai/node-eventstore/pull/87) thanks to [developmentalmadness](https://github.com/developmentalmadness)
 
