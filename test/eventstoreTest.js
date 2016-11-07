@@ -821,7 +821,11 @@ describe('eventstore', function () {
                   snapshotsTableName: 'snapshots' + token
               }
             }
-
+            if (type === 'redis') {
+              options = {
+                db: 3
+              };
+            }
             options.type = type;
           });
 
@@ -1282,7 +1286,7 @@ describe('eventstore', function () {
                       }, function (err) {
                         expect(err).not.to.be.ok();
 
-                        stream.addEvent({ fourSnap: 'event4' })
+                        stream.addEvent({ fourSnap: 'event4' });
 
                         stream.commit(function(err, str) {
                           expect(err).not.to.be.ok();
