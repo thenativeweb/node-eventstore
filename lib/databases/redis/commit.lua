@@ -5,7 +5,7 @@ local revisionKey = KEYS[3] .. ':revision'
 local revision = redis.call('GET', revisionKey)
 if (not revision) then revision = 0 end
 redis.call('INCR', revisionKey)
-event['streamRevision'] = revision
+event['streamRevision'] = tonumber(revision)
 redis.call('SET', key, cjson.encode(event))
 
-return revision
+return tonumber(revision)
