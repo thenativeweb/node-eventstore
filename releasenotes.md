@@ -1,3 +1,6 @@
+#### [v1.10.1](https://github.com/adrai/node-eventstore/compare/v1.10.0...v1.10.1)
+- fix calculated streamRevision for redis to avoid events sorting issues [#92](https://github.com/adrai/node-eventstore/pull/92) thanks to [rehia](https://github.com/rehia)
+
 #### [v1.10.0](https://github.com/adrai/node-eventstore/compare/v1.9.0...v1.10.0)
 - improve event revision accuracy in redis, to avoid revisions duplications for an aggregate [#91](https://github.com/adrai/node-eventstore/pull/91) thanks to [rehia](https://github.com/rehia)
 
