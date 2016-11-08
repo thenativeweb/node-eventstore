@@ -226,6 +226,7 @@ types.forEach(function (type) {
                     expect(evts[1].aggregateId).to.eql(event2.aggregateId);
                     expect(evts[1].commitId).to.eql(event2.commitId);
                     expect(evts[1].payload.event).to.eql(event2.payload.event);
+                    expect(evts[1].streamRevision).to.be.a('number');
 
                     store.getLastEvent({ aggregateId: event2.aggregateId }, function(err, evt) {
                       expect(err).not.to.be.ok();
