@@ -1,3 +1,6 @@
+#### [v1.10.2](https://github.com/adrai/node-eventstore/compare/v1.10.1...v1.10.2)
+- dynamodb: changed addEvents to use sequential async methods instead of parallel [#93](https://github.com/adrai/node-eventstore/pull/93) thanks to [developmentalmadness](https://github.com/developmentalmadness)
+
 #### [v1.10.1](https://github.com/adrai/node-eventstore/compare/v1.10.0...v1.10.1)
 - fix calculated streamRevision for redis to avoid events sorting issues [#92](https://github.com/adrai/node-eventstore/pull/92) thanks to [rehia](https://github.com/rehia)
 
