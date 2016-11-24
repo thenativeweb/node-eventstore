@@ -1,3 +1,6 @@
+#### [v1.10.3](https://github.com/adrai/node-eventstore/compare/v1.10.2...v1.10.3)
+- update deps
+
 #### [v1.10.2](https://github.com/adrai/node-eventstore/compare/v1.10.1...v1.10.2)
 - dynamodb: changed addEvents to use sequential async methods instead of parallel [#93](https://github.com/adrai/node-eventstore/pull/93) thanks to [developmentalmadness](https://github.com/developmentalmadness)
 
