@@ -93,7 +93,7 @@ example with elasticsearch:
       log: 'warning',                             // optional
       maxSearchResults: 10000                     // optional
     });
-	
+
 example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note ``` http-aws-es ``` package usage in this example):
 
     var elasticsearch = require('elasticsearch');
@@ -107,7 +107,7 @@ example with custom elasticsearch client (e.g. with AWS ElasticSearch client. No
         secretKey: 'REPLACE_AWS_secretKey'
       }
     });
-	
+
     var es = require('eventstore')({
       type: 'elasticsearch',
       client: esClient,
@@ -117,7 +117,7 @@ example with custom elasticsearch client (e.g. with AWS ElasticSearch client. No
       log: 'warning',
       maxSearchResults: 10000
 	});
-	
+
 example with azuretable:
 
     var es = require('eventstore')({
@@ -156,7 +156,7 @@ Or on Windows:
 
     > set AWS_DYNAMODB_ENDPOINT=http://localhost:8000
 
-The **useUndispatchedEventsTable** option to available for those who prefer to use DyanmoDB.Streams to pull events from the store instead of the UndispatchedEvents table. The default is true. Setting this option to false will result in the UndispatchedEvents table not being created at all, the getUndispatchedEvents method will always return an empty array, and the setEventToDispatched will effectively do nothing. 
+The **useUndispatchedEventsTable** option to available for those who prefer to use DyanmoDB.Streams to pull events from the store instead of the UndispatchedEvents table. The default is true. Setting this option to false will result in the UndispatchedEvents table not being created at all, the getUndispatchedEvents method will always return an empty array, and the setEventToDispatched will effectively do nothing.
 
 ## Built-in event publisher (optional)
 
@@ -587,7 +587,7 @@ and you can use it in this way
 
 # License
 
-Copyright (c) 2016 Adriano Raiano, Jan Muehlemann
+Copyright (c) 2017 Adriano Raiano, Jan Muehlemann
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
