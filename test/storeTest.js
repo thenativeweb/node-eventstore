@@ -158,7 +158,8 @@ types.forEach(function (type) {
                   commitSequence: 0,
                   payload: {
                     event:'bla'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event], function(err) {
@@ -172,6 +173,40 @@ types.forEach(function (type) {
                     expect(evts[0].aggregateId).to.eql(event.aggregateId);
                     expect(evts[0].commitId).to.eql(event.commitId);
                     expect(evts[0].payload.event).to.eql(event.payload.event);
+
+                    done();
+                  });
+                });
+
+              });
+
+            });
+
+            describe('with an array in the payload', function () {
+
+              it('it should save the event', function(done) {
+
+                var event = {
+                  aggregateId: 'id1',
+                  id: '111',
+                  streamRevision: 0,
+                  commitId: '111',
+                  commitStamp: new Date(),
+                  commitSequence: 0,
+                  payload: {
+                    event:'bla',
+                    array: []
+                  },
+                  applyMappings: function () {}
+                };
+
+                store.addEvents([event], function(err) {
+                  expect(err).not.to.be.ok();
+
+                  store.getEvents({}, 0, -1, function(err, evts) {
+                    expect(err).not.to.be.ok();
+
+                    expect(evts[0].payload.array).to.be.an('array');
 
                     done();
                   });
@@ -195,7 +230,8 @@ types.forEach(function (type) {
                   restInCommitStream: 1,
                   payload: {
                     event:'bla'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 var event2 = {
@@ -208,7 +244,8 @@ types.forEach(function (type) {
                   restInCommitStream: 0,
                   payload: {
                     event:'bla2'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event1, event2], function(err) {
@@ -753,7 +790,8 @@ types.forEach(function (type) {
                   commitSequence: 0,
                   payload: {
                     event:'bla'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event], function(err) {
@@ -778,7 +816,8 @@ types.forEach(function (type) {
                   commitSequence: 0,
                   payload: {
                     event:'blaffff'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event], function(err) {
@@ -815,7 +854,8 @@ types.forEach(function (type) {
                   commitSequence: 0,
                   payload: {
                     event:'blaffff'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event], function(err) {
@@ -854,7 +894,8 @@ types.forEach(function (type) {
                   commitSequence: 0,
                   payload: {
                     event:'blaffff'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event], function(err) {
@@ -893,7 +934,8 @@ types.forEach(function (type) {
                   commitId: '118',
                   payload: {
                     event:'blaffff'
-                  }
+                  },
+                  applyMappings: function () {}
                 };
 
                 store.addEvents([event], function(err) {
@@ -932,7 +974,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }, {
               aggregateId: 'id',
               streamRevision: 1,
@@ -942,7 +985,8 @@ types.forEach(function (type) {
               commitSequence: 1,
               payload: {
                 event:'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream2 = [{
@@ -955,7 +999,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }, {
               aggregateId: 'idWithAgg',
               aggregate: 'myAgg',
@@ -966,7 +1011,8 @@ types.forEach(function (type) {
               commitSequence: 1,
               payload: {
                 event: 'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream3 = [{
@@ -979,7 +1025,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream4 = [{
@@ -992,7 +1039,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }, {
               aggregateId: 'idWithCont',
               context: 'myCont',
@@ -1003,7 +1051,8 @@ types.forEach(function (type) {
               commitSequence: 1,
               payload: {
                 event: 'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream5 = [{
@@ -1016,7 +1065,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream6 = [{
@@ -1030,7 +1080,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }, {
               aggregateId: 'idWithAggrAndCont',
               aggregate: 'myAggrrr',
@@ -1042,7 +1093,8 @@ types.forEach(function (type) {
               commitSequence: 1,
               payload: {
                 event: 'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream7 = [{
@@ -1056,7 +1108,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }, {
               aggregateId: 'idWithAggrAndCont2',
               aggregate: 'myAggrrr2',
@@ -1068,7 +1121,8 @@ types.forEach(function (type) {
               commitSequence: 1,
               payload: {
                 event: 'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream8 = [{
@@ -1082,7 +1136,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream9 = [{
@@ -1096,7 +1151,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event: 'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var stream10 = [{
@@ -1110,7 +1166,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             var allEvents = [].concat(stream1).concat(stream2).concat(stream3)
@@ -2313,7 +2370,8 @@ types.forEach(function (type) {
               commitSequence: 0,
               payload: {
                 event:'bla'
-              }
+              },
+              applyMappings: function () {}
             }, {
               aggregateId: 'id',
               streamRevision: 1,
@@ -2323,7 +2381,8 @@ types.forEach(function (type) {
               commitSequence: 1,
               payload: {
                 event:'bla2'
-              }
+              },
+              applyMappings: function () {}
             }];
 
             beforeEach(function (done) {
