@@ -1,3 +1,6 @@
+#### [v1.11.1](https://github.com/adrai/node-eventstore/compare/v1.11.0...v1.11.1)
+- loop fix for node 0.12.x [#99](https://github.com/adrai/node-eventstore/pull/99) thanks to [pingchen](https://github.com/pingchen)
+
 #### [v1.11.0](https://github.com/adrai/node-eventstore/compare/v1.10.3...v1.11.0)
 - Fix empty array conversion due to Lua json decode [#97](https://github.com/adrai/node-eventstore/pull/97) thanks to [rehia](https://github.com/rehia)
 
