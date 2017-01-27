@@ -345,6 +345,7 @@ create a snapshot point
 
     });
 
+You can automatically clean older snapshots by configuring the number of snapshots to keep with `maxSnapshotsCount` in `eventstore` options.
 
 ## own event dispatching (no event publisher function defined)
 
