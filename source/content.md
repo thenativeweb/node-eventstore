@@ -50,6 +50,7 @@ example with mongodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000                              // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
       // authSource: 'authedicationDatabase',        // optional
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
@@ -67,6 +68,7 @@ example with redis:
       eventsCollectionName: 'events',             // optional
       snapshotsCollectionName: 'snapshots',       // optional
       timeout: 10000                              // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
       // password: 'secret'                          // optional
     });
 
@@ -79,6 +81,7 @@ example with tingodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000                              // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
     });
 
 example with azuretable:
