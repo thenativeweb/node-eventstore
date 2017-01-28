@@ -4,7 +4,7 @@ var expect = require('expect.js'),
   _ = require('lodash'),
   crypto = require('crypto');
 
-var types = ['inmemory', 'tingodb', 'mongodb', 'redis'/*, 'azuretable', 'elasticsearch', 'dynamodb'*/];
+var types = ['inmemory', 'tingodb', 'mongodb', 'redis'/*, 'elasticsearch', 'azuretable', 'dynamodb'*/];
 
 var token = crypto.randomBytes(16).toString('hex');
 
@@ -28,6 +28,7 @@ types.forEach(function (type) {
     describe('creating an instance', function () {
 
       before(function () {
+        options = {};
         if (type === "azuretable" || type === "dynamodb") {
           options = {
               eventsTableName: 'events' + token,
@@ -40,6 +41,7 @@ types.forEach(function (type) {
             db: 3
           };
         }
+        options.maxSnapshotsCount = 5;
         store = new Store(options);
       });
 
@@ -2922,6 +2924,164 @@ types.forEach(function (type) {
 
                 });
 
+              });
+
+            });
+
+          });
+
+          describe('cleaning snapshots', function () {
+
+            describe('having some snapshots in the eventstore calling cleanSnapshot', function () {
+
+              var snap1 = {
+                id: 'rev3',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 405),
+                revision: 3,
+                version: 1,
+                data: {
+                  mySnappi: 'data'
+                }
+              };
+
+              var snap2 = {
+                id: 'rev4',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 410),
+                revision: 4,
+                version: 1,
+                data: {
+                  mySnappi: 'data2'
+                }
+              };
+
+              var snap3 = {
+                id: 'rev5',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 420),
+                revision: 5,
+                version: 1,
+                data: {
+                  mySnappi: 'data3'
+                }
+              };
+
+              var snap4 = {
+                id: 'rev9',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 430),
+                revision: 9,
+                version: 1,
+                data: {
+                  mySnappi: 'data4'
+                }
+              };
+
+              var snap5 = {
+                id: 'rev10',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 440),
+                revision: 10,
+                version: 1,
+                data: {
+                  mySnappi: 'dataXY'
+                }
+              };
+
+              var snap6 = {
+                id: 'rev12',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 450),
+                revision: 12,
+                version: 1,
+                data: {
+                  mySnappi: 'dataaaaa'
+                }
+              };
+
+              var snap7 = {
+                id: 'rev16',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 555),
+                revision: 16,
+                version: 1,
+                data: {
+                  mySnappi: 'dataaaaa2'
+                }
+              };
+
+              var snap8 = {
+                id: 'rev17',
+                aggregateId: '920193847',
+                aggregate: 'myCoolAggregate',
+                context: 'myCoolContext',
+                commitStamp: new Date(Date.now() + 575),
+                revision: 17,
+                version: 1,
+                data: {
+                  mySnappi: 'dataaaaa3'
+                }
+              };
+
+              beforeEach(function (done) {
+                async.series([
+                  function (callback) {
+                    store.addSnapshot(snap1, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap2, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap3, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap4, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap5, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap6, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap7, callback);
+                  },
+                  function (callback) {
+                    store.addSnapshot(snap8, callback);
+                  }
+                ], done);
+              });
+
+              describe('with an aggregateId being used only in one context and aggregate', function () {
+
+                it('it should clean oldest snapshots', function (done) {
+
+                  store.cleanSnapshots({
+                    aggregateId: '920193847',
+                    aggregate: 'myCoolAggregate',
+                    context: 'myCoolContext'
+                  }, function (err, cleanedCount) {
+                    expect(err).not.to.be.ok();
+                    expect(cleanedCount).to.equal(3);
+                    done();
+                  });
+
+                });
               });
 
             });

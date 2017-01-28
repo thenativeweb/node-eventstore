@@ -739,6 +739,75 @@ describe('eventstore', function () {
 
       });
 
+      describe('cleanSnapshots', function () {
+
+        var es = eventstore({
+            maxSnapshotsCount: 5
+          }),
+          orgFunc = es.store.cleanSnapshots,
+          addSnapshot = es.store.addSnapshot;
+
+        before(function (done) {
+          es.store.addSnapshot = function (snap, callback) {
+            callback();
+          };
+          es.init(done);
+        });
+
+        after(function () {
+          es.store.cleanSnapshots = orgFunc;
+          es.store.addSnapshot = addSnapshot;
+        });
+
+        describe('with streamId', function () {
+
+          it('it should pass them correctly', function (done) {
+
+            var obj = {
+              streamId: 'myAggId',
+              aggregate: 'myAgg',
+              context: 'myCont',
+              data: { snap: 'data' }
+            };
+
+            es.store.cleanSnapshots = function (query, callback) {
+              expect(query.aggregateId).to.eql(obj.streamId);
+              expect(query.aggregate).to.eql(obj.aggregate);
+              expect(query.context).to.eql(obj.context);
+              expect(callback).to.be.a('function');
+              callback();
+            };
+
+            es.createSnapshot(obj, done);
+          });
+
+        });
+
+        describe('with options not activated', function () {
+
+          before(function () {
+            es.options.maxSnapshotsCount = 0;
+          });
+
+          it('it should not clean snapshots', function (done) {
+
+            var obj = {
+              streamId: 'myAggId',
+              aggregate: 'myAgg',
+              context: 'myCont',
+              data: { snap: 'data' }
+            };
+
+            es.store.cleanSnapshots = function (query, callback) {
+              callback(new Error('clean snapshots should not have been called'));
+            };
+
+            es.createSnapshot(obj, done);
+          });
+
+        });
+      });
+
       describe('setEventToDispatched', function () {
 
         var es = eventstore(),
