@@ -1,3 +1,6 @@
+#### [v1.12.0](https://github.com/adrai/node-eventstore/compare/v1.11.1...v1.12.0)
+- Clean snapshots automatically whenever activated [#101](https://github.com/adrai/node-eventstore/pull/101) thanks to [rehia](https://github.com/rehia)
+
 #### [v1.11.1](https://github.com/adrai/node-eventstore/compare/v1.11.0...v1.11.1)
 - loop fix for node 0.12.x [#99](https://github.com/adrai/node-eventstore/pull/99) thanks to [pingchen](https://github.com/pingchen)
 

@@ -51,6 +51,7 @@ example with mongodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000                              // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
       // authSource: 'authedicationDatabase',        // optional
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
@@ -68,6 +69,7 @@ example with redis:
       eventsCollectionName: 'events',             // optional
       snapshotsCollectionName: 'snapshots',       // optional
       timeout: 10000                              // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
       // password: 'secret'                          // optional
     });
 
@@ -80,6 +82,7 @@ example with tingodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000                              // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
     });
 
 example with elasticsearch:
@@ -92,6 +95,7 @@ example with elasticsearch:
       snapshotsTypeName: 'snapshots',             // optional
       log: 'warning',                             // optional
       maxSearchResults: 10000                     // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
     });
 
 example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note ``` http-aws-es ``` package usage in this example):
