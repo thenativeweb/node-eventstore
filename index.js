@@ -5,6 +5,21 @@ var Eventstore = require('./lib/eventstore'),
   _ = require('lodash'),
   debug = require('debug')('eventstore');
 
+function exists(toCheck) {
+  var _exists = require('fs').existsSync || require('path').existsSync;
+  if (require('fs').accessSync) {
+    _exists = function (toCheck) {
+      try {
+        require('fs').accessSync(toCheck);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    };
+  }
+  return _exists(toCheck);
+}
+
 function getSpecificStore(options) {
   options = options || {};
 
@@ -18,7 +33,6 @@ function getSpecificStore(options) {
 
   var dbPath = __dirname + "/lib/databases/" + options.type + ".js";
 
-  var exists = require('fs').existsSync || require('path').existsSync;
   if (!exists(dbPath)) {
     var errMsg = 'Implementation for db "' + options.type + '" does not exist!';
     console.log(errMsg);
