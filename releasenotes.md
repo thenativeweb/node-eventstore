@@ -1,3 +1,6 @@
+#### [v1.12.3](https://github.com/adrai/node-eventstore/compare/v1.12.2...v1.12.3)
+- dynamodb: Fixed TypeError [#107](https://github.com/adrai/node-eventstore/pull/107) thanks to [jrutley](https://github.com/jrutley)
+
 #### [v1.12.2](https://github.com/adrai/node-eventstore/compare/v1.12.0...v1.12.2)
 - fix for new mongodb driver
 
