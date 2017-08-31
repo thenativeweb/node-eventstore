@@ -1,3 +1,6 @@
+#### [v1.12.4](https://github.com/adrai/node-eventstore/compare/v1.12.3...v1.12.4)
+- fixing dynamodb DocumentClient initialization [#109](https://github.com/adrai/node-eventstore/pull/109) thanks to [Glockenbeat](https://github.com/Glockenbeat)
+
 #### [v1.12.3](https://github.com/adrai/node-eventstore/compare/v1.12.2...v1.12.3)
 - dynamodb: Fixed TypeError [#107](https://github.com/adrai/node-eventstore/pull/107) thanks to [jrutley](https://github.com/jrutley)
 
