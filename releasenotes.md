@@ -1,3 +1,6 @@
+#### [v1.12.5](https://github.com/adrai/node-eventstore/compare/v1.12.4...v1.12.5)
+- fix DynamoDB concurrency [#110](https://github.com/adrai/node-eventstore/pull/110) thanks to [DannyRyman](https://github.com/DannyRyman)
+
 #### [v1.12.4](https://github.com/adrai/node-eventstore/compare/v1.12.3...v1.12.4)
 - fixing dynamodb DocumentClient initialization [#109](https://github.com/adrai/node-eventstore/pull/109) thanks to [Glockenbeat](https://github.com/Glockenbeat)
 
