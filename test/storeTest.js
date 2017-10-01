@@ -119,19 +119,12 @@ types.forEach(function (type) {
 
         describe('using the store', function () {
 
-          var clearPause = 0;
-
           before(function (done) {
             store.connect(done);
           });
 
           beforeEach(function (done) {
-            store.clear(function (err) {
-              if (type !== 'mongodb') return done(err);
-              setTimeout(function() {
-                done(err);
-              }, clearPause);
-            });
+            store.clear(done);
           });
 
           after(function (done) {
@@ -291,8 +284,6 @@ types.forEach(function (type) {
               if (type === 'mongodb' || type === 'tingodb') {
 
                 describe('failing to save all events', function () {
-
-                  clearPause = 500;
 
                   it('it should successfully handle the transaction', function(done) {
 
@@ -681,8 +672,6 @@ types.forEach(function (type) {
                                     expect(lastEvt.aggregateId).to.eql(event3.aggregateId);
                                     expect(lastEvt.commitId).to.eql(event3.commitId);
                                     expect(lastEvt.payload.event).to.eql(event3.payload.event);
-
-                                    clearPause = 0;
 
                                     done();
                                   });
