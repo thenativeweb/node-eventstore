@@ -124,7 +124,11 @@ types.forEach(function (type) {
           });
 
           beforeEach(function (done) {
-            store.clear(done);
+            store.clear(function (err) {
+              setTimeout(function() {
+                done(err);
+              }, 150);
+            });
           });
 
           after(function (done) {
