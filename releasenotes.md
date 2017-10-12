@@ -1,3 +1,6 @@
+#### [v1.12.6](https://github.com/adrai/node-eventstore/compare/v1.12.5...v1.12.6)
+- try to fix memory leak when calling next page [#112](https://github.com/adrai/node-eventstore/issues/112) thanks to [repkins](https://github.com/repkins)
+
 #### [v1.12.5](https://github.com/adrai/node-eventstore/compare/v1.12.4...v1.12.5)
 - fix DynamoDB concurrency [#110](https://github.com/adrai/node-eventstore/pull/110) thanks to [DannyRyman](https://github.com/DannyRyman)
 
