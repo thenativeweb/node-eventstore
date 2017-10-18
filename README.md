@@ -148,6 +148,8 @@ example with dynamodb:
         UndispatchedEventsReadCapacityUnits: 1,     // optional
         UndispatchedEventsReadCapacityUnits: 1,     // optional
         useUndispatchedEventsTable: true            // optional
+        eventsTableStreamEnabled: false             // optional
+        eventsTableStreamViewType: 'NEW_IMAGE'      // optional
     });
 
 DynamoDB credentials are obtained by eventstore either from environment vars or credentials file. For setup see [AWS Javascript SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
@@ -161,6 +163,8 @@ Or on Windows:
     > set AWS_DYNAMODB_ENDPOINT=http://localhost:8000
 
 The **useUndispatchedEventsTable** option to available for those who prefer to use DyanmoDB.Streams to pull events from the store instead of the UndispatchedEvents table. The default is true. Setting this option to false will result in the UndispatchedEvents table not being created at all, the getUndispatchedEvents method will always return an empty array, and the setEventToDispatched will effectively do nothing.
+
+Refer to [StreamViewType](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_StreamSpecification.html#DDB-Type-StreamSpecification-StreamViewType) for a description of the **eventsTableStreamViewType** option
 
 ## Built-in event publisher (optional)
 
