@@ -1,4 +1,7 @@
 #### [v1.12.7](https://github.com/adrai/node-eventstore/compare/v1.12.6...v1.12.7)
+- Fix sort key/range key ordering in dynamodb events table [#115](https://github.com/adrai/node-eventstore/pull/115) thanks to [chriscosgriff](https://github.com/chriscosgriff)
+
+#### [v1.12.7](https://github.com/adrai/node-eventstore/compare/v1.12.6...v1.12.7)
 - Optionally enable dynamodb stream on the events table [#113](https://github.com/adrai/node-eventstore/pull/113) thanks to [chriscosgriff](https://github.com/chriscosgriff)
 
 #### [v1.12.6](https://github.com/adrai/node-eventstore/compare/v1.12.5...v1.12.6)
