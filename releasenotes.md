@@ -1,3 +1,7 @@
+#116
+#### [v1.12.9](https://github.com/adrai/node-eventstore/compare/v1.12.8...v1.12.9)
+- fixing [#116](https://github.com/adrai/node-eventstore/pull/116) correctly thanks to [wrobel](https://github.com/wrobel)
+
 #### [v1.12.8](https://github.com/adrai/node-eventstore/compare/v1.12.7...v1.12.8)
 - Fix sort key/range key ordering in dynamodb events table [#115](https://github.com/adrai/node-eventstore/pull/115) thanks to [chriscosgriff](https://github.com/chriscosgriff)
 

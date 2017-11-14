@@ -1170,6 +1170,45 @@ describe('eventstore', function () {
 
               });
 
+              describe('requesting all existing events, without query argument and using next function', function () {
+
+                describe('and committing some new events', function () {
+
+                  it('it should work as expected', function (done) {
+
+                    es.getEvents(0, 3, function (err, evts) {
+                      expect(err).not.to.be.ok();
+
+                      expect(evts.length).to.eql(3);
+
+                      expect(evts.next).to.be.a('function');
+
+                      evts.next(function (err, nextEvts) {
+                        expect(err).not.to.be.ok();
+
+                        expect(nextEvts.length).to.eql(3);
+
+                        expect(nextEvts.next).to.be.a('function');
+
+                        nextEvts.next(function (err, nextNextEvts) {
+                          expect(err).not.to.be.ok();
+
+                          expect(nextNextEvts.length).to.eql(2);
+
+                          expect(nextNextEvts.next).to.be.a('function');
+
+                          done();
+                        });
+                      });
+
+                    });
+
+                  });
+
+                });
+
+              });
+
               describe('requesting existing events since a date and using next function', function () {
 
                 describe('and committing some new events', function () {
