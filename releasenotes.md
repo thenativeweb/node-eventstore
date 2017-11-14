@@ -1,4 +1,3 @@
-#116
 #### [v1.12.9](https://github.com/adrai/node-eventstore/compare/v1.12.8...v1.12.9)
 - fixing [#116](https://github.com/adrai/node-eventstore/pull/116) correctly thanks to [wrobel](https://github.com/wrobel)
 
