@@ -1,5 +1,3 @@
-'use strict';
-
 var Eventstore = require('./lib/eventstore'),
   Base = require('./lib/base'),
   _ = require('lodash'),

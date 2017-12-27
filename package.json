@@ -40,7 +40,7 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "async": "2.5.0",
+    "async": "2.6.0",
     "debug": "3.1.0",
     "dotty": "0.0.2",
     "jsondate": "0.0.1",
