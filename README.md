@@ -213,7 +213,7 @@ Define which values should be mapped/copied to the payload event.
 
     // or
 
-    ex.init(); // callback is optional
+    es.init(); // callback is optional
 
 
 ## working with the eventstore
