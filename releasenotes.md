@@ -1,3 +1,6 @@
+#### [v1.13.3](https://github.com/adrai/node-eventstore/compare/v1.13.2...v1.13.3)
+- remove deprecated option max_attempts from redis options
+
 #### [v1.13.2](https://github.com/adrai/node-eventstore/compare/v1.13.0...v1.13.2)
 - Fix concurrency issue in createTableIfNotExists (DynamoDB) [#118](https://github.com/adrai/node-eventstore/pull/118) thanks to [DannyRyman](https://github.com/DannyRyman)
 
