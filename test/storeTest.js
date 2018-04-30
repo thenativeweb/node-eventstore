@@ -3038,53 +3038,92 @@ types.forEach(function (type) {
                 }
               };
 
-              beforeEach(function (done) {
-                async.series([
-                  function (callback) {
-                    store.addSnapshot(snap1, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap2, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap3, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap4, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap5, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap6, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap7, callback);
-                  },
-                  function (callback) {
-                    store.addSnapshot(snap8, callback);
-                  }
-                ], done);
-              });
-
               describe('with an aggregateId being used only in one context and aggregate', function () {
 
-                it('it should clean oldest snapshots', function (done) {
+                describe('having fewer snapshots than the threshold', function() {
 
-                  store.cleanSnapshots({
-                    aggregateId: '920193847',
-                    aggregate: 'myCoolAggregate',
-                    context: 'myCoolContext'
-                  }, function (err, cleanedCount) {
-                    expect(err).not.to.be.ok();
-                    expect(cleanedCount).to.equal(3);
-                    done();
+                  beforeEach(function (done) {
+                    async.series([
+                      function (callback) {
+                        store.addSnapshot(snap1, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap2, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap3, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap4, callback);
+                      }
+                    ], done);
+                  });
+
+                  it('can be called without error', function(done) {
+
+                    store.cleanSnapshots({
+                      aggregateId: '920193847',
+                      aggregate: 'myCoolAggregate',
+                      context: 'myCoolContext'
+                    }, function (err, cleanedCount) {
+                      expect(err).not.to.be.ok();
+                      expect(cleanedCount).to.equal(0);
+                      done();
+                    });
+
+                  })
+                })
+
+                describe('having more snapshots than the threshold', function() {
+
+                  beforeEach(function (done) {
+                    async.series([
+                      function (callback) {
+                        store.addSnapshot(snap1, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap2, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap3, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap4, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap5, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap6, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap7, callback);
+                      },
+                      function (callback) {
+                        store.addSnapshot(snap8, callback);
+                      }
+                    ], done);
+                  });
+
+                  it('it should clean oldest snapshots', function (done) {
+
+                    store.cleanSnapshots({
+                      aggregateId: '920193847',
+                      aggregate: 'myCoolAggregate',
+                      context: 'myCoolContext'
+                    }, function (err, cleanedCount) {
+                      expect(err).not.to.be.ok();
+                      expect(cleanedCount).to.equal(3);
+                      done();
+                    });
+
                   });
 
                 });
+
               });
 
-            });
+            })
 
           });
 
