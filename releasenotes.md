@@ -1,3 +1,6 @@
+#### [v1.13.4](https://github.com/adrai/node-eventstore/compare/v1.13.3...v1.13.4)
+- Fix store.cleanSnapshots for redis implementation [#127](https://github.com/adrai/node-eventstore/pull/127) thanks to [TyGuy](https://github.com/TyGuy)
+
 #### [v1.13.3](https://github.com/adrai/node-eventstore/compare/v1.13.2...v1.13.3)
 - remove deprecated option max_attempts from redis options
 
