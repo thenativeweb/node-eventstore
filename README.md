@@ -5,28 +5,32 @@
 
 The project goal is to provide an eventstore implementation for node.js:
 
-- load and store events via EventStream object
-- event dispatching to your publisher (optional)
-- supported Dbs (inmemory, mongodb, redis, tingodb, elasticsearch, azuretable, dynamodb)
-- snapshot support
-- query your events
+* load and store events via EventStream object
+* event dispatching to your publisher (optional)
+* supported Dbs (inmemory, mongodb, redis, tingodb, elasticsearch, azuretable, dynamodb)
+* snapshot support
+* query your events
 
 # Consumers
 
-- [cqrs-domain](https://github.com/adrai/node-cqrs-domain)
-- [cqrs](https://github.com/leogiese/cqrs)
+* [cqrs-domain](https://github.com/adrai/node-cqrs-domain)
+* [cqrs](https://github.com/leogiese/cqrs)
 
 # Installation
 
+```bash
     npm install eventstore
+```
 
 # Usage
 
 ## Require the module and init the eventstore:
 
-    var eventstore = require('eventstore');
+```javascript
+var eventstore = require("eventstore");
 
-    var es = eventstore();
+var es = eventstore();
+```
 
 By default the eventstore will use an inmemory Storage.
 
@@ -36,70 +40,81 @@ For logging and debugging you can use [debug](https://github.com/visionmedia/deb
 
 simply run your process with
 
+```bash
     DEBUG=eventstore* node app.js
+```
 
 ## Provide implementation for storage
 
 example with mongodb:
 
-    var es = require('eventstore')({
-      type: 'mongodb',
-      host: 'localhost',                          // optional
-      port: 27017,                                // optional
-      dbName: 'eventstore',                       // optional
-      eventsCollectionName: 'events',             // optional
-      snapshotsCollectionName: 'snapshots',       // optional
-      transactionsCollectionName: 'transactions', // optional
-      timeout: 10000                              // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
-      // authSource: 'authedicationDatabase',        // optional
-      // username: 'technicalDbUser',                // optional
-      // password: 'secret'                          // optional
-      // url: 'mongodb://user:pass@host:port/db?opts // optional
-    });
+```javascript
+var es = require("eventstore")({
+  type: "mongodb",
+  host: "localhost", // optional
+  port: 27017, // optional
+  dbName: "eventstore", // optional
+  eventsCollectionName: "events", // optional
+  snapshotsCollectionName: "snapshots", // optional
+  transactionsCollectionName: "transactions", // optional
+  timeout: 10000 // optional
+  // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+  // authSource: 'authedicationDatabase',        // optional
+  // username: 'technicalDbUser',                // optional
+  // password: 'secret'                          // optional
+  // url: 'mongodb://user:pass@host:port/db?opts // optional
+});
+```
 
 example with redis:
 
-    var es = require('eventstore')({
-      type: 'redis',
-      host: 'localhost',                          // optional
-      port: 6379,                                 // optional
-      db: 0,                                      // optional
-      prefix: 'eventstore',                       // optional
-      eventsCollectionName: 'events',             // optional
-      snapshotsCollectionName: 'snapshots',       // optional
-      timeout: 10000                              // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
-      // password: 'secret'                          // optional
-    });
+```javascript
+var es = require("eventstore")({
+  type: "redis",
+  host: "localhost", // optional
+  port: 6379, // optional
+  db: 0, // optional
+  prefix: "eventstore", // optional
+  eventsCollectionName: "events", // optional
+  snapshotsCollectionName: "snapshots", // optional
+  timeout: 10000 // optional
+  // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+  // password: 'secret'                          // optional
+});
+```
 
 example with tingodb:
 
-    var es = require('eventstore')({
-      type: 'tingodb',
-      dbPath: '/path/to/my/db/file',              // optional
-      eventsCollectionName: 'events',             // optional
-      snapshotsCollectionName: 'snapshots',       // optional
-      transactionsCollectionName: 'transactions', // optional
-      timeout: 10000                              // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
-    });
+```javascript
+var es = require("eventstore")({
+  type: "tingodb",
+  dbPath: "/path/to/my/db/file", // optional
+  eventsCollectionName: "events", // optional
+  snapshotsCollectionName: "snapshots", // optional
+  transactionsCollectionName: "transactions", // optional
+  timeout: 10000 // optional
+  // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+});
+```
 
 example with elasticsearch:
 
-    var es = require('eventstore')({
-      type: 'elasticsearch',
-      host: 'localhost:9200',                     // optional
-      indexName: 'eventstore',                    // optional
-      eventsTypeName: 'events',                   // optional
-      snapshotsTypeName: 'snapshots',             // optional
-      log: 'warning',                             // optional
-      maxSearchResults: 10000                     // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
-    });
+```javascript
+var es = require("eventstore")({
+  type: "elasticsearch",
+  host: "localhost:9200", // optional
+  indexName: "eventstore", // optional
+  eventsTypeName: "events", // optional
+  snapshotsTypeName: "snapshots", // optional
+  log: "warning", // optional
+  maxSearchResults: 10000 // optional
+  // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+});
+```
 
-example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note ``` http-aws-es ``` package usage in this example):
+example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note `http-aws-es` package usage in this example):
 
+```javascript
     var elasticsearch = require('elasticsearch');
 
     var esClient = = new elasticsearch.Client({
@@ -120,22 +135,27 @@ example with custom elasticsearch client (e.g. with AWS ElasticSearch client. No
       snapshotsTypeName: 'snapshots',
       log: 'warning',
       maxSearchResults: 10000
-	});
+    });
+```
 
 example with azuretable:
 
-    var es = require('eventstore')({
-      type: 'azuretable',
-      storageAccount: 'nodeeventstore',
-      storageAccessKey: 'aXJaod96t980AbNwG9Vh6T3ewPQnvMWAn289Wft9RTv+heXQBxLsY3Z4w66CI7NN12+1HUnHM8S3sUbcI5zctg==',
-      storageTableHost: 'https://nodeeventstore.table.core.windows.net/',
-      eventsTableName: 'events',             // optional
-      snapshotsTableName: 'snapshots',       // optional
-      timeout: 10000                              // optional
-    });
+```javascript
+var es = require("eventstore")({
+  type: "azuretable",
+  storageAccount: "nodeeventstore",
+  storageAccessKey:
+    "aXJaod96t980AbNwG9Vh6T3ewPQnvMWAn289Wft9RTv+heXQBxLsY3Z4w66CI7NN12+1HUnHM8S3sUbcI5zctg==",
+  storageTableHost: "https://nodeeventstore.table.core.windows.net/",
+  eventsTableName: "events", // optional
+  snapshotsTableName: "snapshots", // optional
+  timeout: 10000 // optional
+});
+```
 
 example with dynamodb:
 
+```javascript
     var es = require('eventstore')({
         type: 'dynamodb',
         eventsTableName: 'events',                  // optional
@@ -151,16 +171,21 @@ example with dynamodb:
         eventsTableStreamEnabled: false             // optional
         eventsTableStreamViewType: 'NEW_IMAGE'      // optional
     });
+```
 
 DynamoDB credentials are obtained by eventstore either from environment vars or credentials file. For setup see [AWS Javascript SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
 
 DynamoDB provider supports [DynamoDB local](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.html) for local development via the AWS SDK `endpoint` option. Just set the `$AWS_DYNAMODB_ENDPOINT` (or `%AWS_DYNAMODB_ENDPOINT%` in Windows) environment variable to point to your running instance of Dynamodb local like this:
 
+```bash
     $ export AWS_DYNAMODB_ENDPOINT=http://localhost:8000
+```
 
 Or on Windows:
 
+```bash
     > set AWS_DYNAMODB_ENDPOINT=http://localhost:8000
+```
 
 The **useUndispatchedEventsTable** option to available for those who prefer to use DyanmoDB.Streams to pull events from the store instead of the UndispatchedEvents table. The default is true. Setting this option to false will result in the UndispatchedEvents table not being created at all, the getUndispatchedEvents method will always return an empty array, and the setEventToDispatched will effectively do nothing.
 
@@ -172,71 +197,86 @@ if defined the eventstore will try to publish AND set event do dispatched on its
 
 ### sync interface
 
-    es.useEventPublisher(function(evt) {
-      // bus.emit('event', evt);
-    });
+```javascript
+es.useEventPublisher(function(evt) {
+  // bus.emit('event', evt);
+});
+```
 
 ### async interface
 
-    es.useEventPublisher(function(evt, callback) {
-      // bus.sendAndWaitForAck('event', evt, callback);
-    });
-
+```javascript
+es.useEventPublisher(function(evt, callback) {
+  // bus.sendAndWaitForAck('event', evt, callback);
+});
+```
 
 ## catch connect and disconnect events
 
-    es.on('connect', function() {
-      console.log('storage connected');
-    });
+```javascript
+es.on("connect", function() {
+  console.log("storage connected");
+});
 
-    es.on('disconnect', function() {
-      console.log('connection to storage is gone');
-    });
-
+es.on("disconnect", function() {
+  console.log("connection to storage is gone");
+});
+```
 
 ## define event mappings [optional]
+
 Define which values should be mapped/copied to the payload event.
 
-    es.defineEventMappings({
-      id: 'id',
-      commitId: 'commitId',
-      commitSequence: 'commitSequence',
-      commitStamp: 'commitStamp',
-      streamRevision: 'streamRevision'
-    });
+```javascript
+es.defineEventMappings({
+  id: "id",
+  commitId: "commitId",
+  commitSequence: "commitSequence",
+  commitStamp: "commitStamp",
+  streamRevision: "streamRevision"
+});
+```
 
 ## initialize
 
-    es.init(function (err) {
-      // this callback is called when all is ready...
-    });
+```javascript
+es.init(function(err) {
+  // this callback is called when all is ready...
+});
 
-    // or
+// or
 
-    es.init(); // callback is optional
-
+es.init(); // callback is optional
+```
 
 ## working with the eventstore
 
 ### get the eventhistory (of an aggregate)
 
-    es.getEventStream('streamId', function(err, stream) {
-      var history = stream.events; // the original event will be in events[i].payload
+```javascript
+es.getEventStream("streamId", function(err, stream) {
+  var history = stream.events; // the original event will be in events[i].payload
 
-      // myAggregate.loadFromHistory(history);
-    });
+  // myAggregate.loadFromHistory(history);
+});
+```
 
 or
 
-    es.getEventStream({
-      aggregateId: 'myAggregateId',
-      aggregate: 'person',          // optional
-      context: 'hr'                 // optional
-    }, function(err, stream) {
-      var history = stream.events; // the original event will be in events[i].payload
+```javascript
+es.getEventStream(
+  {
+    aggregateId: "myAggregateId",
+    aggregate: "person", // optional
+    context: "hr" // optional
+  },
+  function(err, stream) {
+    var history = stream.events; // the original event will be in events[i].payload
 
-      // myAggregate.loadFromHistory(history);
-    });
+    // myAggregate.loadFromHistory(history);
+  }
+);
+```
 
 'streamId' and 'aggregateId' are the same...
 In ddd terms aggregate and context are just to be more precise in language.
@@ -245,76 +285,101 @@ So you can have 2 complete different aggregate instances of 2 complete different
 
 you can request an eventstream even by limit the query with a 'minimum revision number' and a 'maximum revision number'
 
-    var revMin = 5,
-        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
+```javascript
+var revMin = 5,
+  revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
 
-    es.getEventStream('streamId' || {/* query */}, revMin, revMax, function(err, stream) {
-      var history = stream.events; // the original event will be in events[i].payload
+es.getEventStream(
+  "streamId" ||
+    {
+      /* query */
+    },
+  revMin,
+  revMax,
+  function(err, stream) {
+    var history = stream.events; // the original event will be in events[i].payload
 
-      // myAggregate.loadFromHistory(history);
-    });
+    // myAggregate.loadFromHistory(history);
+  }
+);
+```
 
 store a new event and commit it to store
 
-    es.getEventStream('streamId', function(err, stream) {
-      stream.addEvent({ my: 'event' });
-      stream.addEvents([{ my: 'event2' }]);
+```javascript
+es.getEventStream("streamId", function(err, stream) {
+  stream.addEvent({ my: "event" });
+  stream.addEvents([{ my: "event2" }]);
 
-      stream.commit();
+  stream.commit();
 
-      // or
+  // or
 
-      stream.commit(function(err, stream) {
-        console.log(stream.eventsToDispatch); // this is an array containing all added events in this commit.
-      });
-    });
+  stream.commit(function(err, stream) {
+    console.log(stream.eventsToDispatch); // this is an array containing all added events in this commit.
+  });
+});
+```
 
 if you defined an event publisher function the committed event will be dispatched to the provided publisher
 
 if you just want to load the last event as stream you can call getLastEventAsStream instead of ´getEventStream´.
 
-
 ## working with snapshotting
 
 get snapshot and eventhistory from the snapshot point
 
-    es.getFromSnapshot('streamId', function(err, snapshot, stream) {
-      var snap = snapshot.data;
-      var history = stream.events; // events history from given snapshot
+```javascript
+es.getFromSnapshot("streamId", function(err, snapshot, stream) {
+  var snap = snapshot.data;
+  var history = stream.events; // events history from given snapshot
 
-      // myAggregate.loadSnapshot(snap);
-      // myAggregate.loadFromHistory(history);
-    });
+  // myAggregate.loadSnapshot(snap);
+  // myAggregate.loadFromHistory(history);
+});
 
-or
+//or
 
-    es.getFromSnapshot({
-      aggregateId: 'myAggregateId',
-      aggregate: 'person',          // optional
-      context: 'hr'                 // optional
-    }, function(err, snapshot, stream) {
-      var snap = snapshot.data;
-      var history = stream.events; // events history from given snapshot
+es.getFromSnapshot(
+  {
+    aggregateId: "myAggregateId",
+    aggregate: "person", // optional
+    context: "hr" // optional
+  },
+  function(err, snapshot, stream) {
+    var snap = snapshot.data;
+    var history = stream.events; // events history from given snapshot
 
-      // myAggregate.loadSnapshot(snap);
-      // myAggregate.loadFromHistory(history);
-    });
+    // myAggregate.loadSnapshot(snap);
+    // myAggregate.loadFromHistory(history);
+  }
+);
+```
 
 you can request a snapshot and an eventstream even by limit the query with a 'maximum revision number'
 
-    var revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
+```javascript
+var revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
 
-    es.getFromSnapshot('streamId' || {/* query */}, revMax, function(err, stream) {
-      var snap = snapshot.data;
-      var history = stream.events; // events history from given snapshot
+es.getFromSnapshot(
+  "streamId" ||
+    {
+      /* query */
+    },
+  revMax,
+  function(err, stream) {
+    var snap = snapshot.data;
+    var history = stream.events; // events history from given snapshot
 
-      // myAggregate.loadSnapshot(snap);
-      // myAggregate.loadFromHistory(history);
-    });
-
+    // myAggregate.loadSnapshot(snap);
+    // myAggregate.loadFromHistory(history);
+  }
+);
+```
 
 create a snapshot point
 
+```javascript
     es.getFromSnapshot('streamId', function(err, snapshot, stream) {
 
       var snap = snapshot.data;
@@ -352,130 +417,150 @@ create a snapshot point
       // stream.addEvents...
 
     });
+```
 
 You can automatically clean older snapshots by configuring the number of snapshots to keep with `maxSnapshotsCount` in `eventstore` options.
 
 ## own event dispatching (no event publisher function defined)
 
-    es.getUndispatchedEvents(function(err, evts) {
-    // or es.getUndispatchedEvents('streamId', function(err, evts) {
-    // or es.getUndispatchedEvents({ // free choice (all, only context, only aggregate, only aggregateId...)
-    //                                context: 'hr',
-    //                                aggregate: 'person',
-    //                                aggregateId: 'uuid'
-    //                              }, function(err, evts) {
+```javascript
+es.getUndispatchedEvents(function(err, evts) {
+  // or es.getUndispatchedEvents('streamId', function(err, evts) {
+  // or es.getUndispatchedEvents({ // free choice (all, only context, only aggregate, only aggregateId...)
+  //                                context: 'hr',
+  //                                aggregate: 'person',
+  //                                aggregateId: 'uuid'
+  //                              }, function(err, evts) {
 
-      // all undispatched events
-      console.log(evts);
+  // all undispatched events
+  console.log(evts);
 
-      // dispatch it and set the event as dispatched
+  // dispatch it and set the event as dispatched
 
-      for (var e in evts) {
-        var evt = evts[r];
-        es.setEventToDispatched(evt, function(err) {});
-        // or
-        es.setEventToDispatched(evt.id, function(err) {});
-      }
-
-    });
-
+  for (var e in evts) {
+    var evt = evts[r];
+    es.setEventToDispatched(evt, function(err) {});
+    // or
+    es.setEventToDispatched(evt.id, function(err) {});
+  }
+});
+```
 
 ## query your events
+
 for replaying your events or for rebuilding a viewmodel or just for fun...
 
 skip, limit always optional
 
-    var skip = 0,
-        limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
+```javascript
+var skip = 0,
+  limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
 
-    es.getEvents(skip, limit, function(err, evts) {
-      // if (events.length === amount) {
-      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
-      // } else {
-      //   // finished...
-      // }
-    });
+es.getEvents(skip, limit, function(err, evts) {
+  // if (events.length === amount) {
+  //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+  // } else {
+  //   // finished...
+  // }
+});
 
-    // or
+// or
 
-    es.getEvents('streamId', skip, limit, function(err, evts) {
-      // if (events.length === amount) {
-      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
-      // } else {
-      //   // finished...
-      // }
-    });
+es.getEvents("streamId", skip, limit, function(err, evts) {
+  // if (events.length === amount) {
+  //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+  // } else {
+  //   // finished...
+  // }
+});
 
-    // or
+// or
 
-    es.getEvents({ // free choice (all, only context, only aggregate, only aggregateId...)
-      context: 'hr',
-      aggregate: 'person',
-      aggregateId: 'uuid'
-    }, skip, limit, function(err, evts) {
-      // if (events.length === amount) {
-      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
-      // } else {
-      //   // finished...
-      // }
-    });
+es.getEvents(
+  {
+    // free choice (all, only context, only aggregate, only aggregateId...)
+    context: "hr",
+    aggregate: "person",
+    aggregateId: "uuid"
+  },
+  skip,
+  limit,
+  function(err, evts) {
+    // if (events.length === amount) {
+    //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+    // } else {
+    //   // finished...
+    // }
+  }
+);
+```
 
 by revision
 
 revMin, revMax always optional
 
-    var revMin = 5,
-        revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
+```javascript
+var revMin = 5,
+  revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
 
-    es.getEventsByRevision('streamId', revMin, revMax, function(err, evts) {});
+es.getEventsByRevision("streamId", revMin, revMax, function(err, evts) {});
 
-    // or
+// or
 
-    es.getEventsByRevision({
-      aggregateId: 'myAggregateId',
-      aggregate: 'person',          // optional
-      context: 'hr'                 // optional
-    }, revMin, revMax, function(err, evts) {});
+es.getEventsByRevision(
+  {
+    aggregateId: "myAggregateId",
+    aggregate: "person", // optional
+    context: "hr" // optional
+  },
+  revMin,
+  revMax,
+  function(err, evts) {}
+);
+```
 
 by commitStamp
 
 skip, limit always optional
 
-    var skip = 0,
-        limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
+```javascript
+var skip = 0,
+  limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
 
-    es.getEventsSince(new Date(2015, 5, 23), skip, limit, function(err, evts) {
-      // if (events.length === amount) {
-      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
-      // } else {
-      //   // finished...
-      // }
-    });
+es.getEventsSince(new Date(2015, 5, 23), skip, limit, function(err, evts) {
+  // if (events.length === amount) {
+  //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+  // } else {
+  //   // finished...
+  // }
+});
 
-    // or
+// or
 
-    es.getEventsSince(new Date(2015, 5, 23), limit, function(err, evts) {
-      // if (events.length === amount) {
-      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
-      // } else {
-      //   // finished...
-      // }
-    });
+es.getEventsSince(new Date(2015, 5, 23), limit, function(err, evts) {
+  // if (events.length === amount) {
+  //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+  // } else {
+  //   // finished...
+  // }
+});
 
-    // or
+// or
 
-    es.getEventsSince(new Date(2015, 5, 23), function(err, evts) {
-      // if (events.length === amount) {
-      //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
-      // } else {
-      //   // finished...
-      // }
-    });
-
+es.getEventsSince(new Date(2015, 5, 23), function(err, evts) {
+  // if (events.length === amount) {
+  //   events.next(function (err, nextEvts) {}); // just call next to retrieve the next page...
+  // } else {
+  //   // finished...
+  // }
+});
+```
 
 ## get the last event
+
 for example to obtain the last revision nr
 
+```javascript
     es.getLastEvent('streamId', function(err, evt) {
     });
 
@@ -487,112 +572,120 @@ for example to obtain the last revision nr
       aggregateId: 'uuid'
     } function(err, evt) {
     });
-
+```
 
 ## obtain a new id
 
-    es.getNewId(function(err, newId) {
-      if(err) {
-        console.log('ohhh :-(');
-        return;
-      }
+```javascript
+es.getNewId(function(err, newId) {
+  if (err) {
+    console.log("ohhh :-(");
+    return;
+  }
 
-      console.log('the new id is: ' + newId);
-    });
-
+  console.log("the new id is: " + newId);
+});
+```
 
 ## special scaling handling with mongodb
+
 Inserting multiple events (documents) in mongodb, is not atomic.
 For the eventstore tries to repair itself when calling `getEventsByRevision`.
 But if you want you can trigger this from outside:
 
-    es.store.getPendingTransactions(function(err, txs) {
-      if(err) {
-        console.log('ohhh :-(');
+```javascript
+es.store.getPendingTransactions(function(err, txs) {
+  if (err) {
+    console.log("ohhh :-(");
+    return;
+  }
+
+  // txs is an array of objects like:
+  // {
+  //   _id: '/* the commitId of the committed event stream */',
+  //   events: [ /* all events of the committed event stream */ ],
+  //   aggregateId: 'aggregateId',
+  //   aggregate: 'aggregate', // optional
+  //   context: 'context'      // optional
+  // }
+
+  es.store.getLastEvent(
+    {
+      aggregateId: txs[0].aggregateId,
+      aggregate: txs[0].aggregate, // optional
+      context: txs[0].context // optional
+    },
+    function(err, lastEvent) {
+      if (err) {
+        console.log("ohhh :-(");
         return;
       }
 
-      // txs is an array of objects like:
-      // {
-      //   _id: '/* the commitId of the committed event stream */',
-      //   events: [ /* all events of the committed event stream */ ],
-      //   aggregateId: 'aggregateId',
-      //   aggregate: 'aggregate', // optional
-      //   context: 'context'      // optional
-      // }
-
-      es.store.getLastEvent({
-        aggregateId: txs[0].aggregateId,
-        aggregate: txs[0].aggregate, // optional
-        context: txs[0].context      // optional
-      }, function (err, lastEvent) {
-        if(err) {
-          console.log('ohhh :-(');
+      es.store.repairFailedTransaction(lastEvent, function(err) {
+        if (err) {
+          console.log("ohhh :-(");
           return;
         }
 
-        es.store.repairFailedTransaction(lastEvent, function (err) {
-          if(err) {
-            console.log('ohhh :-(');
-            return;
-          }
-
-          console.log('everything is fine');
-        });
+        console.log("everything is fine");
       });
-    });
-
-
+    }
+  );
+});
+```
 
 # Sample Integration
 
-- [nodeCQRS](https://github.com/jamuhl/nodeCQRS) A CQRS sample integrating eventstore
+* [nodeCQRS](https://github.com/jamuhl/nodeCQRS) A CQRS sample integrating eventstore
 
 # Inspiration
 
-- Jonathan Oliver's [EventStore](https://github.com/joliver/EventStore) for .net.
+* Jonathan Oliver's [EventStore](https://github.com/joliver/EventStore) for .net.
 
 #[Release notes](https://github.com/adrai/node-eventstore/blob/master/releasenotes.md)
 
 # Database Support
+
 Currently these databases are supported:
 
-1. inmemory
-2. mongodb ([node-mongodb-native](https://github.com/mongodb/node-mongodb-native))
-3. redis ([redis](https://github.com/mranney/node_redis))
-4. tingodb ([tingodb](https://github.com/sergeyksv/tingodb))
-5. azuretable ([azure-storage](https://github.com/Azure/azure-storage-node))
-6. dynamodb ([aws-sdk](https://github.com/aws/aws-sdk-js))
+1.  inmemory
+2.  mongodb ([node-mongodb-native](https://github.com/mongodb/node-mongodb-native))
+3.  redis ([redis](https://github.com/mranney/node_redis))
+4.  tingodb ([tingodb](https://github.com/sergeyksv/tingodb))
+5.  azuretable ([azure-storage](https://github.com/Azure/azure-storage-node))
+6.  dynamodb ([aws-sdk](https://github.com/aws/aws-sdk-js))
 
 ## own db implementation
+
 You can use your own db implementation by extending this...
 
-    var Store = require('eventstore').Store,
-        util = require('util'),
-        _ = require('lodash');
+```javascript
+var Store = require("eventstore").Store,
+  util = require("util"),
+  _ = require("lodash");
 
-    function MyDB(options) {
-      options = options || {};
-      Store.call(this, options);
-    }
+function MyDB(options) {
+  options = options || {};
+  Store.call(this, options);
+}
 
-    util.inherits(MyDB, Store);
+util.inherits(MyDB, Store);
 
-    _.extend(MyDB.prototype, {
+_.extend(MyDB.prototype, {
+  // ...
+});
 
-      // ...
-
-    });
-
-    module.exports = MyDB;
+module.exports = MyDB;
+```
 
 and you can use it in this way
 
-    var es = require('eventstore')({
-      type: MyDB
-    });
-    // es.init...
-
+```javascript
+var es = require("eventstore")({
+  type: MyDB
+});
+// es.init...
+```
 
 # License
 
