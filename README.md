@@ -485,8 +485,13 @@ skip, limit always optional
     // or
     var stream = es.streamEvents('streamId', skip, limit);
     // or by commitstamp
-    var stream = es.streamEEventsSince(new Date(2015, 5, 23), skip, limit);
-
+    var stream = es.streamEventsSince(new Date(2015, 5, 23), skip, limit);
+    // or by revision
+    var stream = es.streamEventsByRevision({
+      aggregateId: 'myAggregateId',
+      aggregate: 'person',
+      context: 'hr',
+    });
 
     stream.on('data', function(e) {
       doSomethingWithEvent(e);
