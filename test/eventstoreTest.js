@@ -65,6 +65,7 @@ describe('eventstore', function () {
         expect(es).to.be.a('object');
         expect(es.useEventPublisher).to.be.a('function');
         expect(es.init).to.be.a('function');
+        expect(es.streamEvents).to.be.a('function');
         expect(es.getEvents).to.be.a('function');
         expect(es.getEventsByRevision).to.be.a('function');
         expect(es.getEventStream).to.be.a('function');
@@ -871,6 +872,7 @@ describe('eventstore', function () {
     describe('with options containing a type property with the value of', function () {
 
       var types = ['inmemory', 'tingodb', 'mongodb', 'redis'/*, 'elasticsearch', 'azuretable', 'dynamodb'*/];
+      var streamingApiTypes = ['mongodb'];
 
       var token = crypto.randomBytes(16).toString('hex');
 
@@ -1502,6 +1504,64 @@ describe('eventstore', function () {
                 });
 
               });
+
+              if (streamingApiTypes.indexOf(type) !== -1) {
+                describe('streaming api', function () {
+                  describe('streaming existing events', function () {                
+                    describe('and committing some new events', function () {
+                      it('it should work as expected', function (done) {
+
+                        var evts = [];
+                        var stream = es.streamEvents({ aggregate: 'myAgg', context: 'myCont' }, 0, 3);
+                        stream.on('data', function (e) {
+                          evts.push(e);
+                        });
+                        stream.on('end', function(){
+                          expect(evts.length).to.eql(3);
+                          done();
+                        });
+
+                      });
+
+                    });
+
+                  });
+                  describe('streaming all existing events, without query argument', function () {
+                    describe('and committing some new events', function () {
+                      it('it should work as expected', function (done) {
+
+                        var evts = [];
+                        var stream =  es.streamEvents(0, 3);
+                        stream.on('data', function (e) {
+                          evts.push(e);
+                        });
+                        stream.on('end', function(){
+                          expect(evts.length).to.eql(3);
+                          done();
+                        });
+
+                      });
+                    });
+                  });
+      
+                  describe('requesting existing events since a date and using next function', function () {
+                    describe('and committing some new events', function () {
+                      it('it should work as expected', function (done) {
+                        var evts = [];
+                        var stream =  es.streamEventsSince(new Date(2000, 1, 1), 0, 3);
+                        stream.on('data', function (e) {
+                          evts.push(e);
+                        });
+                        stream.on('end', function(){
+                          expect(evts.length).to.eql(3);
+                          done();
+                        });
+                      });
+                    });
+                  });
+                });                    
+              }
+
 
             });
 
