@@ -473,6 +473,37 @@ skip, limit always optional
     });
 
 
+## streaming your events
+Some databases support streaming your events, the api is similar to the query one
+
+skip, limit always optional
+
+    var skip = 0,
+        limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
+
+    var stream = es.streamEvents(skip, limit);
+    // or
+    var stream = es.streamEvents('streamId', skip, limit);
+    // or by commitstamp
+    var stream = es.streamEEventsSince(new Date(2015, 5, 23), skip, limit);
+
+
+    stream.on('data', function(e) {
+      doSomethingWithEvent(e);
+    });
+
+    stream.on('end', function() {
+      console.log('no more evets');
+    });
+
+    // or even better
+    stream.pipe(myWritableStream);
+
+
+currently supported by:
+
+1. mongodb
+
 ## get the last event
 for example to obtain the last revision nr
 
@@ -541,7 +572,6 @@ But if you want you can trigger this from outside:
         });
       });
     });
-
 
 
 # Sample Integration
