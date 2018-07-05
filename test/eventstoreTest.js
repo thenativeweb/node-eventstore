@@ -28,6 +28,9 @@ describe('eventstore', function () {
         expect(es).to.be.a('object');
         expect(es.useEventPublisher).to.be.a('function');
         expect(es.init).to.be.a('function');
+        expect(es.streamEvents).to.be.a('function');
+        expect(es.streamEventsSince).to.be.a('function');
+        expect(es.streamEventsByRevision).to.be.a('function');
         expect(es.getEvents).to.be.a('function');
         expect(es.getEventsSince).to.be.a('function');
         expect(es.getEventsByRevision).to.be.a('function');
@@ -1544,7 +1547,7 @@ describe('eventstore', function () {
                     });
                   });
       
-                  describe('requesting existing events since a date and using next function', function () {
+                  describe('requesting existing events since a date', function () {
                     describe('and committing some new events', function () {
                       it('it should work as expected', function (done) {
                         var evts = [];
@@ -1559,6 +1562,23 @@ describe('eventstore', function () {
                       });
                     });
                   });
+                  describe('requesting existing events by revision', function () {
+                    describe('and committing some new events', function () {
+                      it('it should work as expected', function (done) {
+                        var evts = [];
+                        var stream =  es.streamEventsByRevision('myAggId2', 0, 3);
+                        stream.on('data', function (e) {
+                          console.log('mitkot');
+                          evts.push(e);
+                        });
+                        stream.on('end', function(){
+                          expect(evts.length).to.eql(3);
+                          done();
+                        });
+                      });
+                    });
+                  });
+
                 });                    
               }
 
