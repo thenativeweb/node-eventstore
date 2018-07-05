@@ -1,5 +1,5 @@
 #### [v1.14.0](https://github.com/adrai/node-eventstore/compare/v1.13.4...v1.14.0)
-- Fix store.cleanSnapshots for redis implementation [#127](https://github.com/adrai/node-eventstore/pull/127) thanks to [TyGuy](https://github.com/TyGuy)
+- Introduce stream API for getEvents and getEventsSince and add mongodb implementation [nanov](https://github.com/nanov)
 
 #### [v1.13.4](https://github.com/adrai/node-eventstore/compare/v1.13.3...v1.13.4)
 - Fix store.cleanSnapshots for redis implementation [#127](https://github.com/adrai/node-eventstore/pull/127) thanks to [TyGuy](https://github.com/TyGuy)
