@@ -1,3 +1,6 @@
+#### [v1.14.0](https://github.com/adrai/node-eventstore/compare/v1.13.4...v1.14.0)
+- Fix store.cleanSnapshots for redis implementation [#127](https://github.com/adrai/node-eventstore/pull/127) thanks to [TyGuy](https://github.com/TyGuy)
+
 #### [v1.13.4](https://github.com/adrai/node-eventstore/compare/v1.13.3...v1.13.4)
 - Fix store.cleanSnapshots for redis implementation [#127](https://github.com/adrai/node-eventstore/pull/127) thanks to [TyGuy](https://github.com/TyGuy)
 
