@@ -2167,6 +2167,36 @@ types.forEach(function (type) {
 
                   });
 
+                  if (type === 'redis') {
+                    describe('when events do not start at revision 0', function () {
+
+                      it('should return the events specified by the revMin and revMax', function (done) {
+
+                        var firstEventMatcher = options.prefix + ':' + options.eventsCollectionName + ':*:*:*:*:' + 'idWithAgg' + ':*:0'
+                        var revMin = 1
+                        var revMax = 2
+
+                        store.client.keys(firstEventMatcher, (err, keys) => {
+                          if (err) { console.log(err) }
+
+                          store.client.del(keys[0], (err, keysDeleted) => {
+                            expect(keysDeleted).to.equal(1)
+
+                            store.getEventsByRevision({ aggregateId: 'idWithAgg' }, revMin, revMax, function (err, evts) {
+                              expect(err).not.to.be.ok();
+                              expect(evts.length).to.eql(1);
+                              expect(evts[0].aggregateId).to.eql(stream2[1].aggregateId);
+                              expect(evts[0].commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
+                              expect(evts[0].streamRevision).to.eql(stream2[1].streamRevision);
+
+                              done();
+                            });
+                          })
+                        })
+                      })
+                    })
+                  }
+
                 });
 
               });
@@ -2283,7 +2313,7 @@ types.forEach(function (type) {
 
                 });
 
-                describe('and limit it with skip and limit', function () {
+                describe('and limit it with revMin and revMax', function () {
 
                   it('it should return the correct events', function (done) {
 
