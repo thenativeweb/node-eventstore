@@ -1,3 +1,6 @@
+#### [v1.14.2](https://github.com/adrai/node-eventstore/compare/v1.40.1...v1.14.2)
+- add non-breaking, optional position in store option for mongodb and inmemory implementations
+
 #### [v1.14.1](https://github.com/adrai/node-eventstore/compare/v1.40.0...v1.14.1)
 - add streamEventsByRevision method to the streaming api thanks to [nanov](https://github.com/nanov)
 
