@@ -56,6 +56,7 @@ example with mongodb:
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
       // url: 'mongodb://user:pass@host:port/db?opts // optional
+      // positionsCollectionName: 'positions' // optioanl, defaultly wont keep position
     });
 
 example with redis:
@@ -536,6 +537,14 @@ for example to obtain the last revision nr
       console.log('the new id is: ' + newId);
     });
 
+## position of event in store
+
+  some db implementations support writing the position of the event in the whole store additional to the streamRevision.
+
+  currently those implementations support this:
+
+  1. inmemory ( by setting ```trackPosition`` option )
+  2. mongodb ( by setting ```positionsCollectionName``` option)
 
 ## special scaling handling with mongodb
 Inserting multiple events (documents) in mongodb, is not atomic.
