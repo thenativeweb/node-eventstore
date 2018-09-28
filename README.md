@@ -543,8 +543,8 @@ for example to obtain the last revision nr
 
   currently those implementations support this:
 
-  1. inmemory ( by setting ```trackPosition`` option )
-  2. mongodb ( by setting ```positionsCollectionName``` option)
+  *. inmemory ( by setting ```trackPosition`` option )
+  *. mongodb ( by setting ```positionsCollectionName``` option)
 
 ## special scaling handling with mongodb
 Inserting multiple events (documents) in mongodb, is not atomic.
