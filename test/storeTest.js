@@ -3127,10 +3127,102 @@ types.forEach(function (type) {
 
           });
 
+          if (type === "mongodb" || type === "inmemory") {
+            var positionstore = new Store({
+              positionsCollectionName: 'positions',
+              trackPosition: true,
+            });
+    
+            describe('adding position number', function(done) {
+              beforeEach(function (done) {
+                positionstore.connect(done);
+              });
+
+              afterEach(function (done) {
+                positionstore.clear(done);
+              });              
+              describe('with one event in the array', function () {
+
+                it('it should save the event with position', function(done) {
+  
+                  var event = {
+                    aggregateId: 'id1',
+                    id: '111',
+                    streamRevision: 0,
+                    commitId: '111',
+                    commitStamp: new Date(),
+                    commitSequence: 0,
+                    payload: {
+                      event:'bla',
+                      array: []
+                    },
+                    applyMappings: function () {}
+                  };
+  
+                  positionstore.addEvents([event], function(err) {
+                    expect(err).not.to.be.ok();
+  
+                    positionstore.getEvents({}, 0, -1, function(err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts[0].position).to.eql(1);
+                      done();
+                    });
+                  });
+  
+                });
+  
+              });
+  
+              describe('with multiple events in the array', function () {
+  
+                it('it should save the events with positions', function(done) {
+  
+                  var event1 = {
+                    aggregateId: 'id2',
+                    streamRevision: 0,
+                    id: '112',
+                    commitId: '987',
+                    commitStamp: new Date(Date.now() + 1),
+                    commitSequence: 0,
+                    restInCommitStream: 1,
+                    payload: {
+                      event:'bla'
+                    },
+                    applyMappings: function () {}
+                  };
+  
+                  var event2 = {
+                    aggregateId: 'id2',
+                    streamRevision: 1,
+                    id:'113',
+                    commitId: '987',
+                    commitStamp: new Date(Date.now() + 1),
+                    commitSequence: 1,
+                    restInCommitStream: 0,
+                    payload: {
+                      event:'bla2'
+                    },
+                    applyMappings: function () {}
+                  };
+  
+                  positionstore.addEvents([event1, event2], function(err) {
+                    expect(err).not.to.be.ok();
+  
+                    positionstore.getEvents({}, 0, -1, function(err, evts) {
+                      expect(err).not.to.be.ok();
+                      expect(evts).to.be.an('array');
+                      expect(evts).to.have.length(2);
+                      expect(evts[0].position).to.eql(1);
+                      expect(evts[1].position).to.eql(2);
+                      done();
+                    });
+                  });
+                });
+              });
+            });
+          }
         });
-
       });
-
     });
 
   });
