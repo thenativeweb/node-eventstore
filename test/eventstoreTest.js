@@ -876,6 +876,7 @@ describe('eventstore', function () {
 
       var types = ['inmemory', 'tingodb', 'mongodb', 'redis'/*, 'elasticsearch', 'azuretable', 'dynamodb'*/];
       var streamingApiTypes = ['mongodb'];
+      var positionTypes = ['mongodb', 'inmemory'];
 
       var token = crypto.randomBytes(16).toString('hex');
 
@@ -1582,7 +1583,62 @@ describe('eventstore', function () {
                 });                    
               }
 
+              if (positionTypes.indexOf(type) !== -1) {
+                describe('setting event position option', function() {
+                  beforeEach(function (done) {
+                    es = eventstore({
+                      type: type,
+                      positionsCollectionName: 'positions',
+                      trackPosition: true,
+                    });
+                    es.defineEventMappings({ commitStamp: 'head.position' });
+                    es.init(function(err) {
+                      es.store.clear(done);
+                    });
+                  });
+    
+                  afterEach(function (done) {
+                    es.store.clear(done);
+                  });
 
+                  it('it should save the event with position', function(done) {
+                    es.getEventStream('streamIdWithPosition', function (err, stream) {
+                      expect(err).not.to.be.ok();
+                      stream.addEvent({ one: 'event' });
+                      stream.addEvent({ one: 'event-other' });
+          
+                      stream.commit(function (err, st) {
+                        expect(err).not.to.be.ok();
+          
+                        expect(st.events.length).to.eql(2);
+                        expect(st.events[0].position).to.eql(1);
+                        expect(st.events[1].position).to.eql(2);
+          
+                        done();
+                      });
+                    });
+                  });
+
+                  it('it should map position to payload', function(done) {
+                    es.getEventStream('streamIdWithPosition', function (err, stream) {
+                      expect(err).not.to.be.ok();
+                      stream.addEvent({ one: 'event' });
+                      stream.addEvent({ one: 'event-other' });
+          
+                      stream.commit(function (err, st) {
+                        expect(err).not.to.be.ok();
+          
+                        expect(st.events.length).to.eql(2);
+                        expect(st.events[0].payload.head.position).to.eql(1);
+                        expect(st.events[1].payload.head.position).to.eql(2);
+          
+                        done();
+                      });
+                    });
+                  });
+
+                });
+              }
             });
 
           });
