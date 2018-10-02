@@ -1,3 +1,6 @@
+#### [v1.14.3](https://github.com/adrai/node-eventstore/compare/v1.40.3...v1.14.2)
+- revisit the position option, to make it mappable to payload and part of the commit flow
+
 #### [v1.14.2](https://github.com/adrai/node-eventstore/compare/v1.40.1...v1.14.2)
 - add non-breaking, optional position in store option for mongodb and inmemory implementations
 
