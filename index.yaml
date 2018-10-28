@@ -1,0 +1,160 @@
+// This is needed for testing google cloud datastore, since a lot of queries are using composite index
+// please set up your gcloud-cli, and run "gcloud datastore create-indexes index.yaml"
+
+indexes:
+- kind: snapshots
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  properties:
+  - name: aggregate
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  properties:
+  - name: context
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: revision
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: aggregateId
+  - name: context
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: aggregateId
+  - name: revision
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: context
+  - name: revision
+  - name: commitStamp
+    direction: desc
+- kind: snapshots
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: aggregateId
+  - name: context
+  - name: revision
+  - name: commitStamp
+    direction: desc
+
+- kind: events
+  ancestor: yes
+  properties:
+  - name: commitStamp
+- kind: events
+  ancestor: yes
+  properties:
+  - name: dispatched
+  - name: commitStamp
+  - name: id
+- kind: events
+  ancestor: yes
+  properties:
+  - name: commitStamp
+  - name: streamRevision
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: streamRevision
+  - name: commitStamp
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: commitStamp
+  - name: streamRevision
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: commitStamp
+  - name: streamRevision
+- kind: events
+  ancestor: yes
+  properties:
+  - name: context
+  - name: commitStamp
+  - name: streamRevision
+- kind: events
+  ancestor: yes
+  properties:
+  - name: dispatched
+  - name: aggregateId
+  - name: commitStamp
+  - name: id
+- kind: events
+  ancestor: yes
+  properties:
+  - name: dispatched
+  - name: aggregate
+  - name: commitStamp
+  - name: id
+- kind: events
+  ancestor: yes
+  properties:
+  - name: dispatched
+  - name: context
+  - name: commitStamp
+  - name: id
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: context
+  - name: streamRevision
+  - name: commitStamp
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: aggregateId
+  - name: streamRevision
+  - name: commitStamp
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: aggregateId
+  - name: commitStamp
+  - name: streamRevision
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregateId
+  - name: commitStamp
+    direction: desc
+  - name: streamRevision
+    direction: desc
+  - name: commitSequence
+    direction: desc
+- kind: events
+  ancestor: yes
+  properties:
+  - name: aggregate
+  - name: aggregateId
+  - name: context
+  - name: streamRevision
+  - name: commitStamp
