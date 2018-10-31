@@ -7,7 +7,7 @@ The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher (optional)
-- supported Dbs (inmemory, mongodb, redis, tingodb, elasticsearch, azuretable, dynamodb)
+- supported Dbs (inmemory, mongodb, redis, tingodb, elasticsearch, azuretable, dynamodb, cloud datastore)
 - snapshot support
 - query your events
 
@@ -134,6 +134,34 @@ example with azuretable:
       snapshotsTableName: 'snapshots',       // optional
       timeout: 10000                              // optional
     });
+
+example with cloud datastore:
+
+    var es = require('eventstore')({
+        type: 'datastore',
+        projectId: 'my-project-id',                 // optional
+        eventsTableName: 'events',                  // optional
+        snapshotsTableName: 'snapshots'             // optional
+    });
+
+Google Cloud Datastore credentials are obtained from your default gcloud project, you need to set it up first:
+
+1. Go to the [Google Cloud API Manager](https://console.cloud.google.com/apis) and select "Credentials" on the left.
+2. Click on "Create credentials" and select "Service account key".
+3. Select "New service account" in the "Service account" dropdown.
+4. Enter a name for your "Service account name" (e.g. "serverless-framework").
+5. Select "Project" --> "Owner" as the "Role".
+6. The "Key type" should be "JSON".
+7. Click on "Create" to create your private key.
+8. That's your so called `keyfile` which should be downloaded on your machine.
+9. Save the `keyfile` somewhere secure. We recommend making a folder in your root folder and putting it there. Like this, `~/.gcloud/keyfile.json`. You can change the file name from `keyfile` to anything. Remember the path you saved it to.
+
+Lastly, you need to prepare the index for the table since the library will use composite index. Example [here](test/index.yaml). Please note that for test purposes, it uses "Ancestor" query to ensure strong consistency. In real use case, you can remove all lines with `ancestor: yes`.
+
+Run the command to populate the index.
+```bash
+$ gcloud datastore create-indexes test/index.yaml
+```
 
 example with dynamodb:
 
@@ -607,6 +635,7 @@ Currently these databases are supported:
 4. tingodb ([tingodb](https://github.com/sergeyksv/tingodb))
 5. azuretable ([azure-storage](https://github.com/Azure/azure-storage-node))
 6. dynamodb ([aws-sdk](https://github.com/aws/aws-sdk-js))
+7. datastore ([cloud-datastore](https://github.com/googleapis/nodejs-datastore))
 
 ## own db implementation
 You can use your own db implementation by extending this...
