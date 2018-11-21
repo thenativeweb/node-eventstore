@@ -1,12 +1,13 @@
 # Introduction
 
+[![JS.ORG](https://img.shields.io/badge/js.org-eventstore-ffb400.svg?style=flat-square)](http://js.org)
 [![travis](https://img.shields.io/travis/adrai/node-eventstore.svg)](https://travis-ci.org/adrai/node-eventstore) [![npm](https://img.shields.io/npm/v/eventstore.svg)](https://npmjs.org/package/eventstore)
 
 The project goal is to provide an eventstore implementation for node.js:
 
 - load and store events via EventStream object
 - event dispatching to your publisher (optional)
-- supported Dbs (inmemory, mongodb, redis, tingodb, azuretable, dynamodb)
+- supported Dbs (inmemory, mongodb, redis, tingodb, elasticsearch, azuretable, dynamodb)
 - snapshot support
 - query your events
 
@@ -55,6 +56,7 @@ example with mongodb:
       // username: 'technicalDbUser',                // optional
       // password: 'secret'                          // optional
       // url: 'mongodb://user:pass@host:port/db?opts // optional
+      // positionsCollectionName: 'positions' // optioanl, defaultly wont keep position
     });
 
 example with redis:
@@ -84,6 +86,43 @@ example with tingodb:
       // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
     });
 
+example with elasticsearch:
+
+    var es = require('eventstore')({
+      type: 'elasticsearch',
+      host: 'localhost:9200',                     // optional
+      indexName: 'eventstore',                    // optional
+      eventsTypeName: 'events',                   // optional
+      snapshotsTypeName: 'snapshots',             // optional
+      log: 'warning',                             // optional
+      maxSearchResults: 10000                     // optional
+      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+    });
+
+example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note ``` http-aws-es ``` package usage in this example):
+
+    var elasticsearch = require('elasticsearch');
+
+    var esClient = = new elasticsearch.Client({
+      hosts: 'SOMETHING.es.amazonaws.com',
+      connectionClass: require('http-aws-es'),
+      amazonES: {
+        region: 'us-east-1',
+        accessKey: 'REPLACE_AWS_accessKey',
+        secretKey: 'REPLACE_AWS_secretKey'
+      }
+    });
+
+    var es = require('eventstore')({
+      type: 'elasticsearch',
+      client: esClient,
+      indexName: 'eventstore',
+      eventsTypeName: 'events',
+      snapshotsTypeName: 'snapshots',
+      log: 'warning',
+      maxSearchResults: 10000
+	});
+
 example with azuretable:
 
     var es = require('eventstore')({
@@ -108,6 +147,10 @@ example with dynamodb:
         SnapshotReadCapacityUnits: 1,               // optional
         SnapshotWriteCapacityUnits: 3,              // optional
         UndispatchedEventsReadCapacityUnits: 1,     // optional
+        UndispatchedEventsReadCapacityUnits: 1,     // optional
+        useUndispatchedEventsTable: true            // optional
+        eventsTableStreamEnabled: false             // optional
+        eventsTableStreamViewType: 'NEW_IMAGE'      // optional
     });
 
 DynamoDB credentials are obtained by eventstore either from environment vars or credentials file. For setup see [AWS Javascript SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
@@ -120,6 +163,9 @@ Or on Windows:
 
     > set AWS_DYNAMODB_ENDPOINT=http://localhost:8000
 
+The **useUndispatchedEventsTable** option to available for those who prefer to use DyanmoDB.Streams to pull events from the store instead of the UndispatchedEvents table. The default is true. Setting this option to false will result in the UndispatchedEvents table not being created at all, the getUndispatchedEvents method will always return an empty array, and the setEventToDispatched will effectively do nothing.
+
+Refer to [StreamViewType](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_StreamSpecification.html#DDB-Type-StreamSpecification-StreamViewType) for a description of the **eventsTableStreamViewType** option
 
 ## Built-in event publisher (optional)
 
@@ -138,7 +184,7 @@ if defined the eventstore will try to publish AND set event do dispatched on its
     });
 
 
-## catch connect ad disconnect events
+## catch connect and disconnect events
 
     es.on('connect', function() {
       console.log('storage connected');
@@ -160,7 +206,6 @@ Define which values should be mapped/copied to the payload event.
       streamRevision: 'streamRevision'
     });
 
-
 ## initialize
 
     es.init(function (err) {
@@ -169,7 +214,7 @@ Define which values should be mapped/copied to the payload event.
 
     // or
 
-    ex.init(); // callback is optional
+    es.init(); // callback is optional
 
 
 ## working with the eventstore
@@ -228,6 +273,7 @@ store a new event and commit it to store
 if you defined an event publisher function the committed event will be dispatched to the provided publisher
 
 if you just want to load the last event as stream you can call getLastEventAsStream instead of ´getEventStream´.
+
 
 ## working with snapshotting
 
@@ -308,6 +354,7 @@ create a snapshot point
 
     });
 
+You can automatically clean older snapshots by configuring the number of snapshots to keep with `maxSnapshotsCount` in `eventstore` options.
 
 ## own event dispatching (no event publisher function defined)
 
@@ -427,6 +474,42 @@ skip, limit always optional
     });
 
 
+## streaming your events
+Some databases support streaming your events, the api is similar to the query one
+
+skip, limit always optional
+
+    var skip = 0,
+        limit = 100; // if you omit limit or you define it as -1 it will retrieve until the end
+
+    var stream = es.streamEvents(skip, limit);
+    // or
+    var stream = es.streamEvents('streamId', skip, limit);
+    // or by commitstamp
+    var stream = es.streamEventsSince(new Date(2015, 5, 23), skip, limit);
+    // or by revision
+    var stream = es.streamEventsByRevision({
+      aggregateId: 'myAggregateId',
+      aggregate: 'person',
+      context: 'hr',
+    });
+
+    stream.on('data', function(e) {
+      doSomethingWithEvent(e);
+    });
+
+    stream.on('end', function() {
+      console.log('no more evets');
+    });
+
+    // or even better
+    stream.pipe(myWritableStream);
+
+
+currently supported by:
+
+1. mongodb
+
 ## get the last event
 for example to obtain the last revision nr
 
@@ -454,6 +537,14 @@ for example to obtain the last revision nr
       console.log('the new id is: ' + newId);
     });
 
+## position of event in store
+
+  some db implementations support writing the position of the event in the whole store additional to the streamRevision.
+
+  currently those implementations support this:
+
+  *. inmemory ( by setting ```trackPosition`` option )
+  *. mongodb ( by setting ```positionsCollectionName``` option)
 
 ## special scaling handling with mongodb
 Inserting multiple events (documents) in mongodb, is not atomic.
@@ -495,7 +586,6 @@ But if you want you can trigger this from outside:
         });
       });
     });
-
 
 
 # Sample Integration
@@ -550,7 +640,7 @@ and you can use it in this way
 
 # License
 
-Copyright (c) 2016 Adriano Raiano, Jan Muehlemann
+Copyright (c) 2018 Adriano Raiano, Jan Muehlemann
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
