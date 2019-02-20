@@ -1569,7 +1569,6 @@ describe('eventstore', function () {
                         var evts = [];
                         var stream =  es.streamEventsByRevision('myAggId2', 0, 3);
                         stream.on('data', function (e) {
-                          console.log('mitkot');
                           evts.push(e);
                         });
                         stream.on('end', function(){
