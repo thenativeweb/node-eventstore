@@ -1569,7 +1569,6 @@ describe('eventstore', function () {
                         var evts = [];
                         var stream =  es.streamEventsByRevision('myAggId2', 0, 3);
                         stream.on('data', function (e) {
-                          console.log('mitkot');
                           evts.push(e);
                         });
                         stream.on('end', function(){
@@ -1591,7 +1590,7 @@ describe('eventstore', function () {
                       positionsCollectionName: 'positions',
                       trackPosition: true,
                     });
-                    es.defineEventMappings({ commitStamp: 'head.position' });
+                    es.defineEventMappings({ position: 'head.position' });
                     es.init(function(err) {
                       es.store.clear(done);
                     });
