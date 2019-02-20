@@ -1590,7 +1590,7 @@ describe('eventstore', function () {
                       positionsCollectionName: 'positions',
                       trackPosition: true,
                     });
-                    es.defineEventMappings({ commitStamp: 'head.position' });
+                    es.defineEventMappings({ position: 'head.position' });
                     es.init(function(err) {
                       es.store.clear(done);
                     });
