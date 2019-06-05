@@ -1,4 +1,3 @@
-#### [v1.14.4](https://github.com/adrai/node-eventstore/compare/v1.40.4...v1.14.3)
 #### [v1.14.41](https://github.com/adrai/node-eventstore/compare/v1.14.40...v1.14.41)
 - update deps
 
