@@ -305,7 +305,7 @@ you can request a snapshot and an eventstream even by limit the query with a 'ma
 
     var revMax = 8; // if you omit revMax or you define it as -1 it will retrieve until the end
 
-    es.getFromSnapshot('streamId' || {/* query */}, revMax, function(err, stream) {
+    es.getFromSnapshot('streamId' || {/* query */}, revMax, function(err, snapshot, stream) {
       var snap = snapshot.data;
       var history = stream.events; // events history from given snapshot
 
