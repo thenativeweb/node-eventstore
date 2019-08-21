@@ -1,3 +1,6 @@
+#### [v1.14.42](https://github.com/adrai/node-eventstore/compare/v1.14.41...v1.14.42)
+- mongodb: speedup getLastEvent by adding a new index [#147](https://github.com/adrai/node-eventstore/pull/147) thanks to [robinfehr](https://github.com/robinfehr)
+
 #### [v1.14.41](https://github.com/adrai/node-eventstore/compare/v1.14.40...v1.14.41)
 - update deps
 
