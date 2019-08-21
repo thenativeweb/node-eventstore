@@ -596,7 +596,7 @@ But if you want you can trigger this from outside:
 
 - Jonathan Oliver's [EventStore](https://github.com/joliver/EventStore) for .net.
 
-#[Release notes](https://github.com/adrai/node-eventstore/blob/master/releasenotes.md)
+# [Release notes](https://github.com/adrai/node-eventstore/blob/master/releasenotes.md)
 
 # Database Support
 Currently these databases are supported:
