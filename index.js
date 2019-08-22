@@ -70,11 +70,10 @@ module.exports = function(options) {
     throw err;
   }
 
-  var eventemitter = new Eventstore(options, new Store(options));
+  var eventstore = new Eventstore(options, new Store(options));
+  addStoreEventEmitter(eventstore);
 
-  addStoreEventEmitter(Store, eventemitter);
-
-  return eventemitter;
+  return eventstore;
 };
 
 module.exports.Store = Base;
