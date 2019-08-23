@@ -587,6 +587,78 @@ But if you want you can trigger this from outside:
       });
     });
 
+## Catch before and after eventstore events
+    var eventstore = require('eventstore');
+    var es = eventstore();
+
+    es.on('before-clear', function(milliseconds) {});
+    es.on('after-clear', function(milliseconds) {});
+
+    es.on('before-get-next-positions', function(milliseconds, positions) {});
+    es.on('after-get-next-positions', function(milliseconds, positions) {});
+
+    es.on('before-add-events', function(milliseconds, events) {});
+    es.on('after-add-events', function(milliseconds, events) {});
+
+    es.on('before-get-events', function(milliseconds, query, skip, limit) {});
+    es.on('after-get-events', function(milliseconds, query, skip, limit) {});
+
+    es.on('before-get-events-since', function(milliseconds, date, skip, limit) {});
+    es.on('after-get-events-since', function(milliseconds, date, skip, limit) {});
+
+    es.on('before-get-events-by-revision', function(milliseconds, query, revMin, revMax) {});
+    es.on('after-get-events-by-revision', function(milliseconds, query, revMin, revMax) {});
+
+    es.on('before-get-last-event', function(milliseconds, query) {});
+    es.on('after-get-last-event', function(milliseconds, query) {});
+
+    es.on('before-get-undispatched-events', function(milliseconds, query) {});
+    es.on('after-get-undispatched-events', function(milliseconds, query) {});
+  
+    es.on('before-set-event-to-dispatched', function(milliseconds, id) {});
+    es.on('after-set-event-to-dispatched', function(milliseconds, id) {});
+
+    es.on('before-add-snapshot', function(milliseconds, snap) {});
+    es.on('after-add-snapshot', function(milliseconds, snap) {});
+
+    es.on('before-clean-snapshots', function(milliseconds, query) {});
+    es.on('after-clean-snapshots', function(milliseconds, query) {});
+
+    es.on('before-get-snapshot', function(milliseconds, query, revMax) {});
+    es.on('after-get-snapshot', function(milliseconds, query, revMax) {});
+  
+    es.on('before-remove-transactions', function(milliseconds) {});
+    es.on('after-remove-transactions', function(milliseconds) {});
+
+    es.on('before-get-pending-transactions', function(milliseconds) {});
+    es.on('after-get-pending-transactions', function(milliseconds) {});
+
+    es.on('before-repair-failed-transactions', function(milliseconds, lastEvt) {});
+    es.on('after-repair-failed-transactions', function(milliseconds, lastEvt) {});
+
+    es.on('before-remove-tables', function(milliseconds) {});
+    es.on('after-remove-tables', function(milliseconds) {});
+
+    es.on('before-stream-events', function(milliseconds, query, skip, limit) {});
+    es.on('after-stream-events', function(milliseconds, query, skip, limit) {});
+
+    es.on('before-stream-events-since', function(milliseconds) {});
+    es.on('after-stream-events-since', function(milliseconds) {});
+
+    es.on('before-get-event-stream', function(milliseconds, query, revMin, revMax, parentEventId) {});
+    es.on('after-get-event-stream', function(milliseconds, query, revMin, revMax, parentEventId) {});
+
+    es.on('before-get-from-snapshot', function(milliseconds, query, revMax, parentEventId) {});
+    eventstore.on('after-get-from-snapshot', function(milliseconds, query, revMax, parentEventId) {});
+
+    es.on('before-create-snapshot', function(milliseconds, obj, parentEventId) {});
+    es.on('after-create-snapshot', function(milliseconds, obj, parentEventId) {});
+  
+    es.on('before-commit', function(milliseconds, eventstream, parentEventId) {});
+    es.on('after-commit', function(milliseconds, eventstream, parentEventId) {});
+
+    es.on('before-get-last-event-as-stream', function(milliseconds, query) {});
+    es.on('after-get-last-event-as-stream', function(milliseconds, query) {});
 
 # Sample Integration
 
