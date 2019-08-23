@@ -2,25 +2,46 @@ var expect = require('expect.js');
 var eventstore = require('../');
 var addStoreEventEmitter = require('../lib/storeEventEmitter').addStoreEventEmitter;
 
-describe('storeEventEmitter', function() {
-  describe('addStoreEventEmitter', function() {
+function beforeEachMethod(eventName) {
+  var self = this;
+
+  self.es.on('before-' + eventName, function (timestamp) {
+    self.receivedBeforeTimestamp = timestamp;
+    self.receivedBefore = true;
+  });
+
+  self.es.on('after-' + eventName, function (timestamp) {
+    self.receivedAfter = true;
+    self.receivedAfterTimestamp = timestamp;
+  });
+};
+
+function expectEventEmittedAndTimestamps() {
+  expect(this.receivedBefore).to.eql(true);
+  expect(this.receivedAfter).to.eql(true);
+  expect(this.receivedBeforeTimestamp).to.be.a('number');
+  expect(this.receivedAfterTimestamp).to.be.a('number');
+}
+
+describe('storeEventEmitter', function () {
+  describe('addStoreEventEmitter', function () {
     it('it should be a function', function () {
       expect(addStoreEventEmitter).to.be.a('function');
     });
   });
 
-  describe('without eventstore as option', function() {
-    it('it should throw an error', function() {
+  describe('without eventstore as option', function () {
+    it('it should throw an error', function () {
       expect(function () {
         addStoreEventEmitter();
       }).to.throwError();
     });
   });
 
-  describe('with wrong eventstore instance as option', function() {
+  describe('with wrong eventstore instance as option', function () {
     var es;
 
-    before(function() {
+    before(function () {
       es = Object.create({});
     });
 
@@ -31,208 +52,173 @@ describe('storeEventEmitter', function() {
     });
   });
 
-  describe('calling that function', function() {
-    var es;
-    var receivedBefore;
-    var receivedAfter;
-  
-    beforeEach(function() {
-      es = eventstore();
-      receivedBefore = false;
-      receivedAfter = false;
+  describe('calling that method', function () {
+    var self = this;
+
+    self.es;
+    self.receivedBefore;
+    self.receivedAfter;
+    self.receivedBeforeTimestamp;
+    self.receivedAfterTimestamp;
+
+    beforeEach(function () {
+      self.es = eventstore();
+      self.receivedBefore = false;
+      self.receivedAfter = false;
+      self.receivedBeforeTimestamp = undefined;
+      self.receivedAfterTimestamp = undefined;
     });
 
-    afterEach(function() {
-      es.removeAllListeners();
+    afterEach(function () {
+      self.es.removeAllListeners();
     });
 
-    describe('clear', function() {
-      beforeEach(function() {
-        es.on('before-clear', function () { receivedBefore = true; });
-        es.on('after-clear', function () { receivedAfter = true; });
-      });
+    describe('clear', function () {
+      beforeEach(beforeEachMethod.bind(self, 'clear'));
 
-      it('it should emit the correct events', function(done) {
-        es.store.clear(function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+      it('it should emit the correct events', function (done) {
+        self.es.store.clear(function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('getNextPositions', function () {
-      beforeEach(function() {
-        es.on('before-get-next-positions', function () { receivedBefore = true; });
-        es.on('after-get-next-positions', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-next-positions'));
 
       it('it should emit the correct events', function (done) {
-        es.store.getNextPositions(4, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.store.getNextPositions(4, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('addEvents', function () {
-      beforeEach(function () {
-        es.on('before-add-events', function () { receivedBefore = true; });
-        es.on('after-add-events', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'add-events'));
 
       it('it should emit the correct events with valid parameters', function (done) {
-        es.store.addEvents([{ one: 'event1' }], function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.store.addEvents([{ one: 'event1' }], function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with empty events array', function (done) {
-        es.store.addEvents([], function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.store.addEvents([], function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('getEvents', function () {
-      beforeEach(function () {
-        es.on('before-get-events', function () { receivedBefore = true; });
-        es.on('after-get-events', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-events'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, 2, 32, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, 2, 32, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with only callback parameter', function (done) {
-        es.getEvents(function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEvents(function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of skip parameter', function (done) {
-        es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of limit parameter', function (done) {
-        es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, 2, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, 2, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('getEventsSince', function () {
-      beforeEach(function () {
-        es.on('before-get-events-since', function () { receivedBefore = true; });
-        es.on('after-get-events-since', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-events-since'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getEventsSince(new Date(2000, 1, 1), 0, 3, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventsSince(new Date(2000, 1, 1), 0, 3, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of skip parameter', function (done) {
-        es.getEventsSince(new Date(2000, 1, 1), function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventsSince(new Date(2000, 1, 1), function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of limit parameter', function (done) {
-        es.getEventsSince(new Date(2000, 1, 1), 0, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventsSince(new Date(2000, 1, 1), 0, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
-  
+
     describe('getEventsByRevision', function () {
-      beforeEach(function () {
-        es.on('before-get-events-by-revision', function () { receivedBefore = true; });
-        es.on('after-get-events-by-revision', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-events-by-revision'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getEventsByRevision('myQuery', 3, 100, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventsByRevision('myQuery', 3, 100, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMin parameter', function (done) {
-        es.getEventsByRevision('myQuery', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventsByRevision('myQuery', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMax parameter', function (done) {
-        es.getEventsByRevision('myQuery', 3, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventsByRevision('myQuery', 3, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
-  
+
     describe('getLastEvent', function () {
-      beforeEach(function () {
-        es.on('before-get-last-event', function () { receivedBefore = true; });
-        es.on('after-get-last-event', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-last-event'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getLastEvent('myQuery', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getLastEvent('myQuery', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('getUndispatchedEvents', function () {
-      beforeEach(function () {
-        es.on('before-get-undispatched-events', function () { receivedBefore = true; });
-        es.on('after-get-undispatched-events', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-undispatched-events'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getUndispatchedEvents('myQuery', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getUndispatchedEvents('myQuery', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with only callback parameter', function (done) {
-        es.getUndispatchedEvents(function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getUndispatchedEvents(function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
@@ -240,133 +226,105 @@ describe('storeEventEmitter', function() {
 
     describe('setEventToDispatched', function () {
       beforeEach(function () {
-        es.on('before-set-event-to-dispatched', function () { receivedBefore = true; });
-        es.on('after-set-event-to-dispatched', function () { receivedAfter = true; });
+        beforeEachMethod.call(self, 'set-event-to-dispatched');
 
-        es.store.setEventToDispatched = function (_id, callback) {
+        self.es.store.setEventToDispatched = function (_id, callback) {
           return callback();
         };
-        addStoreEventEmitter(es);
+
+        addStoreEventEmitter(self.es);
       });
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.setEventToDispatched('my-id', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.setEventToDispatched('my-id', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('addSnapshot', function () {
-      beforeEach(function () {
-        es.on('before-add-snapshot', function () { receivedBefore = true; });
-        es.on('after-add-snapshot', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'add-snapshot'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.store.addSnapshot('myAggId', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.store.addSnapshot('myAggId', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('cleanSnapshots', function () {
-      beforeEach(function () {
-        es.on('before-clean-snapshots', function () { receivedBefore = true; });
-        es.on('after-clean-snapshots', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'clean-snapshots'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.store.cleanSnapshots('myQuery', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.store.cleanSnapshots('myQuery', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('getSnapshot', function () {
-      beforeEach(function () {
-        es.on('before-get-snapshot', function () { receivedBefore = true; });
-        es.on('after-get-snapshot', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-snapshot'));
 
       it('it should emit the correct events', function (done) {
-        es.store.getSnapshot('myQuery', 100, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.store.getSnapshot('myQuery', 100, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
-  
+
     describe('getEventStream', function () {
-      beforeEach(function () {
-        es.on('before-get-event-stream', function () { receivedBefore = true; });
-        es.on('after-get-event-stream', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-event-stream'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getEventStream('myQuery', 3, 100, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventStream('myQuery', 3, 100, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMin parameter', function (done) {
-        es.getEventStream('myQuery', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventStream('myQuery', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMax parameter', function (done) {
-        es.getEventStream('myQuery', 3, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getEventStream('myQuery', 3, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
-  
+
     describe('getFromSnapshot', function () {
-      beforeEach(function () {
-        es.on('before-get-from-snapshot', function () { receivedBefore = true; });
-        es.on('after-get-from-snapshot', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-from-snapshot'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getFromSnapshot('myQuery', 100, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getFromSnapshot('myQuery', 100, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMax parameter', function (done) {
-        es.getFromSnapshot('myQuery', function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getFromSnapshot('myQuery', function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('createSnapshot', function () {
-      beforeEach(function () {
-        es.on('before-create-snapshot', function () { receivedBefore = true; });
-        es.on('after-create-snapshot', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'create-snapshot'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.createSnapshot({ aggregateId: 'myAggId' }, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.createSnapshot({ aggregateId: 'myAggId' }, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
@@ -374,34 +332,29 @@ describe('storeEventEmitter', function() {
 
     describe('commit', function () {
       beforeEach(function () {
-        es.on('before-commit', function () { receivedBefore = true; });
-        es.on('after-commit', function () { receivedAfter = true; });
+        beforeEachMethod.call(self, 'commit');
 
-        es.commit = function (_eventstream, callback) {
+        self.es.commit = function (_eventstream, callback) {
           return callback();
         };
-        addStoreEventEmitter(es);
+
+        addStoreEventEmitter(self.es);
       });
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.commit({}, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.commit({}, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
     });
 
     describe('getLastEventAsStream', function () {
-      beforeEach(function () {
-        es.on('before-get-last-event-as-stream', function () { receivedBefore = true; });
-        es.on('after-get-last-event-as-stream', function () { receivedAfter = true; });
-      });
+      beforeEach(beforeEachMethod.bind(self, 'get-last-event-as-stream'));
 
       it('it should emit the correct events with all parameters', function (done) {
-        es.getLastEventAsStream({ aggregateId: 'myAggId' }, function () {
-          expect(receivedBefore).to.eql(true);
-          expect(receivedAfter).to.eql(true);
+        self.es.getLastEventAsStream({ aggregateId: 'myAggId' }, function () {
+          expectEventEmittedAndTimestamps.call(self);
           done();
         });
       });
