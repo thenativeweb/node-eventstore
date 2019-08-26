@@ -1,54 +1,47 @@
 var expect = require('expect.js');
 var eventstore = require('../');
-var addStoreEventEmitter = require('../lib/storeEventEmitter').addStoreEventEmitter;
+var StoreEventEmitter = require('../lib/storeEventEmitter');
 
 function beforeEachMethod(eventName) {
   var self = this;
 
-  self.es.on('before-' + eventName, function (timestamp) {
-    self.receivedBeforeTimestamp = timestamp;
+  self.es.on('before-' + eventName, function (result) {
+    self.receivedBeforeResult = result;
     self.receivedBefore = true;
   });
 
-  self.es.on('after-' + eventName, function (timestamp) {
+  self.es.on('after-' + eventName, function (result) {
     self.receivedAfter = true;
-    self.receivedAfterTimestamp = timestamp;
+    self.receivedAfterResult = result;
   });
 };
 
-function expectEventEmittedAndTimestamps() {
+function expectEventEmittedAndResult() {
   expect(this.receivedBefore).to.eql(true);
   expect(this.receivedAfter).to.eql(true);
-  expect(this.receivedBeforeTimestamp).to.be.a('number');
-  expect(this.receivedAfterTimestamp).to.be.a('number');
+  expect(this.receivedBeforeResult).to.be.a(Object);
+  expect(this.receivedAfterResult).to.be.a(Object);
+  expect(this.receivedBeforeResult.milliseconds).to.be.a('number');
+  expect(this.receivedAfterResult.milliseconds).to.be.a('number');
+  expect(this.receivedBeforeResult.eventId).to.be.a('string');
 }
 
-describe('storeEventEmitter', function () {
-  describe('addStoreEventEmitter', function () {
-    it('it should be a function', function () {
-      expect(addStoreEventEmitter).to.be.a('function');
-    });
-  });
-
-  describe('without eventstore as option', function () {
-    it('it should throw an error', function () {
+describe('StoreEventEmitter', function () {
+  describe('create instance', function() {
+    it('it should throw an error if instantiated without eventstore', function () {
       expect(function () {
-        addStoreEventEmitter();
+        new StoreEventEmitter();
       }).to.throwError();
     });
-  });
 
-  describe('with wrong eventstore instance as option', function () {
-    var es;
-
-    before(function () {
-      es = Object.create({});
+    it('it should be instance of StoreEventEmitter', function () {
+      var storeEventEmitter = new StoreEventEmitter(eventstore());
+      expect(storeEventEmitter).to.be.a(StoreEventEmitter);
     });
 
-    it('it should throw an error', function () {
-      expect(function () {
-        addStoreEventEmitter(es);
-      }).to.throwError();
+    it('addEventEmitter should be a function', function () {
+      var storeEventEmitter = new StoreEventEmitter(eventstore());
+      expect(storeEventEmitter.addEventEmitter).to.be.a('function');
     });
   });
 
@@ -58,15 +51,15 @@ describe('storeEventEmitter', function () {
     self.es;
     self.receivedBefore;
     self.receivedAfter;
-    self.receivedBeforeTimestamp;
-    self.receivedAfterTimestamp;
+    self.receivedBeforeResult;
+    self.receivedAfterResult;
 
     beforeEach(function () {
       self.es = eventstore();
       self.receivedBefore = false;
       self.receivedAfter = false;
-      self.receivedBeforeTimestamp = undefined;
-      self.receivedAfterTimestamp = undefined;
+      self.receivedBeforeResult = undefined;
+      self.receivedAfterResult = undefined;
     });
 
     afterEach(function () {
@@ -78,7 +71,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events', function (done) {
         self.es.store.clear(function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -89,7 +82,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events', function (done) {
         self.es.store.getNextPositions(4, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -100,14 +93,14 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with valid parameters', function (done) {
         self.es.store.addEvents([{ one: 'event1' }], function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with empty events array', function (done) {
         self.es.store.addEvents([], function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -118,28 +111,28 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, 2, 32, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with only callback parameter', function (done) {
         self.es.getEvents(function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of skip parameter', function (done) {
         self.es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of limit parameter', function (done) {
         self.es.getEvents({ aggregateId: 'myAggId', aggregate: 'myAgg', context: 'myCont' }, 2, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -150,21 +143,21 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getEventsSince(new Date(2000, 1, 1), 0, 3, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of skip parameter', function (done) {
         self.es.getEventsSince(new Date(2000, 1, 1), function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of limit parameter', function (done) {
         self.es.getEventsSince(new Date(2000, 1, 1), 0, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -175,21 +168,21 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getEventsByRevision('myQuery', 3, 100, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMin parameter', function (done) {
         self.es.getEventsByRevision('myQuery', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMax parameter', function (done) {
         self.es.getEventsByRevision('myQuery', 3, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -200,7 +193,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getLastEvent('myQuery', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -211,14 +204,14 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getUndispatchedEvents('myQuery', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with only callback parameter', function (done) {
         self.es.getUndispatchedEvents(function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -232,12 +225,13 @@ describe('storeEventEmitter', function () {
           return callback();
         };
 
-        addStoreEventEmitter(self.es);
+        var storeEventEmitter = new StoreEventEmitter(self.es);
+        storeEventEmitter.addEventEmitter();
       });
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.setEventToDispatched('my-id', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -248,7 +242,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.store.addSnapshot('myAggId', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -259,7 +253,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.store.cleanSnapshots('myQuery', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -270,7 +264,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events', function (done) {
         self.es.store.getSnapshot('myQuery', 100, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -281,21 +275,21 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getEventStream('myQuery', 3, 100, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMin parameter', function (done) {
         self.es.getEventStream('myQuery', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMax parameter', function (done) {
         self.es.getEventStream('myQuery', 3, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -306,14 +300,14 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getFromSnapshot('myQuery', 100, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
 
       it('it should emit the correct events with callback instead of revMax parameter', function (done) {
         self.es.getFromSnapshot('myQuery', function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -324,7 +318,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.createSnapshot({ aggregateId: 'myAggId' }, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -338,12 +332,13 @@ describe('storeEventEmitter', function () {
           return callback();
         };
 
-        addStoreEventEmitter(self.es);
+        var storeEventEmitter = new StoreEventEmitter(self.es);
+        storeEventEmitter.addEventEmitter();
       });
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.commit({}, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
@@ -354,7 +349,7 @@ describe('storeEventEmitter', function () {
 
       it('it should emit the correct events with all parameters', function (done) {
         self.es.getLastEventAsStream({ aggregateId: 'myAggId' }, function () {
-          expectEventEmittedAndTimestamps.call(self);
+          expectEventEmittedAndResult.call(self);
           done();
         });
       });
