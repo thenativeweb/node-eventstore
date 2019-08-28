@@ -62,12 +62,16 @@ describe('StoreEventEmitter', function () {
     var self = this;
 
     beforeEach(function () {
-      this.es = eventstore();
+      self.es = eventstore();
       resetCheckValues.call(self);
+    });
+
+    afterEach(function () {
+      self.es.removeAllListeners();
     });
   
     it('it should not emit any events', function(done) {
-      this.es.store.addEvents([], function () {
+      self.es.store.addEvents([], function () {
         expectEventsNotEmitted.call(self);
         done();
       });
