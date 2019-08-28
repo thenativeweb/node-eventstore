@@ -72,8 +72,10 @@ module.exports = function(options) {
 
   var eventstore = new Eventstore(options, new Store(options));
 
-  var storeEventEmitter = new StoreEventEmitter(eventstore);
-  storeEventEmitter.addEventEmitter();
+  if (options.emitStoreEvents) {
+    var storeEventEmitter = new StoreEventEmitter(eventstore);
+    storeEventEmitter.addEventEmitter();
+  }
 
   return eventstore;
 };
