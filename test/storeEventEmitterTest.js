@@ -23,7 +23,6 @@ function expectEventEmittedAndResult() {
   expect(this.receivedAfterResult).to.be.a(Object);
   expect(this.receivedBeforeResult.milliseconds).to.be.a('number');
   expect(this.receivedAfterResult.milliseconds).to.be.a('number');
-  expect(this.receivedBeforeResult.eventId).to.be.a('string');
 }
 
 describe('StoreEventEmitter', function () {
