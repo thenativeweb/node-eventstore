@@ -44,19 +44,20 @@ example with mongodb:
 
     var es = require('eventstore')({
       type: 'mongodb',
-      host: 'localhost',                          // optional
-      port: 27017,                                // optional
-      dbName: 'eventstore',                       // optional
-      eventsCollectionName: 'events',             // optional
-      snapshotsCollectionName: 'snapshots',       // optional
-      transactionsCollectionName: 'transactions', // optional
-      timeout: 10000                              // optional
+      host: 'localhost',                             // optional
+      port: 27017,                                   // optional
+      dbName: 'eventstore',                          // optional
+      eventsCollectionName: 'events',                // optional
+      snapshotsCollectionName: 'snapshots',          // optional
+      transactionsCollectionName: 'transactions',    // optional
+      timeout: 10000,                                // optional
+      emitStoreEvents: true                          // optional, by default no store events are emitted
       // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
-      // authSource: 'authedicationDatabase',        // optional
-      // username: 'technicalDbUser',                // optional
+      // authSource: 'authedicationDatabase'         // optional
+      // username: 'technicalDbUser'                 // optional
       // password: 'secret'                          // optional
       // url: 'mongodb://user:pass@host:port/db?opts // optional
-      // positionsCollectionName: 'positions' // optioanl, defaultly wont keep position
+      // positionsCollectionName: 'positions'        // optional, defaultly wont keep position
     });
 
 example with redis:
@@ -69,9 +70,10 @@ example with redis:
       prefix: 'eventstore',                       // optional
       eventsCollectionName: 'events',             // optional
       snapshotsCollectionName: 'snapshots',       // optional
+      emitStoreEvents: true,                      // optional, by default no store events are emitted
       timeout: 10000                              // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
-      // password: 'secret'                          // optional
+      // maxSnapshotsCount: 3                     // optional, defaultly will keep all snapshots
+      // password: 'secret'                       // optional
     });
 
 example with tingodb:
@@ -82,8 +84,9 @@ example with tingodb:
       eventsCollectionName: 'events',             // optional
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
-      timeout: 10000                              // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+      timeout: 10000,                             // optional
+      emitStoreEvents: true                       // optional, by default no store events are emitted
+      // maxSnapshotsCount: 3                     // optional, defaultly will keep all snapshots
     });
 
 example with elasticsearch:
@@ -95,8 +98,9 @@ example with elasticsearch:
       eventsTypeName: 'events',                   // optional
       snapshotsTypeName: 'snapshots',             // optional
       log: 'warning',                             // optional
-      maxSearchResults: 10000                     // optional
-      // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
+      maxSearchResults: 10000,                    // optional
+      emitStoreEvents: true                       // optional, by default no store events are emitted
+      // maxSnapshotsCount: 3                     // optional, defaultly will keep all snapshots
     });
 
 example with custom elasticsearch client (e.g. with AWS ElasticSearch client. Note ``` http-aws-es ``` package usage in this example):
@@ -130,9 +134,10 @@ example with azuretable:
       storageAccount: 'nodeeventstore',
       storageAccessKey: 'aXJaod96t980AbNwG9Vh6T3ewPQnvMWAn289Wft9RTv+heXQBxLsY3Z4w66CI7NN12+1HUnHM8S3sUbcI5zctg==',
       storageTableHost: 'https://nodeeventstore.table.core.windows.net/',
-      eventsTableName: 'events',             // optional
-      snapshotsTableName: 'snapshots',       // optional
-      timeout: 10000                              // optional
+      eventsTableName: 'events',               // optional
+      snapshotsTableName: 'snapshots',         // optional
+      timeout: 10000,                          // optional
+      emitStoreEvents: true                    // optional, by default no store events are emitted
     });
 
 example with dynamodb:
@@ -150,7 +155,8 @@ example with dynamodb:
         UndispatchedEventsReadCapacityUnits: 1,     // optional
         useUndispatchedEventsTable: true            // optional
         eventsTableStreamEnabled: false             // optional
-        eventsTableStreamViewType: 'NEW_IMAGE'      // optional
+        eventsTableStreamViewType: 'NEW_IMAGE',     // optional
+        emitStoreEvents: true                       // optional, by default no store events are emitted
     });
 
 DynamoDB credentials are obtained by eventstore either from environment vars or credentials file. For setup see [AWS Javascript SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
@@ -587,6 +593,78 @@ But if you want you can trigger this from outside:
       });
     });
 
+## Catch before and after eventstore events
+    var eventstore = require('eventstore');
+    var es = eventstore();
+
+    es.on('before-clear', function({milliseconds}) {});
+    es.on('after-clear', function({milliseconds}) {});
+
+    es.on('before-get-next-positions', function({milliseconds, arguments: [positions]}) {});
+    es.on('after-get-next-positions', function({milliseconds, arguments: [positions]}) {});
+
+    es.on('before-add-events', function({milliseconds, arguments: [events]}) {});
+    es.on('after-add-events', function(milliseconds, arguments: [events]) {});
+
+    es.on('before-get-events', function({milliseconds, arguments: [query, skip, limit]}) {});
+    es.on('after-get-events', function({milliseconds, arguments: [query, skip, limit]}) {});
+
+    es.on('before-get-events-since', function({milliseconds, arguments: [milliseconds, date, skip, limit]}) {});
+    es.on('after-get-events-since', function({milliseconds, arguments: [date, skip, limit]}) {});
+
+    es.on('before-get-events-by-revision', function({milliseconds, arguments: [query, revMin, revMax]}) {});
+    es.on('after-get-events-by-revision', function({milliseconds, arguments, [query, revMin, revMax]}) {});
+
+    es.on('before-get-last-event', function({milliseconds, arguments: [query]}) {});
+    es.on('after-get-last-event', function({milliseconds, arguments: [query]}) {});
+
+    es.on('before-get-undispatched-events', function({milliseconds, arguments: [query]}) {});
+    es.on('after-get-undispatched-events', function({milliseconds, arguments: [query]}) {});
+  
+    es.on('before-set-event-to-dispatched', function({milliseconds, arguments: [id]}) {});
+    es.on('after-set-event-to-dispatched', function({milliseconds, arguments: [id]}) {});
+
+    es.on('before-add-snapshot', function({milliseconds, arguments: [snap]}) {});
+    es.on('after-add-snapshot', function({milliseconds, arguments: [snap]}) {});
+
+    es.on('before-clean-snapshots', function({milliseconds, arguments: [query]}) {});
+    es.on('after-clean-snapshots', function({milliseconds, arguments: [query]}) {});
+
+    es.on('before-get-snapshot', function({milliseconds, arguments: [query, revMax]}) {});
+    es.on('after-get-snapshot', function({milliseconds, arguments: [query, revMax]}) {});
+  
+    es.on('before-remove-transactions', function({milliseconds}) {});
+    es.on('after-remove-transactions', function({milliseconds}) {});
+
+    es.on('before-get-pending-transactions', function({milliseconds}) {});
+    es.on('after-get-pending-transactions', function({milliseconds}) {});
+
+    es.on('before-repair-failed-transactions', function({milliseconds, arguments: [lastEvt]}) {});
+    es.on('after-repair-failed-transactions', function({milliseconds, arguments: [lastEvt]}) {});
+
+    es.on('before-remove-tables', function({milliseconds}) {});
+    es.on('after-remove-tables', function({milliseconds}) {});
+
+    es.on('before-stream-events', function({milliseconds, arguments: [query, skip, limit]}) {});
+    es.on('after-stream-events', function({milliseconds, arguments: [query, skip, limit]}) {});
+
+    es.on('before-stream-events-since', function({milliseconds}) {});
+    es.on('after-stream-events-since', function({milliseconds}) {});
+
+    es.on('before-get-event-stream', function({milliseconds, parentEventId, arguments: [query, revMin, revMax]}) {});
+    es.on('after-get-event-stream', function({milliseconds, parentEventId, arguments: [query, revMin, revMax]}) {});
+
+    es.on('before-get-from-snapshot', function({milliseconds, parentEventId, arguments: [query, revMax]}) {});
+    es.on('after-get-from-snapshot', function({milliseconds, parentEventId, arguments: [query, revMax]}) {});
+
+    es.on('before-create-snapshot', function({milliseconds, parentEventId, arguments: [obj]}) {});
+    es.on('after-create-snapshot', function({milliseconds, parentEventId, arguments: [obj]}) {});
+  
+    es.on('before-commit', function({milliseconds, parentEventId, arguments: [eventstream]}) {});
+    es.on('after-commit', function({milliseconds, parentEventId, arguments: [eventstream]}) {});
+
+    es.on('before-get-last-event-as-stream', function({milliseconds, arguments: [query]}) {});
+    es.on('after-get-last-event-as-stream', function({milliseconds, arguments: [query]}) {});
 
 # Sample Integration
 

@@ -1,7 +1,8 @@
 var Eventstore = require('./lib/eventstore'),
   Base = require('./lib/base'),
   _ = require('lodash'),
-  debug = require('debug')('eventstore');
+  debug = require('debug')('eventstore'),
+  StoreEventEmitter = require('./lib/storeEventEmitter');
 
 function exists(toCheck) {
   var _exists = require('fs').existsSync || require('path').existsSync;
@@ -69,7 +70,14 @@ module.exports = function(options) {
     throw err;
   }
 
-  return new Eventstore(options, new Store(options));
+  var eventstore = new Eventstore(options, new Store(options));
+
+  if (options.emitStoreEvents) {
+    var storeEventEmitter = new StoreEventEmitter(eventstore);
+    storeEventEmitter.addEventEmitter();
+  }
+
+  return eventstore;
 };
 
 module.exports.Store = Base;
