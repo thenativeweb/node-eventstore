@@ -1,3 +1,6 @@
+#### [v1.15.0](https://github.com/adrai/node-eventstore/compare/v1.14.42...v1.15.0)
+- Feature: optionally emit eventstore before and after events [#149](https://github.com/adrai/node-eventstore/pull/149) thanks to [DaNautilus](https://github.com/DaNautilus)
+
 #### [v1.14.42](https://github.com/adrai/node-eventstore/compare/v1.14.41...v1.14.42)
 - mongodb: speedup getLastEvent by adding a new index [#147](https://github.com/adrai/node-eventstore/pull/147) thanks to [robinfehr](https://github.com/robinfehr)
 
