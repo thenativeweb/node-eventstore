@@ -51,7 +51,7 @@ example with mongodb:
       snapshotsCollectionName: 'snapshots',          // optional
       transactionsCollectionName: 'transactions',    // optional
       timeout: 10000,                                // optional
-      emitStoreEvents: true                          // optional, by default no store events are emitted
+      // emitStoreEvents: true                       // optional, by default no store events are emitted
       // maxSnapshotsCount: 3                        // optional, defaultly will keep all snapshots
       // authSource: 'authedicationDatabase'         // optional
       // username: 'technicalDbUser'                 // optional
@@ -70,8 +70,8 @@ example with redis:
       prefix: 'eventstore',                       // optional
       eventsCollectionName: 'events',             // optional
       snapshotsCollectionName: 'snapshots',       // optional
-      emitStoreEvents: true,                      // optional, by default no store events are emitted
       timeout: 10000                              // optional
+      // emitStoreEvents: true,                   // optional, by default no store events are emitted
       // maxSnapshotsCount: 3                     // optional, defaultly will keep all snapshots
       // password: 'secret'                       // optional
     });
@@ -85,7 +85,7 @@ example with tingodb:
       snapshotsCollectionName: 'snapshots',       // optional
       transactionsCollectionName: 'transactions', // optional
       timeout: 10000,                             // optional
-      emitStoreEvents: true                       // optional, by default no store events are emitted
+      // emitStoreEvents: true,                   // optional, by default no store events are emitted
       // maxSnapshotsCount: 3                     // optional, defaultly will keep all snapshots
     });
 
@@ -99,7 +99,7 @@ example with elasticsearch:
       snapshotsTypeName: 'snapshots',             // optional
       log: 'warning',                             // optional
       maxSearchResults: 10000,                    // optional
-      emitStoreEvents: true                       // optional, by default no store events are emitted
+      // emitStoreEvents: true,                   // optional, by default no store events are emitted
       // maxSnapshotsCount: 3                     // optional, defaultly will keep all snapshots
     });
 
@@ -594,8 +594,12 @@ But if you want you can trigger this from outside:
     });
 
 ## Catch before and after eventstore events
+    Optionally the eventstore can emit brefore and after events, to enable this feature set the ```emitStoreEvents``` to true.
+
     var eventstore = require('eventstore');
-    var es = eventstore();
+    var es = eventstore({
+      emitStoreEvents: true,
+    });
 
     es.on('before-clear', function({milliseconds}) {});
     es.on('after-clear', function({milliseconds}) {});
