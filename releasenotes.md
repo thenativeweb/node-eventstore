@@ -1,3 +1,6 @@
+#### [v1.15.1](https://github.com/adrai/node-eventstore/compare/v1.15.0...v1.15.1)
+- Bugfix/emit eventstore event without callback [#151](https://github.com/adrai/node-eventstore/pull/151) thanks to [DaNautilus](https://github.com/DaNautilus)
+
 #### [v1.15.0](https://github.com/adrai/node-eventstore/compare/v1.14.42...v1.15.0)
 - Feature: optionally emit eventstore before and after events [#149](https://github.com/adrai/node-eventstore/pull/149) thanks to [DaNautilus](https://github.com/DaNautilus)
 
