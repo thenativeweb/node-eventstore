@@ -637,8 +637,8 @@ But if you want you can trigger this from outside:
     es.on('before-get-snapshot', function({milliseconds, arguments: [query, revMax]}) {});
     es.on('after-get-snapshot', function({milliseconds, arguments: [query, revMax]}) {});
   
-    es.on('before-remove-transactions', function({milliseconds}) {});
-    es.on('after-remove-transactions', function({milliseconds}) {});
+    es.on('before-remove-transactions', function({milliseconds}, arguments: [event]) {});
+    es.on('after-remove-transactions', function({milliseconds}, arguments: [event]) {});
 
     es.on('before-get-pending-transactions', function({milliseconds}) {});
     es.on('after-get-pending-transactions', function({milliseconds}) {});
@@ -652,20 +652,20 @@ But if you want you can trigger this from outside:
     es.on('before-stream-events', function({milliseconds, arguments: [query, skip, limit]}) {});
     es.on('after-stream-events', function({milliseconds, arguments: [query, skip, limit]}) {});
 
-    es.on('before-stream-events-since', function({milliseconds}) {});
-    es.on('after-stream-events-since', function({milliseconds}) {});
+    es.on('before-stream-events-since', function({milliseconds, arguments: [date, skip, limit]}) {});
+    es.on('after-stream-events-since', function({milliseconds, arguments: [date, skip, limit]}) {});
 
-    es.on('before-get-event-stream', function({milliseconds, parentEventId, arguments: [query, revMin, revMax]}) {});
-    es.on('after-get-event-stream', function({milliseconds, parentEventId, arguments: [query, revMin, revMax]}) {});
+    es.on('before-get-event-stream', function({milliseconds, arguments: [query, revMin, revMax]}) {});
+    es.on('after-get-event-stream', function({milliseconds, arguments: [query, revMin, revMax]}) {});
 
-    es.on('before-get-from-snapshot', function({milliseconds, parentEventId, arguments: [query, revMax]}) {});
-    es.on('after-get-from-snapshot', function({milliseconds, parentEventId, arguments: [query, revMax]}) {});
+    es.on('before-get-from-snapshot', function({milliseconds, arguments: [query, revMax]}) {});
+    es.on('after-get-from-snapshot', function({milliseconds, arguments: [query, revMax]}) {});
 
-    es.on('before-create-snapshot', function({milliseconds, parentEventId, arguments: [obj]}) {});
-    es.on('after-create-snapshot', function({milliseconds, parentEventId, arguments: [obj]}) {});
+    es.on('before-create-snapshot', function({milliseconds, arguments: [obj]}) {});
+    es.on('after-create-snapshot', function({milliseconds, arguments: [obj]}) {});
   
-    es.on('before-commit', function({milliseconds, parentEventId, arguments: [eventstream]}) {});
-    es.on('after-commit', function({milliseconds, parentEventId, arguments: [eventstream]}) {});
+    es.on('before-commit', function({milliseconds, arguments: [eventstream]}) {});
+    es.on('after-commit', function({milliseconds, arguments: [eventstream]}) {});
 
     es.on('before-get-last-event-as-stream', function({milliseconds, arguments: [query]}) {});
     es.on('after-get-last-event-as-stream', function({milliseconds, arguments: [query]}) {});
