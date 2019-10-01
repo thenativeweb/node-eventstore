@@ -1,3 +1,6 @@
+#### [v1.15.2](https://github.com/adrai/node-eventstore/compare/v1.15.1...v1.15.2)
+- tingodb: use default implementation for getNewId
+
 #### [v1.15.1](https://github.com/adrai/node-eventstore/compare/v1.15.0...v1.15.1)
 - Bugfix/emit eventstore event without callback [#151](https://github.com/adrai/node-eventstore/pull/151) thanks to [DaNautilus](https://github.com/DaNautilus)
 
