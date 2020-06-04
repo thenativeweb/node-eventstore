@@ -63,6 +63,7 @@ types.forEach(function (type) {
         if (type === 'mongodb' || type === 'tingodb') {
           expect(store.getPendingTransactions).to.be.a('function');
           expect(store.getLastEvent).to.be.a('function');
+          expect(store.getEventsByRevision).to.be.a('function');
           expect(store.repairFailedTransaction).to.be.a('function');
         }
       });
@@ -2358,6 +2359,89 @@ types.forEach(function (type) {
               });
 
             });
+
+            if (type === 'mongodb' || type === 'tingodb') {
+
+              describe('calling getEventByRevision', function () {
+
+                describe('with an aggregateId being used only in one context and aggregate', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    store.getEventByRevision({ aggregateId: 'idWithAgg' }, 1, function (err, evt) {
+                      expect(err).not.to.be.ok();
+                      expect(evt.aggregateId).to.eql(stream2[1].aggregateId);
+                      expect(evt.commitStamp.getTime()).to.eql(stream2[1].commitStamp.getTime());
+                      expect(evt.streamRevision).to.eql(stream2[1].streamRevision);
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('omitting the revision', function () {
+
+                  it('it should fail due to an error thrown', function (done) {
+
+                    store.getEventByRevision({ aggregateId: 'idWithAgg' }, function (err, _evt) {
+                      expect(err).to.be.ok();
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('with an aggregateId being used in an other context or aggregate', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    store.getEventByRevision({ aggregateId: 'id' }, 0, function (err, evt) {
+                      expect(err).not.to.be.ok();
+                      expect(evt.aggregateId).to.eql(stream1[0].aggregateId);
+                      expect(evt.commitStamp.getTime()).to.eql(stream1[0].commitStamp.getTime());
+                      expect(evt.streamRevision).to.eql(stream1[0].streamRevision);
+                      done();
+                    });
+
+                  });
+
+                });
+
+                describe('with an aggregateId and with an aggregate', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    store.getEventByRevision({ aggregate: 'myAggrrr2', aggregateId: 'idWithAggrAndCont' }, 0, function (err, evt) {
+                      expect(err).not.to.be.ok();
+                      expect(evt.aggregateId).to.eql(stream9[0].aggregateId);
+                      expect(evt.commitStamp.getTime()).to.eql(stream9[0].commitStamp.getTime());
+                      expect(evt.streamRevision).to.eql(stream9[0].streamRevision);
+                      done();
+                    });
+
+                  });
+                });
+
+                describe('with an aggregateId and without an aggregate but with a context', function () {
+
+                  it('it should return the correct events', function (done) {
+
+                    store.getEventByRevision({ aggregateId: 'idWithAggrAndCont', context: 'myConttttt' }, 1, function (err, evt) {
+                      expect(err).not.to.be.ok();
+                      expect(evt.aggregateId).to.eql(stream6[1].aggregateId);
+                      expect(evt.commitStamp.getTime()).to.eql(stream6[1].commitStamp.getTime());
+                      expect(evt.streamRevision).to.eql(stream6[1].streamRevision);
+                      done();
+                    });
+
+                  });
+
+                });
+
+              });
+            }
 
           });
 
