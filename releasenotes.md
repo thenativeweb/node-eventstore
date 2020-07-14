@@ -1,3 +1,6 @@
+#### [v1.15.3](https://github.com/adrai/node-eventstore/compare/v1.15.2...v1.15.3)
+- mongodb: useUnifiedTopology [#162](https://github.com/adrai/node-eventstore/pull/162) thanks to [odin16](https://github.com/odin16)
+
 #### [v1.15.2](https://github.com/adrai/node-eventstore/compare/v1.15.1...v1.15.2)
 - tingodb: use default implementation for getNewId
 
