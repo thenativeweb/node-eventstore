@@ -1,3 +1,6 @@
+#### [v1.15.4](https://github.com/adrai/node-eventstore/compare/v1.15.3...v1.15.4)
+- make sure revision is of correct type [#167](https://github.com/adrai/node-eventstore/pull/167) thanks to [ScripterSugar](https://github.com/ScripterSugar)
+
 #### [v1.15.3](https://github.com/adrai/node-eventstore/compare/v1.15.2...v1.15.3)
 - mongodb: useUnifiedTopology [#162](https://github.com/adrai/node-eventstore/pull/162) thanks to [odin16](https://github.com/odin16)
 
