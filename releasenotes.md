@@ -1,3 +1,6 @@
+#### [v1.15.5](https://github.com/adrai/node-eventstore/compare/v1.15.4...v1.15.5)
+- Fixing omitting & duplication issue on mongoDB streamEventsByRevision [#169](https://github.com/adrai/node-eventstore/pull/169) thanks to [ScripterSugar](https://github.com/ScripterSugar)
+
 #### [v1.15.4](https://github.com/adrai/node-eventstore/compare/v1.15.3...v1.15.4)
 - make sure revision is of correct type [#167](https://github.com/adrai/node-eventstore/pull/167) thanks to [ScripterSugar](https://github.com/ScripterSugar)
 
