@@ -59,7 +59,8 @@
     "mocha": "3.x.x",
     "mongodb": "2.1.x",
     "redis": ">=0.10.1",
-    "tingodb": ">=0.0.1"
+    "tingodb": ">=0.0.1",
+    "@google-cloud/datastore": "^2.0.0"
   },
   "scripts": {
     "test": "mocha"

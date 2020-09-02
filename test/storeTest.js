@@ -4,7 +4,7 @@ var expect = require('expect.js'),
   _ = require('lodash'),
   crypto = require('crypto');
 
-var types = ['inmemory', 'tingodb', 'mongodb', 'redis'/*, 'elasticsearch', 'azuretable', 'dynamodb'*/];
+var types = ['inmemory', 'tingodb', 'mongodb', 'redis', 'datastore' /*, 'elasticsearch', 'azuretable', 'dynamodb'*/];
 
 var token = crypto.randomBytes(16).toString('hex');
 
@@ -269,7 +269,7 @@ types.forEach(function (type) {
 
                     store.getLastEvent({ aggregateId: event2.aggregateId }, function(err, evt) {
                       expect(err).not.to.be.ok();
-
+                      
                       expect(evt.commitStamp.getTime()).to.eql(event2.commitStamp.getTime());
                       expect(evt.aggregateId).to.eql(event2.aggregateId);
                       expect(evt.commitId).to.eql(event2.commitId);
@@ -2425,7 +2425,7 @@ types.forEach(function (type) {
 
                 store.setEventToDispatched('119', function (err) {
                   expect(err).not.to.be.ok();
-
+                  
                   store.getUndispatchedEvents(null, function (err, evts) {
                     expect(err).not.to.be.ok();
                     expect(evts.length).to.eql(1);
@@ -2612,7 +2612,7 @@ types.forEach(function (type) {
               describe('with an aggregateId being used only in one context and aggregate', function () {
 
                 it('it should return the correct snapshot', function (done) {
-
+                  
                   store.getSnapshot({ aggregateId: '142351' }, -1, function (err, shot) {
                     expect(err).not.to.be.ok();
                     expect(shot.id).to.eql(snap3.id);
@@ -2907,7 +2907,7 @@ types.forEach(function (type) {
               describe('with a revision that already exists but with a newer version', function () {
 
                 it('it should return the correct snapshot', function (done) {
-
+                  
                   store.getSnapshot({ aggregateId: '920193847313131313', aggregate: 'myCoolAggregate2', context: 'myCoolContext' }, -1, function (err, shot) {
                     expect(err).not.to.be.ok();
                     expect(shot.id).to.eql(snap8.id);
