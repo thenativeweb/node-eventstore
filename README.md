@@ -194,7 +194,8 @@ var es = require('eventstore')({
     useUndispatchedEventsTable: true            // optional
     eventsTableStreamEnabled: false             // optional
     eventsTableStreamViewType: 'NEW_IMAGE',     // optional
-    emitStoreEvents: true                       // optional, by default no store events are emitted
+    emitStoreEvents: true,                      // optional, by default no store events are emitted
+    maxAddEventsRetryCount: 0                   // optional, number. retry times if putItem failed. 0 means do not retry
 });
 ```
 
