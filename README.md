@@ -184,15 +184,14 @@ var es = require('eventstore')({
     type: 'dynamodb',
     eventsTableName: 'events',                  // optional
     snapshotsTableName: 'snapshots',            // optional
-    undispatchedEventsTableName: 'undispatched' // optional
+    undispatchedEventsTableName: 'undispatched', // optional
     EventsReadCapacityUnits: 1,                 // optional
     EventsWriteCapacityUnits: 3,                // optional
     SnapshotReadCapacityUnits: 1,               // optional
     SnapshotWriteCapacityUnits: 3,              // optional
     UndispatchedEventsReadCapacityUnits: 1,     // optional
-    UndispatchedEventsReadCapacityUnits: 1,     // optional
-    useUndispatchedEventsTable: true            // optional
-    eventsTableStreamEnabled: false             // optional
+    useUndispatchedEventsTable: true,            // optional
+    eventsTableStreamEnabled: false,             // optional
     eventsTableStreamViewType: 'NEW_IMAGE',     // optional
     emitStoreEvents: true                       // optional, by default no store events are emitted
 });
