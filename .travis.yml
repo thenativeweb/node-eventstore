@@ -2,18 +2,13 @@ sudo: false
 
 services:
   - mongodb
-  - redis-server
-  - elasticsearch
-#   - couchdb
 
 language: node_js
 node_js:
-  - "4"
-  - "6"
-  - "8"
   - "10"
   - "12"
   - "14"
+  - "16"
 
 branches:
   only:
@@ -21,4 +16,4 @@ branches:
 
 notifications:
   email:
-    - adriano@raiano.ch
+    - developer@lysender.com

@@ -874,7 +874,7 @@ describe('eventstore', function () {
 
     describe('with options containing a type property with the value of', function () {
 
-      var types = ['inmemory', 'tingodb', 'mongodb', 'redis'/*, 'elasticsearch', 'azuretable', 'dynamodb'*/];
+      var types = ['inmemory', 'mongodb'];
       var streamingApiTypes = ['mongodb'];
       var positionTypes = ['mongodb', 'inmemory'];
 
@@ -889,35 +889,11 @@ describe('eventstore', function () {
           var options = {};
 
           before(function () {
-            if (type === "azuretable" || type === "dynamodb") {
-              options = {
-                  eventsTableName: 'events' + token,
-                  undispatchedEventsTableName: 'undispatchedevents' + token,
-                  snapshotsTableName: 'snapshots' + token
-              }
-            }
-            if (type === 'redis') {
-              options = {
-                db: 3
-              };
-            }
             options.type = type;
           });
 
           after(function(done){
-            if(type === "dynamodb") {
-              // AWS has a limit on the number of DynamoDB tables for an account. Let's clean up when we're done
-              var Store = require('../lib/databases/' + type);
-              var store = new Store(options);
-              store.connect(function(err, s) {
-                if(err) return done(err);
-                s.removeTables(function(err, result) {
-                  done(err);
-                });
-              });
-            } else {
-              done(null);
-            }
+            done(null);
           });
 
           describe('calling init without callback', function () {
