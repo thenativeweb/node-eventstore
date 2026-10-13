@@ -1,0 +1,216 @@
+/*
+ * Grundbausteine von the native web und der Event Foundation.
+ *
+ * Setzt tokens.css voraus. In das Projekt kopieren, nicht verlinken; die
+ * Schriftpfade an den Ort anpassen, an den assets/fonts kopiert wird.
+ */
+
+/* Schriften */
+@font-face { font-family: "Ubuntu"; src: url("fonts/Ubuntu-Light.woff2") format("woff2"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Ubuntu"; src: url("fonts/Ubuntu-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Ubuntu"; src: url("fonts/Ubuntu-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Ubuntu"; src: url("fonts/Ubuntu-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("fonts/SourceSans3-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("fonts/SourceSans3-Italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("fonts/SourceSans3-SemiBold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url("fonts/SourceSans3-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Code Pro"; src: url("fonts/SourceCodePro-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Source Code Pro"; src: url("fonts/SourceCodePro-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+
+/* Keine runden Ecken, nirgends. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: 0 !important;
+}
+
+body {
+  margin: 0;
+  background: var(--tnw-white);
+  color: var(--tnw-text);
+  font-family: var(--tnw-font-text);
+  font-size: var(--tnw-size-body);
+  line-height: 1.6;
+}
+
+/* Raster */
+.tnw-wrap { max-width: var(--tnw-content-max); margin-inline: auto; padding-inline: var(--tnw-gutter); }
+.tnw-section { padding-block: var(--tnw-section); }
+.tnw-section--entry { padding-block: var(--tnw-section-entry); }
+.tnw-measure { max-width: var(--tnw-measure); }
+
+/* Flächen: Hell und Dunkel wechseln in großen Blöcken. */
+.tnw-surface-wash { background: var(--tnw-wash); }
+.tnw-surface-dark { background: var(--tnw-dark); color: var(--tnw-on-dark-text); }
+
+/* Überschriften in Ubuntu Light; ausgezeichnete Wörter (b, strong) in Bold. */
+.tnw-hero,
+.tnw-stage,
+.tnw-page-title,
+.tnw-section-title,
+.tnw-sub-title {
+  margin: 0;
+  color: var(--tnw-ink);
+  font-family: var(--tnw-font-title);
+  font-weight: 300;
+  text-wrap: balance;
+}
+.tnw-hero { font-size: var(--tnw-size-hero); line-height: 1.05; letter-spacing: -1px; }
+.tnw-stage { font-size: var(--tnw-size-stage); line-height: 1.1; letter-spacing: -0.6px; }
+.tnw-page-title { font-size: var(--tnw-size-page); line-height: 1.1; letter-spacing: -0.4px; }
+.tnw-section-title { font-size: var(--tnw-size-section); line-height: 1.2; }
+.tnw-sub-title { font-size: var(--tnw-size-sub); line-height: 1.25; }
+.tnw-small-title { margin: 0; color: var(--tnw-ink); font-family: var(--tnw-font-title); font-size: var(--tnw-size-title); font-weight: 500; line-height: 1.3; }
+:is(.tnw-hero, .tnw-stage, .tnw-page-title, .tnw-section-title, .tnw-sub-title) :is(b, strong) { font-weight: 700; }
+
+/* Nur im großen Einstieg: Light-Text in Grau, Bold in voller Farbe. */
+.tnw-hero .tnw-muted { color: var(--tnw-text-secondary); }
+
+.tnw-surface-dark :is(.tnw-hero, .tnw-stage, .tnw-page-title, .tnw-section-title, .tnw-sub-title, .tnw-small-title) { color: var(--tnw-on-dark-heading); }
+.tnw-surface-dark .tnw-hero .tnw-muted { color: var(--tnw-on-dark-secondary); }
+
+.tnw-lede { font-size: var(--tnw-size-title); line-height: 1.5; }
+.tnw-secondary { color: var(--tnw-text-secondary); }
+.tnw-surface-dark .tnw-secondary { color: var(--tnw-on-dark-secondary); }
+
+/* Label: Versalien, gesperrt, mit Sechseck-Marker im Akzent. */
+.tnw-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tnw-space-8);
+  color: var(--accent-label);
+  font-family: var(--tnw-font-text);
+  font-size: var(--tnw-size-label);
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.tnw-label::before {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 10px;
+  background: var(--accent);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.tnw-label--plain::before { content: none; }
+.tnw-surface-dark .tnw-label { color: var(--accent-label-on-dark); }
+
+/* Trennzeichen wie „·“ oder „/“ bleiben hell, die Wörter dazwischen sind lesbar. */
+.tnw-sep { color: var(--tnw-deco); }
+.tnw-surface-dark .tnw-sep { color: var(--tnw-dark-deco); }
+
+/* Buttons: dunkel, Linie unten. Primär in der Akzentfarbe, sekundär grau. */
+.tnw-button {
+  --button-fill: var(--tnw-ink);
+  --button-fill-hover: var(--tnw-fill-hover);
+  --button-line: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tnw-space-8);
+  padding: 14px 26px;
+  border: 0;
+  background: linear-gradient(var(--button-line), var(--button-line)) left bottom / 100% 3px no-repeat, var(--button-fill);
+  color: #ffffff;
+  cursor: pointer;
+  font-family: var(--tnw-font-text);
+  font-size: var(--tnw-size-control);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color var(--tnw-duration-hover) ease-out;
+}
+.tnw-button:hover { --button-fill: var(--button-fill-hover); }
+.tnw-button:focus-visible { outline: 2px solid var(--tnw-ink); outline-offset: 3px; }
+.tnw-button--secondary { --button-line: var(--tnw-line-secondary); }
+.tnw-button--danger { --button-line: var(--tnw-error); }
+.tnw-button:disabled,
+.tnw-button[aria-disabled="true"] { --button-line: var(--tnw-deco); --button-fill-hover: var(--tnw-ink); color: var(--tnw-on-dark-secondary); cursor: not-allowed; }
+.tnw-surface-dark .tnw-button { --button-fill: var(--tnw-dark-raised); --button-fill-hover: var(--tnw-dark-raised-hover); }
+.tnw-surface-dark .tnw-button:focus-visible { outline-color: #ffffff; }
+
+/* Links: Schrift neutral, Unterkante im Akzent; beim Überfahren wird die Unterkante neutral. */
+.tnw-link {
+  --link-line: var(--accent);
+  padding-bottom: 1px;
+  background: linear-gradient(var(--link-line), var(--link-line)) left bottom / 100% 2px no-repeat;
+  color: var(--tnw-ink);
+  font-weight: 600;
+  text-decoration: none;
+}
+.tnw-link:hover { --link-line: var(--tnw-ink); }
+.tnw-link:focus-visible { outline: 2px solid var(--tnw-ink); outline-offset: 2px; }
+.tnw-surface-dark .tnw-link { color: #ffffff; }
+.tnw-surface-dark .tnw-link:hover { --link-line: #ffffff; }
+.tnw-surface-dark .tnw-link:focus-visible { outline-color: #ffffff; }
+
+/* Karten: Linie statt Schatten, Oberkante im Akzent. */
+.tnw-card { padding: var(--tnw-space-24); border: 1px solid var(--tnw-line); border-top: 3px solid var(--accent); background: var(--tnw-white); }
+.tnw-surface-dark .tnw-card { border-color: var(--tnw-dark-line); border-top-color: var(--accent); background: var(--tnw-dark-raised); }
+
+/* Hinweisboxen: linke Kante. Info und Tipp im Akzent, sonst die Zustandsfarbe. */
+.tnw-callout { --callout-line: var(--accent); padding: 14px 18px; border-left: 3px solid var(--callout-line); background: var(--tnw-wash); }
+.tnw-callout--warning { --callout-line: var(--tnw-warning); }
+.tnw-callout--error { --callout-line: var(--tnw-error); }
+.tnw-callout--success { --callout-line: var(--tnw-success); }
+
+/* Regenbogen bzw. Spektrum: nur als 3 px Linie unter der Navigation und über dem Footer. */
+.tnw-rule { height: 3px; background: var(--rule); }
+
+/* Leuchten: nur im großen Einstieg werbender Seiten, hinter dem Bild. */
+.tnw-glow { position: relative; isolation: isolate; }
+.tnw-glow::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -20%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 24%, transparent), transparent);
+  pointer-events: none;
+}
+
+/* Tabellen: nur horizontale Linien, Kopfzeile als Label. */
+.tnw-table { width: 100%; border-collapse: collapse; font-size: var(--tnw-size-secondary); font-variant-numeric: tabular-nums; }
+.tnw-table th { padding: 8px 12px 8px 0; border-bottom: 1px solid var(--tnw-ink); color: var(--tnw-ink); font-size: var(--tnw-size-label); font-weight: 600; letter-spacing: 1.2px; text-align: left; text-transform: uppercase; }
+.tnw-table td { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--tnw-line); }
+
+/* Code */
+code, kbd, samp, pre { font-family: var(--tnw-font-code); }
+.tnw-code { margin: 0; padding: 18px 20px; overflow-x: auto; border-top: 3px solid var(--accent); background: var(--tnw-dark); color: #dcdce2; font-size: 13.5px; line-height: 1.65; }
+
+/* Syntaxfarben: fünf Rollen, Kommentare grau und nicht kursiv. Codeblöcke auf Websites und in der
+   Doku sind immer dunkel; .tnw-code--light ist für Editoren in Produkten im hellen Thema. */
+.tnw-code .tok-keyword { color: var(--tnw-syntax-keyword-dark); }
+.tnw-code .tok-string { color: var(--tnw-syntax-string-dark); }
+.tnw-code .tok-number { color: var(--tnw-syntax-number-dark); }
+.tnw-code .tok-property { color: var(--tnw-syntax-property-dark); }
+.tnw-code .tok-function { color: var(--tnw-syntax-function-dark); }
+.tnw-code .tok-comment { color: var(--tnw-syntax-comment-dark); }
+.tnw-code--light { background: var(--tnw-white); color: var(--tnw-ink); border: 1px solid var(--tnw-line); border-top: 3px solid var(--accent); }
+.tnw-code--light .tok-keyword { color: var(--tnw-syntax-keyword); }
+.tnw-code--light .tok-string { color: var(--tnw-syntax-string); }
+.tnw-code--light .tok-number { color: var(--tnw-syntax-number); }
+.tnw-code--light .tok-property { color: var(--tnw-syntax-property); }
+.tnw-code--light .tok-function { color: var(--tnw-syntax-function); }
+.tnw-code--light .tok-comment { color: var(--tnw-syntax-comment); }
+
+/* Icons: Lucide, aber eckig. Bei Rechtecken rx/ry entfernen. */
+.tnw-icon { flex: none; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+.tnw-icon--large { width: 24px; height: 24px; }
+.tnw-icon--inline { width: 14px; height: 14px; }
+
+/* Bilder: Fotos grundsätzlich schwarzweiß, Kundenlogos in Graustufen. */
+.tnw-photo { filter: grayscale(1) contrast(1.05); }
+.tnw-customer-logo { filter: grayscale(1); opacity: 0.7; }
+
+/* Bewegung reduzieren, wenn das System es verlangt. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

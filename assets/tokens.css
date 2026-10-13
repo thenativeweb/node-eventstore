@@ -1,0 +1,180 @@
+/*
+ * Design-Tokens von the native web und der Event Foundation.
+ *
+ * In das Projekt kopieren, nicht verlinken. Geändert wird hier, im Skill
+ * tnw-design-apply-guidelines, und von dort aus neu kopiert. Werte nie frei
+ * wählen: Jede Farbe, Größe und jeder Abstand kommt aus dieser Datei.
+ */
+
+:root {
+  /* Neutrale Töne auf Hell. Drei Textstufen, alle mindestens 4,5 : 1. */
+  --tnw-ink: #222222;              /* Überschriften, Labels ohne Akzent, dunkle Flächen */
+  --tnw-text: #45454a;             /* Fließtext */
+  --tnw-text-secondary: #707076;   /* Nebentext */
+  --tnw-deco: #aeaeb4;             /* nur Trennzeichen, Linien, Marker, Deaktiviertes – nie Wörter */
+  --tnw-line: #e6e5e1;             /* Linien und Rahmen */
+  --tnw-wash: #f7f6f3;             /* abgesetzte helle Flächen */
+  --tnw-white: #ffffff;
+  --tnw-fill-hover: #3a3a42;       /* Button-Fläche beim Überfahren */
+
+  /* Neutrale Töne auf Dunkel. */
+  --tnw-dark: #222222;
+  --tnw-dark-raised: #2c2c31;      /* Buttons, Felder, Meldungen auf Dunkel */
+  --tnw-dark-raised-hover: #44444c;
+  --tnw-dark-control-hover: #4a4a52; /* Buttons auf angehobenem Dunkel beim Überfahren */
+  --tnw-dark-line: #3a3a42;
+  --tnw-dark-deco: #5a5a62;
+  --tnw-on-dark-heading: #ececee;
+  --tnw-on-dark-text: #b4b4bc;
+  --tnw-on-dark-secondary: #9a9aa2;
+
+  /* Marke. Pink nie als Fehlerfarbe. */
+  --tnw-pink: #dd0099;
+
+  /* Familie the native web: nur Leuchtfarben, nie als Schrift. */
+  --tnw-orange: #ff7700;
+  --tnw-yellow: #ffcc00;
+  --tnw-green: #66aa22;
+  --tnw-blue: #00aaff;
+  --tnw-violet: #a233a2;
+  --tnw-rainbow: linear-gradient(90deg, #ff7700 0%, #ffcc00 20%, #66aa22 36%, #00aaff 46%, #a233a2 66%, #dd0099 100%);
+
+  /* Familie Event Foundation: Leuchtton (Linien, Marker, Flächen),
+     Tiefton (Schrift und Labels auf Hell), Hellton (Schrift auf Dunkel). */
+  --ef-modeling: #3dbf62;
+  --ef-modeling-deep: #23813f;
+  --ef-modeling-light: #3dbf62;
+  --ef-remembering: #14b3a3;
+  --ef-remembering-deep: #097f74;
+  --ef-remembering-light: #14b3a3;
+  --ef-building: #1e9fe8;
+  --ef-building-deep: #0377b2;
+  --ef-building-light: #1e9fe8;
+  --ef-integrating: #4d6df0;
+  --ef-integrating-deep: #4665ea;
+  --ef-integrating-light: #6b8cfe;
+  --ef-analyzing: #7e4fe0;
+  --ef-analyzing-deep: #7e4fe0;
+  --ef-analyzing-light: #a07dfe;
+  --ef-spectrum: linear-gradient(90deg, #3dbf62, #14b3a3, #1e9fe8, #4d6df0, #7e4fe0);
+
+  /* Zustände, für beide Familien. Als Linie, Marker oder Symbol, nie als Schrift. */
+  --tnw-error: #e0362c;
+  --tnw-warning: #e0a100;
+  --tnw-success: #22a35a;
+
+  /* Linie des Sekundärbuttons. */
+  --tnw-line-secondary: #8a8a92;
+
+  /* Akzent des aktuellen Bereichs. Gesetzt über die Klassen unten;
+     ohne Klasse gilt Pink mit neutralen Labels. */
+  --accent: var(--tnw-pink);
+  --accent-label: var(--tnw-ink);
+  --accent-label-on-dark: var(--tnw-on-dark-heading);
+  --rule: var(--tnw-rainbow);
+
+  /* Schriften. */
+  --tnw-font-title: "Ubuntu", system-ui, sans-serif;
+  --tnw-font-text: "Source Sans 3", "Source Sans Pro", system-ui, sans-serif;
+  --tnw-font-code: "Source Code Pro", ui-monospace, monospace;
+
+  /* Schriftgrößen: elf feste Stufen. */
+  --tnw-size-hero: 72px;           /* großer Einstieg */
+  --tnw-size-stage: 52px;          /* Bühne auf werbenden Seiten */
+  --tnw-size-page: 40px;           /* Seitentitel */
+  --tnw-size-section: 30px;        /* Zwischenüberschrift erster Ordnung */
+  --tnw-size-sub: 24px;            /* Zwischenüberschrift zweiter Ordnung */
+  --tnw-size-title: 20px;          /* kleine Titel, Einleitungstext */
+  --tnw-size-body: 17px;           /* Fließtext auf Websites */
+  --tnw-size-control: 15px;        /* Buttons, Navigation, Felder; Fließtext in Produkten */
+  --tnw-size-secondary: 14px;      /* Nebentext */
+  --tnw-size-small: 13px;          /* Kleingedrucktes */
+  --tnw-size-label: 12px;          /* Labels in Versalien */
+
+  /* Abstände: Vielfache von 4. */
+  --tnw-space-4: 4px;              /* Symbol zu Text */
+  --tnw-space-8: 8px;              /* Label zu Feld */
+  --tnw-space-12: 12px;            /* zwischen Buttons */
+  --tnw-space-16: 16px;            /* Überschrift zu Text */
+  --tnw-space-24: 24px;            /* zwischen Karten, Innenabstand */
+  --tnw-space-32: 32px;            /* Text zu Buttons */
+  --tnw-space-48: 48px;            /* zwischen Spalten */
+  --tnw-space-64: 64px;
+  --tnw-space-96: 96px;
+  --tnw-space-128: 128px;
+  --tnw-section: 96px;             /* zwischen Abschnitten */
+  --tnw-section-entry: 128px;      /* großer Einstieg */
+
+  /* Breiten. */
+  --tnw-content-max: 1280px;
+  --tnw-gutter: 24px;
+  --tnw-measure: 680px;            /* Lesetext, etwa 70 Zeichen */
+
+  /* Datenpalette für Diagramme: acht Farben in fester Reihenfolge, für beide Familien
+     und beide Themen gleich (≥ 3 : 1 auf Weiß, #222 und #2c2c31). Eine Reihe = Farbe 1. */
+  --tnw-data-1: #169be4;           /* Blau */
+  --tnw-data-2: #e46a01;           /* Orange */
+  --tnw-data-3: #f531ad;           /* Pink */
+  --tnw-data-4: #6688ff;           /* Indigo */
+  --tnw-data-5: #05a798;           /* Teal */
+  --tnw-data-6: #9b73fe;           /* Violett */
+  --tnw-data-7: #20ab4f;           /* Grün */
+  --tnw-data-8: #ce5fcd;           /* Purpur */
+
+  /* Syntaxfarben (≥ 4,5 : 1), hell bzw. dunkel. */
+  --tnw-syntax-keyword: #8055de;
+  --tnw-syntax-string: #048337;
+  --tnw-syntax-number: #b85400;
+  --tnw-syntax-property: #0177b3;
+  --tnw-syntax-function: #d50493;
+  --tnw-syntax-comment: #707076;
+  --tnw-syntax-keyword-dark: #a07cfe;
+  --tnw-syntax-string-dark: #20ab4f;
+  --tnw-syntax-number-dark: #ea7012;
+  --tnw-syntax-property-dark: #169be4;
+  --tnw-syntax-function-dark: #ff48b7;
+  --tnw-syntax-comment-dark: #9a9aa2;
+
+  /* Bedienelemente in Produkten: kompakt, alle gleich hoch. Rahmen ≥ 3 : 1. */
+  --tnw-control-height: 34px;
+  --tnw-field-line: #8a8a92;
+  --tnw-field-line-dark: #82828a;
+  --tnw-app-bar-height: 56px;
+
+  /* Bewegung. */
+  --tnw-duration-hover: 150ms;
+  --tnw-duration-menu-in: 160ms;
+  --tnw-duration-menu-out: 120ms;
+  --tnw-duration-panel: 300ms;
+}
+
+/* Handy: unter 600 px schrumpfen nur die großen Stufen und Abstände. */
+@media (max-width: 599px) {
+  :root {
+    --tnw-size-hero: 44px;
+    --tnw-size-stage: 36px;
+    --tnw-size-page: 32px;
+    --tnw-size-section: 26px;
+    --tnw-size-sub: 22px;
+    --tnw-section: 64px;
+    --tnw-section-entry: 96px;
+    --tnw-gutter: 16px;
+  }
+}
+
+/* Akzent je Bereich, Familie the native web: Farbe nur als Linie und Marker. */
+.tnw-accent-orange { --accent: var(--tnw-orange); }
+.tnw-accent-yellow { --accent: var(--tnw-yellow); }
+.tnw-accent-green { --accent: var(--tnw-green); }
+.tnw-accent-blue { --accent: var(--tnw-blue); }
+.tnw-accent-violet { --accent: var(--tnw-violet); }
+.tnw-accent-pink { --accent: var(--tnw-pink); }
+
+/* Akzent je Stufe, Familie Event Foundation: Labels in der Stufenfarbe.
+   Ohne Stufe gilt Remembering. */
+.ef { --rule: var(--ef-spectrum); --accent: var(--ef-remembering); --accent-label: var(--ef-remembering-deep); --accent-label-on-dark: var(--ef-remembering-light); }
+.ef-stage-modeling { --accent: var(--ef-modeling); --accent-label: var(--ef-modeling-deep); --accent-label-on-dark: var(--ef-modeling-light); }
+.ef-stage-remembering { --accent: var(--ef-remembering); --accent-label: var(--ef-remembering-deep); --accent-label-on-dark: var(--ef-remembering-light); }
+.ef-stage-building { --accent: var(--ef-building); --accent-label: var(--ef-building-deep); --accent-label-on-dark: var(--ef-building-light); }
+.ef-stage-integrating { --accent: var(--ef-integrating); --accent-label: var(--ef-integrating-deep); --accent-label-on-dark: var(--ef-integrating-light); }
+.ef-stage-analyzing { --accent: var(--ef-analyzing); --accent-label: var(--ef-analyzing-deep); --accent-label-on-dark: var(--ef-analyzing-light); }
